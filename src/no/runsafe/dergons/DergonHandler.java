@@ -5,8 +5,6 @@ import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.entity.ILivingEntity;
-import no.runsafe.framework.api.event.IServerReady;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -14,11 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DergonHandler implements IServerReady
+public class DergonHandler
 {
-	public DergonHandler(IConsole console, IServer server)
+	public DergonHandler(IServer server)
 	{
-		this.console = console;
 		this.server = server;
 	}
 
@@ -55,13 +52,6 @@ public class DergonHandler implements IServerReady
 		}
 	}
 
-	@Override
-	public void OnServerReady()
-	{
-		console.logError("DERGONNNSSS");
-	}
-
-	private final IConsole console;
 	private final IServer server;
 	private final ConcurrentHashMap<String, List<Integer>> tracking = new ConcurrentHashMap<String, List<Integer>>(0);
 }

@@ -6,7 +6,6 @@ import no.runsafe.framework.RunsafePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.Commands;
 import no.runsafe.framework.features.Events;
-import no.runsafe.framework.features.FrameworkHooks;
 
 public class Dergons extends RunsafePlugin
 {
@@ -16,7 +15,6 @@ public class Dergons extends RunsafePlugin
 		// Framework features
 		addComponent(Commands.class);
 		addComponent(Events.class);
-		addComponent(FrameworkHooks.class);
 
 		// Plugin components
 		addComponent(DergonHandler.class);
