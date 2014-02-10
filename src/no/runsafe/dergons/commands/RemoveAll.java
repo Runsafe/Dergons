@@ -9,7 +9,7 @@ public class RemoveAll extends PlayerCommand
 {
 	public RemoveAll(DergonHandler handler)
 	{
-		super("remove", "Remove all dergons", "runsafe.dergons.remove");
+		super("purgedergons", "Remove all dergons", "runsafe.dergons.remove");
 		this.handler = handler;
 	}
 

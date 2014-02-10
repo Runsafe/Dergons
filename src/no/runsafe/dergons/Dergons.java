@@ -19,10 +19,6 @@ public class Dergons extends RunsafeConfigurablePlugin
 		// Plugin components
 		addComponent(DergonHandler.class);
 
-		Command dergonCommand = new Command("dergon", "Dergon related commands", null);
-		addComponent(dergonCommand);
 
-		dergonCommand.addSubCommand(getInstance(StartEvent.class));
-		dergonCommand.addSubCommand(getInstance(RemoveAll.class));
 	}
 }

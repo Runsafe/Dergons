@@ -10,7 +10,7 @@ public class StartEvent extends PlayerCommand
 {
 	public StartEvent(DergonHandler handler)
 	{
-		super("start", "Start a dergon event", "runsafe.dergons.start", new OnlinePlayerRequired());
+		super("spawndergon", "Start a dergon event", "runsafe.dergons.start", new OnlinePlayerRequired());
 		this.handler = handler;
 	}
 

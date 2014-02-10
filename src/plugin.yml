@@ -4,5 +4,7 @@ version: 1.0.@BUILD@
 author: Kruithne
 description: Dergons!
 commands:
-  dergon:
-    description: Dergon related commands
+  purgedergons:
+    description: Purge all dergons from the world
+  spawndergon:
+    description: Spawn a dergon
