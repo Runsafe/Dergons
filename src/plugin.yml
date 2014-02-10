@@ -2,7 +2,7 @@ name: Dergons
 main: no.runsafe.dergons.Dergons
 version: 1.0.@BUILD@
 author: Kruithne
-description: Dergons!
+description:
 commands:
   dergons:
     description: Dergon related commands
