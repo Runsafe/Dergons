@@ -4,5 +4,5 @@ version: 1.0.@BUILD@
 author: Kruithne
 description: Dergons!
 commands:
-  test:
-    description: Test!
+  dergons:
+    description: Dergon related commands
