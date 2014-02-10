@@ -14,7 +14,6 @@ public class Dergons extends RunsafePlugin
 	{
 		// Framework features
 		addComponent(Commands.class);
-		addComponent(Events.class);
 
 		// Plugin components
 		addComponent(DergonHandler.class);
