@@ -12,7 +12,6 @@ public class Dergons extends RunsafeConfigurablePlugin
 	@Override
 	protected void pluginSetup()
 	{
-
 		// Framework features
 		addComponent(Commands.class);
 		addComponent(Events.class);
