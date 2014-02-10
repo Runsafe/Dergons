@@ -1,7 +1,6 @@
 package no.runsafe.dergons;
 
-import no.runsafe.dergons.commands.RemoveAll;
-import no.runsafe.dergons.commands.StartEvent;
+import no.runsafe.dergons.commands.Test;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.features.Commands;
 import no.runsafe.framework.features.Events;
@@ -18,7 +17,6 @@ public class Dergons extends RunsafeConfigurablePlugin
 		// Plugin components
 		addComponent(DergonHandler.class);
 
-		addComponent(RemoveAll.class);
-		addComponent(StartEvent.class);
+		addComponent(Test.class);
 	}
 }
