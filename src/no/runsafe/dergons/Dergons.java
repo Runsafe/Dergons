@@ -5,7 +5,6 @@ import no.runsafe.dergons.commands.SpawnDergon;
 import no.runsafe.framework.RunsafePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.Commands;
-import no.runsafe.framework.features.Events;
 
 public class Dergons extends RunsafePlugin
 {
