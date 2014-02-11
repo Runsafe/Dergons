@@ -4,14 +4,21 @@ import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.event.entity.IEntityDeathEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.entity.LivingEntity;
+import no.runsafe.framework.minecraft.entity.RunsafeEntity;
+import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDeathEvent;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class DergonHandler implements IPluginDisabled, IConfigurationChanged
+public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IEntityDeathEvent
 {
 	public DergonHandler(IScheduler scheduler, IConsole console)
 	{
@@ -57,6 +64,36 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 	}
 
+	@Override
+	public void OnEntityDeath(RunsafeEntityDeathEvent event)
+	{
+		RunsafeEntity entity = event.getEntity();
+
+		// Check we have a dragon.
+		if (entity.getEntityType() == LivingEntity.EnderDragon)
+		{
+			for (Dergon dergon : dergons)
+			{
+				if (dergon.isDergon(entity))
+				{
+					List<RunsafeMeta> drops = new ArrayList<RunsafeMeta>(2);
+
+					RunsafeMeta egg = Item.Special.DragonEgg.getItem();
+					egg.setDisplayName("Dergon Egg");
+					egg.setAmount(1);
+
+					RunsafeMeta bones = Item.Miscellaneous.Bone.getItem();
+					bones.setAmount(random.nextInt(4) + 5); // 4 - 9 bones.
+					bones.setDisplayName("Dergon Bones");
+					bones.addLore("Impressive and heavy bones from a Dergon");
+
+					drops.add(egg);
+					event.setDrops(drops);
+				}
+			}
+		}
+	}
+
 	private final IScheduler scheduler;
 	private final IConsole console;
 	private final List<Dergon> dergons = new ArrayList<Dergon>(0);
@@ -65,4 +102,5 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
+	private final Random random = new Random();
 }

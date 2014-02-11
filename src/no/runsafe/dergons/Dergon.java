@@ -9,6 +9,7 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
+import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +115,11 @@ public class Dergon
 					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
+	}
+
+	public boolean isDergon(RunsafeEntity entity)
+	{
+		return entity.getEntityId() == this.entity.getEntityId();
 	}
 
 	private int currentStep = 0;
