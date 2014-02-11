@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Dergon
 {
-	public Dergon(IScheduler scheduler, IPlayer target, ILocation targetLocation, int min, int max, int steps)
+	public Dergon(IScheduler scheduler, IPlayer target, ILocation targetLocation, int min, int max, int steps, int minY)
 	{
 		this.scheduler = scheduler;
 		this.target = target;
@@ -21,14 +21,26 @@ public class Dergon
 		this.maxStep = max;
 		this.stepCount = steps;
 
+		this.minY = minY;
+
 		processStep();
 	}
 
 	private void spawn()
 	{
-		entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-		entity.setCustomName("Dergon");
-		entity.setDragonTarget(target);
+		if (target.isOnline())
+		{
+			ILocation playerLocation = target.getLocation();
+			if (playerLocation == null)
+				return;
+
+			if (playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
+			{
+				entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
+				entity.setCustomName("Dergon");
+				entity.setDragonTarget(target);
+			}
+		}
 	}
 
 	private void processStep()
@@ -67,6 +79,7 @@ public class Dergon
 	private final IPlayer target;
 	private final int minStep;
 	private final int maxStep;
+	private final int minY;
 	private final int stepCount;
 	private final Random random = new Random();
 }

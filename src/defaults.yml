@@ -2,7 +2,7 @@ spawnChance: 10
 spawnTimer: 3600
 dergonWorld: world
 spawnMinY: 60
-spawnY: 300
+spawnY: 100
 eventMinTime: 2
 eventMaxTime: 6
 eventSteps: 7

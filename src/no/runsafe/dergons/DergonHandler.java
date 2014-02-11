@@ -26,9 +26,9 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 		if (world == null)
 			return;
 
-		location.setY(spawnY); // Set the location to be high in the sky.
+		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
 
-		Dergon dergon = new Dergon(scheduler, target, location, eventMinTime, eventMaxTime, stepCount); // Construct the dergon.
+		Dergon dergon = new Dergon(scheduler, target, location, eventMinTime, eventMaxTime, stepCount, minSpawnY); // Construct the dergon.
 		dergons.add(dergon); // Track the dergon.
 	}
 
@@ -55,6 +55,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 		eventMinTime = config.getConfigValueAsInt("eventMinTime");
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
 		stepCount = config.getConfigValueAsInt("eventSteps");
+		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 	}
 
 	private final IScheduler scheduler;
@@ -64,4 +65,5 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 	private int eventMinTime;
 	private int eventMaxTime;
 	private int stepCount;
+	private int minSpawnY;
 }
