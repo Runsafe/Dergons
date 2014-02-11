@@ -88,6 +88,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 					bones.addLore("Impressive and heavy bones from a Dergon");
 
 					drops.add(egg);
+					drops.add(bones);
 					event.setDrops(drops);
 				}
 			}
