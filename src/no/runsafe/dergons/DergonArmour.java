@@ -55,6 +55,7 @@ public class DergonArmour implements IInventoryClick
 		RunsafeInventory inventory = event.getInventory();
 		if (inventory.getType() == RunsafeInventoryType.WORKBENCH)
 		{
+
 			IPlayer player = event.getWhoClicked();
 			for (int i = 1; i < inventory.getSize(); i++)
 			{
