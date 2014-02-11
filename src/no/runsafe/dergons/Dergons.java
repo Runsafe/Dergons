@@ -2,11 +2,11 @@ package no.runsafe.dergons;
 
 import no.runsafe.dergons.commands.PurgeDergons;
 import no.runsafe.dergons.commands.SpawnDergon;
-import no.runsafe.framework.RunsafePlugin;
+import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.Commands;
 
-public class Dergons extends RunsafePlugin
+public class Dergons extends RunsafeConfigurablePlugin
 {
 	@Override
 	protected void pluginSetup()
