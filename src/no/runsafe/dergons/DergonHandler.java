@@ -90,6 +90,8 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 					drops.add(egg);
 					drops.add(bones);
 					event.setDrops(drops);
+
+					dergon.remove();
 				}
 			}
 		}
