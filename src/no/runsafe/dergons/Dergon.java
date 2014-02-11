@@ -122,6 +122,12 @@ public class Dergon
 		return entity.getEntityId() == this.entity.getEntityId();
 	}
 
+	public void powerDown()
+	{
+		if (fireballTimer > -1)
+			scheduler.cancelTask(fireballTimer);
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon entity;
