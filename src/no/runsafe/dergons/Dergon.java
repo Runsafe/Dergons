@@ -111,7 +111,7 @@ public class Dergon
 				ILocation ballLoc = fireball.getLocation();
 
 				if (ballLoc != null)
-					fireball.setVelocity(ballLoc.toVector().subtract(playerLocation.toVector()).normalize());
+					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
 	}
