@@ -12,5 +12,14 @@ public class DergonboneHelmet extends CustomRecipe
 		helm.setAmount(1);
 		helm.setDisplayName("Dergonbone Helmet");
 		setResult(helm);
+
+		RunsafeMeta bone = Item.Miscellaneous.Bone.getItem();
+		bone.setDisplayName("Dergon Bone");
+
+		addIngredient(1, bone);
+		addIngredient(2, bone);
+		addIngredient(3, bone);
+		addIngredient(4, bone);
+		addIngredient(6, bone);
 	}
 }
