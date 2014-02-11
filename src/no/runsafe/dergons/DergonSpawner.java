@@ -59,13 +59,13 @@ public class DergonSpawner implements IConfigurationChanged
 	public void OnConfigurationChanged(IConfiguration config)
 	{
 		spawnChance = config.getConfigValueAsInt("spawnChance");
-		spawnTimer = config.getConfigValueAsInt("spawnTimer");
 		world = config.getConfigValueAsWorld("dergonWorld");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 
 		if (timerID > -1)
 			scheduler.cancelTask(timerID);
 
+		int spawnTimer = config.getConfigValueAsInt("spawnTimer");
 		timerID = scheduler.startSyncRepeatingTask(new Runnable()
 		{
 			@Override
@@ -81,7 +81,6 @@ public class DergonSpawner implements IConfigurationChanged
 	private final DergonHandler handler;
 	private int timerID;
 	private int spawnChance;
-	private int spawnTimer;
 	private int minSpawnY;
 	private IWorld world;
 	private final Random random = new Random();
