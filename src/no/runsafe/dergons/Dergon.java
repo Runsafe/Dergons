@@ -4,11 +4,14 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
+import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Dergon
@@ -18,38 +21,37 @@ public class Dergon
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
 
+		world = targetLocation.getWorld();
+
 		this.minStep = min;
 		this.maxStep = max;
 		this.stepCount = steps;
 
 		this.minY = minY;
 
-		processStep();
+		if (world != null)
+			processStep();
 	}
 
 	private void spawn()
 	{
-		IWorld world = targetLocation.getWorld();
-		if (world != null)
+		for (IPlayer player : world.getPlayers())
 		{
-			for (IPlayer player : world.getPlayers())
+			ILocation playerLocation = player.getLocation();
+			if (playerLocation != null && playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
 			{
-				ILocation playerLocation = player.getLocation();
-				if (playerLocation != null && playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
+				entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
+				entity.setCustomName("Dergon");
+				entity.setDragonTarget(player);
+				fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
 				{
-					entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-					entity.setCustomName("Dergon");
-					entity.setDragonTarget(player);
-					fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
+					@Override
+					public void run()
 					{
-						@Override
-						public void run()
-						{
-							shootFireball();
-						}
-					}, 1, 1);
-					return;
-				}
+						shootFireball();
+					}
+				}, 1, 1);
+				return;
 			}
 		}
 	}
@@ -87,7 +89,31 @@ public class Dergon
 
 	public void shootFireball()
 	{
-		entity.Fire(ProjectileEntity.Fireball); // Shoot a fireball.
+		List<IPlayer> targets = new ArrayList<IPlayer>(0);
+
+		for (IPlayer checkPlayer : world.getPlayers())
+		{
+			ILocation playerLocation = checkPlayer.getLocation();
+			if (playerLocation != null && playerLocation.distance(entity.getLocation()) < 50)
+				targets.add(checkPlayer);
+		}
+
+		if (targets.isEmpty())
+			return;
+
+		IPlayer target = targets.get(random.nextInt(targets.size()));
+		if (target != null && target.isOnline())
+		{
+			ILocation playerLocation = target.getLocation();
+			if (playerLocation != null)
+			{
+				IEntity fireball = entity.Fire(ProjectileEntity.Fireball); // Shoot a fireball.
+				ILocation ballLoc = fireball.getLocation();
+
+				if (ballLoc != null)
+					fireball.setVelocity(ballLoc.toVector().subtract(playerLocation.toVector()).normalize());
+			}
+		}
 	}
 
 	private int currentStep = 0;
@@ -95,6 +121,7 @@ public class Dergon
 	private IEnderDragon entity;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
+	private final IWorld world;
 	private final int minStep;
 	private final int maxStep;
 	private final int minY;
