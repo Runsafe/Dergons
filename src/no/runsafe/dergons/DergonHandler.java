@@ -1,22 +1,18 @@
 package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.entity.IEntity;
-import no.runsafe.framework.api.entity.ILivingEntity;
-import no.runsafe.framework.minecraft.entity.LivingEntity;
+import no.runsafe.framework.api.event.plugin.IPluginDisabled;
+import no.runsafe.framework.api.log.IConsole;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-public class DergonHandler
+public class DergonHandler implements IPluginDisabled
 {
-	public DergonHandler(IServer server)
+	public DergonHandler(IConsole console)
 	{
-		this.server = server;
+		this.console = console;
 	}
 
 	public void spawnDergon(ILocation location)
@@ -25,33 +21,27 @@ public class DergonHandler
 		if (world == null)
 			return;
 
-		ILivingEntity entity = (ILivingEntity) LivingEntity.EnderDragon.spawn(location);
-		entity.setCustomName("Dergon");
-
-		String worldName = world.getName();
-		if (!tracking.containsKey(worldName))
-			tracking.put(worldName, new ArrayList<Integer>(1));
-
-		tracking.get(worldName).add(entity.getEntityId());
+		Dergon dergon = new Dergon(); // Construct the dergon.
+		dergon.spawn(location); // Spawn the dergon.
+		dergons.add(dergon); // Track the dergon.
 	}
 
 	public void removeAllDergons()
 	{
-		for (Map.Entry<String, List<Integer>> node : tracking.entrySet())
-		{
-			IWorld world = server.getWorld(node.getKey());
-			if (world != null)
-			{
-				for (Integer entityID : node.getValue())
-				{
-					IEntity entity = world.getEntityById(entityID);
-					if (entity != null)
-						entity.remove(); // De-spawn.
-				}
-			}
-		}
+		// Loop all dergons and remove them.
+		for (Dergon dergon : dergons)
+			dergon.remove();
+
+		dergons.clear(); // Clear the tracking list.
 	}
 
-	private final IServer server;
-	private final ConcurrentHashMap<String, List<Integer>> tracking = new ConcurrentHashMap<String, List<Integer>>(0);
+	@Override
+	public void OnPluginDisabled()
+	{
+		console.logWarning("Server shut-down detected, purging all dergons.");
+		removeAllDergons();
+	}
+
+	private final IConsole console;
+	private final List<Dergon> dergons = new ArrayList<Dergon>(0);
 }
