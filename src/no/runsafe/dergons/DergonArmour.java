@@ -59,7 +59,8 @@ public class DergonArmour implements IInventoryClick
 			for (int i = 1; i < inventory.getSize(); i++)
 			{
 				RunsafeMeta slotItem = inventory.getItemInSlot(i);
-				player.sendColouredMessage(i + ": " + slotItem.getNormalName());
+				if (slotItem != null)
+					player.sendColouredMessage(i + ": " + slotItem.getNormalName());
 			}
 		}
 	}
