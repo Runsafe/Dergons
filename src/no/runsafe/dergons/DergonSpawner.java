@@ -51,7 +51,7 @@ public class DergonSpawner implements IConfigurationChanged
 		if (selectedPlayer == null)
 			return "Failed, no valid/lucky players.";
 
-		handler.spawnDergon(selectedPlayer.getLocation(), selectedPlayer);
+		handler.spawnDergon(selectedPlayer.getLocation());
 		return "Spawning @ " + selectedPlayer.getName();
 	}
 

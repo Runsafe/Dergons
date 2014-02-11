@@ -2,6 +2,7 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
@@ -11,10 +12,9 @@ import java.util.Random;
 
 public class Dergon
 {
-	public Dergon(IScheduler scheduler, IPlayer target, ILocation targetLocation, int min, int max, int steps, int minY)
+	public Dergon(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY)
 	{
 		this.scheduler = scheduler;
-		this.target = target;
 		this.targetLocation = targetLocation;
 
 		this.minStep = min;
@@ -28,17 +28,19 @@ public class Dergon
 
 	private void spawn()
 	{
-		if (target.isOnline())
+		IWorld world = targetLocation.getWorld();
+		if (world != null)
 		{
-			ILocation playerLocation = target.getLocation();
-			if (playerLocation == null)
-				return;
-
-			if (playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
+			for (IPlayer player : world.getPlayers())
 			{
-				entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-				entity.setCustomName("Dergon");
-				entity.setDragonTarget(target);
+				ILocation playerLocation = player.getLocation();
+				if (playerLocation != null && playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
+				{
+					entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
+					entity.setCustomName("Dergon");
+					entity.setDragonTarget(player);
+					return;
+				}
 			}
 		}
 	}
@@ -76,7 +78,6 @@ public class Dergon
 	private IEnderDragon entity;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
-	private final IPlayer target;
 	private final int minStep;
 	private final int maxStep;
 	private final int minY;
