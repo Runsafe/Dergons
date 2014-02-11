@@ -7,6 +7,7 @@ import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
+import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 
 import java.util.Random;
 
@@ -39,6 +40,14 @@ public class Dergon
 					entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
 					entity.setCustomName("Dergon");
 					entity.setDragonTarget(player);
+					fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							shootFireball();
+						}
+					}, 1, 1);
 					return;
 				}
 			}
@@ -71,6 +80,14 @@ public class Dergon
 		entity.remove();
 		if (stepTimer > -1)
 			scheduler.cancelTask(stepTimer);
+
+		if (fireballTimer > -1)
+			scheduler.cancelTask(fireballTimer);
+	}
+
+	public void shootFireball()
+	{
+		entity.Fire(ProjectileEntity.Fireball); // Shoot a fireball.
 	}
 
 	private int currentStep = 0;
@@ -83,4 +100,5 @@ public class Dergon
 	private final int minY;
 	private final int stepCount;
 	private final Random random = new Random();
+	private int fireballTimer;
 }
