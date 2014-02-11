@@ -40,7 +40,7 @@ public class DergonSpawner implements IConfigurationChanged
 				if (world.getHighestBlockYAt(playerLocation) > playerY) // Check nothing is blocking the sky.
 					continue;
 
-				if (random.nextInt(100) <= spawnChance + (playerY * 0.5))
+				if (random.nextInt(100) <= spawnChance + ((playerY - minSpawnY) * 0.5))
 				{
 					selectedPlayer = player;
 					break;
