@@ -33,7 +33,7 @@ public class Dergon
 
 	private void processStep()
 	{
-		targetLocation.playSound(Sound.Creature.EnderDragon.Growl, 30, 1);
+		targetLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);
 
 		if (currentStep == stepCount)
 		{
