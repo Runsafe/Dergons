@@ -2,7 +2,7 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.entity.ICreature;
+import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
@@ -26,9 +26,9 @@ public class Dergon
 
 	private void spawn()
 	{
-		entity = (ICreature) LivingEntity.EnderDragon.spawn(targetLocation);
+		entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
 		entity.setCustomName("Dergon");
-		entity.setTarget(target);
+		entity.setDragonTarget(target);
 	}
 
 	private void processStep()
@@ -61,7 +61,7 @@ public class Dergon
 
 	private int currentStep = 0;
 	private int stepTimer;
-	private ICreature entity;
+	private IEnderDragon entity;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IPlayer target;
