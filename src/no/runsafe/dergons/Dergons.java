@@ -17,6 +17,7 @@ public class Dergons extends RunsafeConfigurablePlugin
 		addComponent(Events.class);
 
 		// Plugin components
+		addComponent(DergonArmour.class);
 		addComponent(DergonHandler.class);
 		addComponent(DergonSpawner.class);
 

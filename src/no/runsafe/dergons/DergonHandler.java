@@ -13,6 +13,7 @@ import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDeathEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import no.runsafe.framework.minecraft.material.RunsafeMaterialData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 					RunsafeMeta bones = Item.Miscellaneous.Bone.getItem();
 					bones.setAmount(random.nextInt(4) + 5); // 4 - 9 bones.
 					bones.setDisplayName("Dergon Bones");
-					bones.addLore("Impressive and heavy bones from a Dergon");
+					bones.setData(new RunsafeMaterialData(Item.Miscellaneous.Bone.getItemID(), (byte) 42));
 
 					drops.add(egg);
 					drops.add(bones);
