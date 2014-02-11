@@ -5,6 +5,7 @@ import no.runsafe.dergons.commands.SpawnDergon;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.api.command.Command;
 import no.runsafe.framework.features.Commands;
+import no.runsafe.framework.features.Events;
 
 public class Dergons extends RunsafeConfigurablePlugin
 {
@@ -13,6 +14,7 @@ public class Dergons extends RunsafeConfigurablePlugin
 	{
 		// Framework features
 		addComponent(Commands.class);
+		addComponent(Events.class);
 
 		// Plugin components
 		addComponent(DergonHandler.class);
