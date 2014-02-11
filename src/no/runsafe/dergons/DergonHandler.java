@@ -1,14 +1,16 @@
 package no.runsafe.dergons;
 
+import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DergonHandler implements IPluginDisabled
+public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 {
 	public DergonHandler(IConsole console)
 	{
@@ -20,6 +22,8 @@ public class DergonHandler implements IPluginDisabled
 		IWorld world = location.getWorld();
 		if (world == null)
 			return;
+
+		location.setY(spawnY);
 
 		Dergon dergon = new Dergon(); // Construct the dergon.
 		dergon.spawn(location); // Spawn the dergon.
@@ -42,6 +46,13 @@ public class DergonHandler implements IPluginDisabled
 		removeAllDergons();
 	}
 
+	@Override
+	public void OnConfigurationChanged(IConfiguration configuration)
+	{
+		spawnY = configuration.getConfigValueAsInt("spawnY");
+	}
+
 	private final IConsole console;
 	private final List<Dergon> dergons = new ArrayList<Dergon>(0);
+	private int spawnY;
 }

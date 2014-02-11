@@ -2,3 +2,4 @@ spawnChance: 10
 spawnTimer: 3600
 dergonWorld: world
 spawnMinY: 60
+spawnY: 300
