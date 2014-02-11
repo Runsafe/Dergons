@@ -2,31 +2,33 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 {
-	public DergonHandler(IConsole console)
+	public DergonHandler(IScheduler scheduler, IConsole console)
 	{
+		this.scheduler = scheduler;
 		this.console = console;
 	}
 
-	public void spawnDergon(ILocation location)
+	public void spawnDergon(ILocation location, IPlayer target)
 	{
 		IWorld world = location.getWorld();
 		if (world == null)
 			return;
 
-		location.setY(spawnY);
+		location.setY(spawnY); // Set the location to be high in the sky.
 
-		Dergon dergon = new Dergon(); // Construct the dergon.
-		dergon.spawn(location); // Spawn the dergon.
+		Dergon dergon = new Dergon(scheduler, target, location, eventMinTime, eventMaxTime, stepCount); // Construct the dergon.
 		dergons.add(dergon); // Track the dergon.
 	}
 
@@ -47,12 +49,19 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged
 	}
 
 	@Override
-	public void OnConfigurationChanged(IConfiguration configuration)
+	public void OnConfigurationChanged(IConfiguration config)
 	{
-		spawnY = configuration.getConfigValueAsInt("spawnY");
+		spawnY = config.getConfigValueAsInt("spawnY");
+		eventMinTime = config.getConfigValueAsInt("eventMinTime");
+		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
+		stepCount = config.getConfigValueAsInt("eventSteps");
 	}
 
+	private final IScheduler scheduler;
 	private final IConsole console;
 	private final List<Dergon> dergons = new ArrayList<Dergon>(0);
 	private int spawnY;
+	private int eventMinTime;
+	private int eventMaxTime;
+	private int stepCount;
 }

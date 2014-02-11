@@ -1,21 +1,72 @@
 package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.entity.ILivingEntity;
+import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.entity.ICreature;
+import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
+
+import java.util.Random;
 
 public class Dergon
 {
-	public void spawn(ILocation location)
+	public Dergon(IScheduler scheduler, IPlayer target, ILocation targetLocation, int min, int max, int steps)
 	{
-		entity = (ILivingEntity) LivingEntity.EnderDragon.spawn(location);
+		this.scheduler = scheduler;
+		this.target = target;
+		this.targetLocation = targetLocation;
+
+		this.minStep = min;
+		this.maxStep = max;
+		this.stepCount = steps;
+
+		processStep();
+	}
+
+	private void spawn()
+	{
+		entity = (ICreature) LivingEntity.EnderDragon.spawn(targetLocation);
 		entity.setCustomName("Dergon");
+		entity.setTarget(target);
+	}
+
+	private void processStep()
+	{
+		targetLocation.playSound(Sound.Creature.EnderDragon.Growl, 30, 1);
+
+		if (currentStep == stepCount)
+		{
+			spawn();
+			return;
+		}
+
+		stepTimer = scheduler.startSyncTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				processStep();
+			}
+		}, random.nextInt(maxStep) + minStep);
+		currentStep++;
 	}
 
 	public void remove()
 	{
 		entity.remove();
+		if (stepTimer > -1)
+			scheduler.cancelTask(stepTimer);
 	}
 
-	private ILivingEntity entity;
+	private int currentStep = 0;
+	private int stepTimer;
+	private ICreature entity;
+	private final IScheduler scheduler;
+	private final ILocation targetLocation;
+	private final IPlayer target;
+	private final int minStep;
+	private final int maxStep;
+	private final int stepCount;
+	private final Random random = new Random();
 }

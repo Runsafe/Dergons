@@ -3,3 +3,6 @@ spawnTimer: 3600
 dergonWorld: world
 spawnMinY: 60
 spawnY: 300
+eventMinTime: 2
+eventMaxTime: 6
+eventSteps: 7
