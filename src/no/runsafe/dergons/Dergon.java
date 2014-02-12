@@ -47,7 +47,6 @@ public class Dergon
 				if (idealPlayer == null && playerLocation.getY() > minY)
 					idealPlayer = player;
 
-				player.sendColouredMessage("Dergon gained 100 points of HP because of you.");
 				health += 100D;
 			}
 		}
