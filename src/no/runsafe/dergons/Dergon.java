@@ -6,6 +6,7 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.Buff;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
@@ -58,6 +59,7 @@ public class Dergon
 			entity.setDragonTarget(idealPlayer);
 			entity.setMaxHealth(health);
 			entity.setHealth(health);
+			Buff.Utility.Movement.IncreaseSpeed.duration(100000).amplification(70).applyTo(entity);
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
 			{
