@@ -36,24 +36,37 @@ public class Dergon
 
 	private void spawn()
 	{
+		IPlayer idealPlayer = null;
+		double health = 200D;
+
 		for (IPlayer player : world.getPlayers())
 		{
 			ILocation playerLocation = player.getLocation();
-			if (playerLocation != null && playerLocation.distance(targetLocation) < 200 && playerLocation.getY() > minY)
+			if (playerLocation != null && playerLocation.distance(targetLocation) < 200)
 			{
-				entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-				entity.setCustomName("Dergon");
-				entity.setDragonTarget(player);
-				fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						shootFireball();
-					}
-				}, 1, 1);
-				return;
+				if (idealPlayer == null && playerLocation.getY() > minY)
+					idealPlayer = player;
+
+				health += 50D;
 			}
+		}
+
+		if (idealPlayer != null)
+		{
+			entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
+			entity.setCustomName("Dergon");
+			entity.setDragonTarget(idealPlayer);
+			entity.setMaxHealth(health);
+			entity.setHealth(health);
+
+			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					shootFireball();
+				}
+			}, 1, 1);
 		}
 	}
 
