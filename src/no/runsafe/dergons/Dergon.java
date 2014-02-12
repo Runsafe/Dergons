@@ -153,6 +153,11 @@ public class Dergon
 		damageDone.put(playerName, damageDone.containsKey(playerName) ? damageDone.get(playerName) + damage : damage);
 	}
 
+	public HashMap<String, Double> getDamageDone()
+	{
+		return damageDone;
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon entity;

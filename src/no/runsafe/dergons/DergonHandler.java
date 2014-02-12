@@ -85,12 +85,13 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 
 					RunsafeMeta egg = Item.Special.DragonEgg.getItem();
 					egg.setDisplayName("Dergon Egg");
+					egg.addLore("&3A heavy egg that seems to hum with unnatural energy.")
 					egg.setAmount(1);
 
 					RunsafeMeta bones = Item.Miscellaneous.Bone.getItem();
 					bones.setAmount(random.nextInt(4) + 5); // 4 - 9 bones.
 					bones.setDisplayName("Dergon Bones");
-					bones.addLore("Impressive and heavy bones from the corpse of a Dergon.");
+					bones.addLore("&3Impressive and heavy bones from the corpse of a Dergon.");
 
 					drops.add(egg);
 					drops.add(bones);
