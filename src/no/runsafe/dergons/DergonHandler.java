@@ -1,29 +1,26 @@
 package no.runsafe.dergons;
 
-import no.runsafe.framework.api.IConfiguration;
-import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.entity.IEntityDeathEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginDisabled;
 import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDeathEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IEntityDeathEvent
 {
-	public DergonHandler(IScheduler scheduler, IConsole console)
+	public DergonHandler(IScheduler scheduler, IConsole console, IServer server)
 	{
 		this.scheduler = scheduler;
 		this.console = console;
+		this.server = server;
 	}
 
 	public List<Dergon> getDergons()
@@ -99,6 +96,26 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 
 					dergon.powerDown();
 
+					IPlayer slayer = null;
+					double slayerDamage = 0D;
+
+					HashMap<String, Double> damageDone = dergon.getDamageDone();
+					for (Map.Entry<String, Double> node : damageDone.entrySet())
+					{
+						IPlayer player = server.getPlayerExact(node.getKey());
+						new DergonAssistEvent(player).Fire();
+
+						double damage = node.getValue();
+						if (damage > slayerDamage)
+						{
+							slayer = player;
+							slayerDamage = damage;
+						}
+					}
+
+					if (slayer != null)
+						new DergonSlayEvent(slayer).Fire();
+
 					break;
 				}
 			}
@@ -108,6 +125,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 	private final IScheduler scheduler;
 	private final IConsole console;
 	private final List<Dergon> dergons = new ArrayList<Dergon>(0);
+	private final IServer server;
 	private int spawnY;
 	private int eventMinTime;
 	private int eventMaxTime;
