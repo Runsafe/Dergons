@@ -6,7 +6,6 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.Buff;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
@@ -48,7 +47,8 @@ public class Dergon
 				if (idealPlayer == null && playerLocation.getY() > minY)
 					idealPlayer = player;
 
-				health += 50D;
+				player.sendColouredMessage("Dergon gained 100 points of HP because of you.");
+				health += 100D;
 			}
 		}
 
@@ -59,7 +59,6 @@ public class Dergon
 			entity.setDragonTarget(idealPlayer);
 			entity.setMaxHealth(health);
 			entity.setHealth(health);
-			Buff.Utility.Movement.IncreaseSpeed.duration(100000).amplification(70).applyTo(entity);
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
 			{
@@ -130,6 +129,11 @@ public class Dergon
 					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
+	}
+
+	public IEnderDragon getDragon()
+	{
+		return entity;
 	}
 
 	public boolean isDergon(RunsafeEntity entity)

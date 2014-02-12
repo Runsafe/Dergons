@@ -26,6 +26,11 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 		this.console = console;
 	}
 
+	public List<Dergon> getDergons()
+	{
+		return dergons;
+	}
+
 	public void spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
