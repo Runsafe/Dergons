@@ -12,6 +12,7 @@ import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -146,6 +147,12 @@ public class Dergon
 			scheduler.cancelTask(fireballTimer);
 	}
 
+	public void registerAttack(IPlayer player, double damage)
+	{
+		String playerName = player.getName();
+		damageDone.put(playerName, damageDone.containsKey(playerName) ? damageDone.get(playerName) + damage : damage);
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon entity;
@@ -158,4 +165,5 @@ public class Dergon
 	private final int stepCount;
 	private final Random random = new Random();
 	private int fireballTimer;
+	private final HashMap<String, Double> damageDone = new HashMap<String, Double>(0);
 }
