@@ -95,7 +95,7 @@ public class Dergon
 		for (IPlayer checkPlayer : world.getPlayers())
 		{
 			ILocation playerLocation = checkPlayer.getLocation();
-			if (playerLocation != null && playerLocation.distance(entity.getLocation()) < 50)
+			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(entity.getLocation()) < 50)
 				targets.add(checkPlayer);
 		}
 
