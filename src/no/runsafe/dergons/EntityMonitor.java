@@ -48,7 +48,11 @@ public class EntityMonitor implements IEntityDamageByEntityEvent
 					}
 
 					if (attackingPlayer != null)
+					{
 						dergon.registerAttack(attackingPlayer, event.getDamage());
+						if (attacker.getEntityType() == ProjectileEntity.Snowball)
+							new DergonSnowballEvent(attackingPlayer).Fire();
+					}
 
 					break;
 				}
