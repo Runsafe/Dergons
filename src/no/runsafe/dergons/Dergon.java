@@ -1,18 +1,16 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R1.EntityEnderDragon;
+import net.minecraft.server.v1_7_R1.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
+import no.runsafe.framework.api.entity.ILivingEntity;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
-import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
-import no.runsafe.framework.tools.reflection.ReflectionHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,12 +55,19 @@ public class Dergon
 
 		if (idealPlayer != null)
 		{
-			dragon = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-			entityID = dragon.getEntityId();
-			dragon.setCustomName("Dergon");
-			dragon.setDragonTarget(idealPlayer);
-			dragon.setMaxHealth(health);
-			dragon.setHealth(health);
+			World rawWorld = ObjectUnwrapper.getMinecraft(world);
+			if (rawWorld != null)
+			{
+				dragon = new CustomDergonEntity(world);
+				if (rawWorld.addEntity(dragon))
+				{
+					ILivingEntity livingDragon = getLivingEntity();
+					entityID = livingDragon.getEntityId();
+					livingDragon.setCustomName("Dergon");
+					livingDragon.setMaxHealth(health);
+					livingDragon.setHealth(health);
+				}
+			}
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
 			{
@@ -98,7 +103,7 @@ public class Dergon
 
 	public void remove()
 	{
-		getEntity().remove();
+		getLivingEntity().remove();
 		if (stepTimer > -1)
 			scheduler.cancelTask(stepTimer);
 
@@ -108,12 +113,7 @@ public class Dergon
 
 	public void runCycle()
 	{
-		IEnderDragon dragon = getEntity();
-
-		Dergons.Debugger.debugFine("--------------------------------");
-		Dergons.Debugger.debugFine("Dergon cycle running for " + dragon.getEntityId());
-		Dergons.Debugger.debugFine("Spawn loc: " + targetLocation.toString());
-		Dergons.Debugger.debugFine("Tar loc: " + getTargetLocation().toString());
+		ILivingEntity dragon = getLivingEntity();
 
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
@@ -136,7 +136,7 @@ public class Dergon
 				ILocation playerLocation = target.getLocation();
 				if (playerLocation != null)
 				{
-					IEntity fireball = getEntity().Fire(ProjectileEntity.Fireball); // Shoot a fireball.
+					IEntity fireball = getLivingEntity().Fire(ProjectileEntity.Fireball); // Shoot a fireball.
 					ILocation ballLoc = fireball.getLocation();
 
 					if (ballLoc != null)
@@ -149,35 +149,8 @@ public class Dergon
 			}
 		}
 
-		if (getTargetLocation().distance(targetLocation) > 150)
-		{
-			Dergons.Debugger.debugFine("Over 150 blocks from spawn point, redirecting.");
-			if (!targets.isEmpty())
-			{
-				IPlayer target = targets.get(random.nextInt(targets.size()));
-				if (target != null && target.isOnline())
-				{
-					Dergons.Debugger.debugFine("Redirecting dergon to " + target.getName());
-					dragon.setDragonTarget(target);
-				}
-			}
-		}
-		else
-		{
-			Dergons.Debugger.debugFine("Range check: Within 150 blocks of spawn point.");
-		}
-
 		long pct = Math.round((dragon.getHealth() / dragon.getMaxHealth()) * 100);
 		dragon.setCustomName("Dergon (" +  pct + "%)");
-
-		Dergons.Debugger.debugFine("Spawn loc: " + targetLocation.toString());
-		Dergons.Debugger.debugFine("Tar loc: " + getTargetLocation().toString());
-		Dergons.Debugger.debugFine("--------------------------------");
-	}
-
-	public IEnderDragon getDragon()
-	{
-		return getEntity();
 	}
 
 	public boolean isDergon(RunsafeEntity entity)
@@ -187,7 +160,7 @@ public class Dergon
 
 	public boolean isDergon(int entityID)
 	{
-		return entityID == getEntity().getEntityId();
+		return entityID == getLivingEntity().getEntityId();
 	}
 
 	public void powerDown()
@@ -207,32 +180,22 @@ public class Dergon
 		return damageDone;
 	}
 
-	private IEnderDragon getEntity()
+	public CustomDergonEntity getEntity()
 	{
 		if (dragon != null)
 			return dragon;
 
-		return (IEnderDragon) world.getEntityById(entityID);
+		return (CustomDergonEntity) ObjectUnwrapper.getMinecraft(getLivingEntity());
 	}
 
-	private EntityEnderDragon getRawDragon()
+	public ILivingEntity getLivingEntity()
 	{
-		return (EntityEnderDragon) ObjectUnwrapper.getMinecraft(getEntity());
-	}
-
-	private ILocation getTargetLocation()
-	{
-		EntityEnderDragon rawDragon = getRawDragon();
-		return world.getLocation(
-				(Double) ReflectionHelper.getObjectField(rawDragon, "h"),
-				(Double) ReflectionHelper.getObjectField(rawDragon, "i"),
-				(Double) ReflectionHelper.getObjectField(rawDragon, "j")
-		);
+		return (ILivingEntity) world.getEntityById(entityID);
 	}
 
 	private int currentStep = 0;
 	private int stepTimer;
-	private IEnderDragon dragon;
+	private CustomDergonEntity dragon;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IWorld world;

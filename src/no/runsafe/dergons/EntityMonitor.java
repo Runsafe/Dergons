@@ -1,8 +1,9 @@
 package no.runsafe.dergons;
 
+import net.minecraft.server.v1_7_R1.Entity;
 import no.runsafe.framework.api.event.entity.IEntityDamageByEntityEvent;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.entity.LivingEntity;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeProjectile;
@@ -19,11 +20,15 @@ public class EntityMonitor implements IEntityDamageByEntityEvent
 	public void OnEntityDamageByEntity(RunsafeEntityDamageByEntityEvent event)
 	{
 		RunsafeEntity entity = event.getEntity();
-		if (entity.getEntityType() == LivingEntity.EnderDragon)
+		if (entity == null)
+			return;
+
+		Entity rawEntity = ObjectUnwrapper.getMinecraft(entity);
+		if (rawEntity instanceof CustomDergonEntity)
 		{
-			RunsafeEntity attacker = event.getDamageActor();
 			for (Dergon dergon : handler.getDergons())
 			{
+				RunsafeEntity attacker = event.getDamageActor();
 				if (dergon.isDergon(entity))
 				{
 					IPlayer attackingPlayer = null;
@@ -34,7 +39,7 @@ public class EntityMonitor implements IEntityDamageByEntityEvent
 						{
 							event.setDamage(7.0D);
 							attacker.remove();
-							dergon.getDragon().damage(7.0D);
+							dergon.getLivingEntity().damage(7.0D);
 							event.cancel();
 						}
 
