@@ -109,6 +109,7 @@ public class Dergon
 	public void runCycle()
 	{
 		IEnderDragon dragon = getEntity();
+
 		Dergons.Debugger.debugFine("Dergon cycle running for " + dragon.getEntityId());
 
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
@@ -145,7 +146,12 @@ public class Dergon
 			}
 		}
 
-		if (getTargetLocation().distance(targetLocation) > 150)
+		if (reset)
+		{
+			setTargetLocation(targetLocation);
+			Dergons.Debugger.debugFine("Reset flag detected, sending back to start.");
+		}
+		else if (getTargetLocation().distance(targetLocation) > 150)
 		{
 			Dergons.Debugger.debugFine("Over 150 blocks from spawn point, redirecting.");
 			boolean redirected = false;
@@ -186,7 +192,12 @@ public class Dergon
 
 	public boolean isDergon(RunsafeEntity entity)
 	{
-		return entity.getEntityId() == getEntity().getEntityId();
+		return isDergon(entity.getEntityId());
+	}
+
+	public boolean isDergon(int entityID)
+	{
+		return entityID == getEntity().getEntityId();
 	}
 
 	public void powerDown()
@@ -235,6 +246,11 @@ public class Dergon
 		rawDragon.getControllerMove().a(location.getX(),  location.getY(), location.getZ(), 0);
 	}
 
+	public void reset()
+	{
+		reset = true;
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon dragon;
@@ -249,4 +265,5 @@ public class Dergon
 	private final Random random = new Random();
 	private int fireballTimer;
 	private final HashMap<String, Double> damageDone = new HashMap<String, Double>(0);
+	private boolean reset = false;
 }

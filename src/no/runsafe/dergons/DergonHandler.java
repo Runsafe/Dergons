@@ -49,6 +49,18 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 		dergons.clear(); // Clear the tracking list.
 	}
 
+	public void resetDergon(int dergonID)
+	{
+		for (Dergon dergon : dergons)
+		{
+			if (dergon.isDergon(dergonID))
+			{
+				dergon.reset();
+				break;
+			}
+		}
+	}
+
 	@Override
 	public void OnPluginDisabled()
 	{
