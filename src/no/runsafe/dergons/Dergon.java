@@ -3,7 +3,6 @@ package no.runsafe.dergons;
 import net.minecraft.server.v1_7_R1.EntityEnderDragon;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
-import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
@@ -14,7 +13,6 @@ import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.tools.reflection.ReflectionHelper;
-import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +21,7 @@ import java.util.Random;
 
 public class Dergon
 {
-	public Dergon(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, IServer server)
+	public Dergon(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
@@ -38,8 +36,6 @@ public class Dergon
 
 		if (world != null)
 			processStep();
-
-		this.server = ObjectUnwrapper.convert(server);
 	}
 
 	private void spawn()
@@ -73,7 +69,7 @@ public class Dergon
 				@Override
 				public void run()
 				{
-					shootFireball();
+					runCycle();
 				}
 			}, 1, 1);
 		}
@@ -110,7 +106,7 @@ public class Dergon
 			scheduler.cancelTask(fireballTimer);
 	}
 
-	public void shootFireball()
+	public void runCycle()
 	{
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
@@ -137,13 +133,6 @@ public class Dergon
 					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
-
-		// Debugging
-		ILocation dragonLocation = getTargetLocation();
-		if (dragonLocation != null)
-			server.broadcastMessage("Current target: " + dragonLocation.toString());
-		else
-			server.broadcastMessage("Target loc is null");
 	}
 
 	public IEnderDragon getDragon()
@@ -196,12 +185,19 @@ public class Dergon
 		);
 	}
 
+	private void setTargetLocation(ILocation location)
+	{
+		EntityEnderDragon rawDragon = getRawDragon();
+		ReflectionHelper.setField(rawDragon, "h", location.getX());
+		ReflectionHelper.setField(rawDragon, "i", location.getY());
+		ReflectionHelper.setField(rawDragon, "j", location.getZ());
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon dragon;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
-	private CraftServer server;
 	private final IWorld world;
 	private int entityID;
 	private final int minStep;
