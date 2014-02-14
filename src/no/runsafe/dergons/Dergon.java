@@ -108,12 +108,13 @@ public class Dergon
 
 	public void runCycle()
 	{
+		IEnderDragon dragon = getEntity();
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
 		for (IPlayer checkPlayer : world.getPlayers())
 		{
 			ILocation playerLocation = checkPlayer.getLocation();
-			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(getEntity().getLocation()) < 50)
+			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(dragon.getLocation()) < 50)
 				targets.add(checkPlayer);
 		}
 
@@ -136,6 +137,9 @@ public class Dergon
 
 		if (getTargetLocation().distance(targetLocation) > 150)
 			setTargetLocation(targetLocation);
+
+		long pct = Math.round((dragon.getHealth() / dragon.getMaxHealth()) * 100);
+		dragon.setCustomName("Dergon (" +  pct + "%)");
 	}
 
 	public IEnderDragon getDragon()
