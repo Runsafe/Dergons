@@ -133,6 +133,9 @@ public class Dergon
 					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
+
+		if (getTargetLocation().distance(targetLocation) > 150)
+			setTargetLocation(targetLocation);
 	}
 
 	public IEnderDragon getDragon()
