@@ -118,25 +118,43 @@ public class Dergon
 				targets.add(checkPlayer);
 		}
 
-		if (targets.isEmpty())
-			return;
-
-		IPlayer target = targets.get(random.nextInt(targets.size()));
-		if (target != null && target.isOnline())
+		if (!targets.isEmpty())
 		{
-			ILocation playerLocation = target.getLocation();
-			if (playerLocation != null)
+			IPlayer target = targets.get(random.nextInt(targets.size()));
+			if (target != null && target.isOnline())
 			{
-				IEntity fireball = getEntity().Fire(ProjectileEntity.Fireball); // Shoot a fireball.
-				ILocation ballLoc = fireball.getLocation();
+				ILocation playerLocation = target.getLocation();
+				if (playerLocation != null)
+				{
+					IEntity fireball = getEntity().Fire(ProjectileEntity.Fireball); // Shoot a fireball.
+					ILocation ballLoc = fireball.getLocation();
 
-				if (ballLoc != null)
-					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
+					if (ballLoc != null)
+						fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
+				}
 			}
 		}
 
 		if (getTargetLocation().distance(targetLocation) > 150)
-			setTargetLocation(targetLocation);
+		{
+			boolean redirected = false;
+			if (!targets.isEmpty())
+			{
+				IPlayer target = targets.get(random.nextInt(targets.size()));
+				if (target != null && target.isOnline())
+				{
+					ILocation playerLocation = target.getLocation();
+					if (playerLocation != null)
+					{
+						setTargetLocation(playerLocation);
+						redirected = true;
+					}
+				}
+			}
+
+			if (!redirected)
+				setTargetLocation(targetLocation);
+		}
 
 		long pct = Math.round((dragon.getHealth() / dragon.getMaxHealth()) * 100);
 		dragon.setCustomName("Dergon (" +  pct + "%)");
