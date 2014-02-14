@@ -109,13 +109,18 @@ public class Dergon
 	public void runCycle()
 	{
 		IEnderDragon dragon = getEntity();
+		Dergons.Debugger.debugFine("Dergon cycle running for " + dragon.getEntityId());
+
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
 		for (IPlayer checkPlayer : world.getPlayers())
 		{
 			ILocation playerLocation = checkPlayer.getLocation();
 			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(dragon.getLocation()) < 50)
+			{
+				Dergons.Debugger.debugFine("Player within 50 blocks, adding to target list: " + checkPlayer.getName());
 				targets.add(checkPlayer);
+			}
 		}
 
 		if (!targets.isEmpty())
@@ -123,6 +128,7 @@ public class Dergon
 			IPlayer target = targets.get(random.nextInt(targets.size()));
 			if (target != null && target.isOnline())
 			{
+				Dergons.Debugger.debugFine("Valid random target found, shooting fireball at " + target.getName());
 				ILocation playerLocation = target.getLocation();
 				if (playerLocation != null)
 				{
@@ -133,16 +139,22 @@ public class Dergon
 						fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 				}
 			}
+			else
+			{
+				Dergons.Debugger.debugFine("Invalid fireball target.");
+			}
 		}
 
 		if (getTargetLocation().distance(targetLocation) > 150)
 		{
+			Dergons.Debugger.debugFine("Over 150 blocks from spawn point, redirecting.");
 			boolean redirected = false;
 			if (!targets.isEmpty())
 			{
 				IPlayer target = targets.get(random.nextInt(targets.size()));
 				if (target != null && target.isOnline())
 				{
+					Dergons.Debugger.debugFine("Redirecting dergon to " + target.getName());
 					ILocation playerLocation = target.getLocation();
 					if (playerLocation != null)
 					{
@@ -153,7 +165,14 @@ public class Dergon
 			}
 
 			if (!redirected)
+			{
 				setTargetLocation(targetLocation);
+				Dergons.Debugger.debugFine("Redirection failed, sending to spawn location.");
+			}
+		}
+		else
+		{
+			Dergons.Debugger.debugFine("Range check: Within 150 blocks of spawn point.");
 		}
 
 		long pct = Math.round((dragon.getHealth() / dragon.getMaxHealth()) * 100);
