@@ -232,7 +232,7 @@ public class Dergon
 	private void setTargetLocation(ILocation location)
 	{
 		EntityEnderDragon rawDragon = getRawDragon();
-		rawDragon.move(location.getX(), location.getY(), location.getZ());
+		rawDragon.getControllerMove().a(location.getX(),  location.getY(), location.getZ(), 0);
 	}
 
 	private int currentStep = 0;
