@@ -1,6 +1,5 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R1.Entity;
 import net.minecraft.server.v1_7_R1.EntityEnderDragon;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
@@ -10,14 +9,12 @@ import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
-import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.tools.reflection.ReflectionHelper;
 import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -142,9 +139,11 @@ public class Dergon
 		}
 
 		// Debugging
-		IPlayer dragonTarget = getTarget();
-		if (dragonTarget != null)
-			server.broadcastMessage("Current target: " + dragonTarget.getName());
+		ILocation dragonLocation = getTargetLocation();
+		if (dragonLocation != null)
+			server.broadcastMessage("Current target: " + dragonLocation.toString());
+		else
+			server.broadcastMessage("Target loc is null");
 	}
 
 	public IEnderDragon getDragon()
@@ -187,9 +186,14 @@ public class Dergon
 		return (EntityEnderDragon) ObjectUnwrapper.getMinecraft(getEntity());
 	}
 
-	private IPlayer getTarget()
+	private ILocation getTargetLocation()
 	{
-		return (IPlayer) ObjectWrapper.convert(CraftEntity.getEntity(server, (Entity) ReflectionHelper.getObjectField(getRawDragon(), "bD")));
+		EntityEnderDragon rawDragon = getRawDragon();
+		return world.getLocation(
+				(Double) ReflectionHelper.getObjectField(rawDragon, "h"),
+				(Double) ReflectionHelper.getObjectField(rawDragon, "i"),
+				(Double) ReflectionHelper.getObjectField(rawDragon, "j")
+		);
 	}
 
 	private int currentStep = 0;
