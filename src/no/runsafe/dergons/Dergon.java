@@ -232,9 +232,7 @@ public class Dergon
 	private void setTargetLocation(ILocation location)
 	{
 		EntityEnderDragon rawDragon = getRawDragon();
-		ReflectionHelper.setField(rawDragon, "h", location.getX());
-		ReflectionHelper.setField(rawDragon, "i", location.getY());
-		ReflectionHelper.setField(rawDragon, "j", location.getZ());
+		rawDragon.move(location.getX(), location.getY(), location.getZ());
 	}
 
 	private int currentStep = 0;
