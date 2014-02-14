@@ -110,7 +110,10 @@ public class Dergon
 	{
 		IEnderDragon dragon = getEntity();
 
+		Dergons.Debugger.debugFine("--------------------------------");
 		Dergons.Debugger.debugFine("Dergon cycle running for " + dragon.getEntityId());
+		Dergons.Debugger.debugFine("Spawn loc: " + targetLocation.toString());
+		Dergons.Debugger.debugFine("Tar loc: " + getTargetLocation().toString());
 
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
@@ -183,6 +186,10 @@ public class Dergon
 
 		long pct = Math.round((dragon.getHealth() / dragon.getMaxHealth()) * 100);
 		dragon.setCustomName("Dergon (" +  pct + "%)");
+
+		Dergons.Debugger.debugFine("Spawn loc: " + targetLocation.toString());
+		Dergons.Debugger.debugFine("Tar loc: " + getTargetLocation().toString());
+		Dergons.Debugger.debugFine("--------------------------------");
 	}
 
 	public IEnderDragon getDragon()
