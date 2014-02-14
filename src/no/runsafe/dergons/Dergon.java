@@ -1,15 +1,23 @@
 package no.runsafe.dergons;
 
+import net.minecraft.server.v1_7_R1.Entity;
+import net.minecraft.server.v1_7_R1.EntityEnderDragon;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
+import no.runsafe.framework.api.IServer;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.entity.IEnderDragon;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.LivingEntity;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
+import no.runsafe.framework.tools.reflection.ReflectionHelper;
+import org.bukkit.craftbukkit.v1_7_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +26,7 @@ import java.util.Random;
 
 public class Dergon
 {
-	public Dergon(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY)
+	public Dergon(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, IServer server)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
@@ -33,6 +41,8 @@ public class Dergon
 
 		if (world != null)
 			processStep();
+
+		this.server = ObjectUnwrapper.convert(server);
 	}
 
 	private void spawn()
@@ -130,6 +140,11 @@ public class Dergon
 					fireball.setVelocity(playerLocation.toVector().subtract(ballLoc.toVector()).normalize());
 			}
 		}
+
+		// Debugging
+		IPlayer dragonTarget = getTarget();
+		if (dragonTarget != null)
+			server.broadcastMessage("Current target: " + dragonTarget.getName());
 	}
 
 	public IEnderDragon getDragon()
@@ -167,11 +182,22 @@ public class Dergon
 		return (IEnderDragon) world.getEntityById(entityID);
 	}
 
+	private EntityEnderDragon getRawDragon()
+	{
+		return (EntityEnderDragon) ObjectUnwrapper.getMinecraft(getEntity());
+	}
+
+	private IPlayer getTarget()
+	{
+		return (IPlayer) ObjectWrapper.convert(CraftEntity.getEntity(server, (Entity) ReflectionHelper.getObjectField(getRawDragon(), "bD")));
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
 	private IEnderDragon dragon;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
+	private CraftServer server;
 	private final IWorld world;
 	private int entityID;
 	private final int minStep;
