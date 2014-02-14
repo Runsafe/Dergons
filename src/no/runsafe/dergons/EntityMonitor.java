@@ -32,9 +32,9 @@ public class EntityMonitor implements IEntityDamageByEntityEvent
 					{
 						if (attacker.getEntityType() == ProjectileEntity.Arrow)
 						{
-							event.setDamage(5.0D);
+							event.setDamage(10.0D);
 							attacker.remove();
-							dergon.getDragon().damage(5.0D);
+							dergon.getDragon().damage(10.0D);
 							event.cancel();
 						}
 
