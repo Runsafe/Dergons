@@ -54,11 +54,12 @@ public class Dergon
 
 		if (idealPlayer != null)
 		{
-			entity = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
-			entity.setCustomName("Dergon");
-			entity.setDragonTarget(idealPlayer);
-			entity.setMaxHealth(health);
-			entity.setHealth(health);
+			dragon = (IEnderDragon) LivingEntity.EnderDragon.spawn(targetLocation);
+			entityID = dragon.getEntityId();
+			dragon.setCustomName("Dergon");
+			dragon.setDragonTarget(idealPlayer);
+			dragon.setMaxHealth(health);
+			dragon.setHealth(health);
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
 			{
@@ -94,7 +95,7 @@ public class Dergon
 
 	public void remove()
 	{
-		entity.remove();
+		getEntity().remove();
 		if (stepTimer > -1)
 			scheduler.cancelTask(stepTimer);
 
@@ -109,7 +110,7 @@ public class Dergon
 		for (IPlayer checkPlayer : world.getPlayers())
 		{
 			ILocation playerLocation = checkPlayer.getLocation();
-			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(entity.getLocation()) < 50)
+			if (playerLocation != null && !checkPlayer.isVanished() && playerLocation.distance(getEntity().getLocation()) < 50)
 				targets.add(checkPlayer);
 		}
 
@@ -122,7 +123,7 @@ public class Dergon
 			ILocation playerLocation = target.getLocation();
 			if (playerLocation != null)
 			{
-				IEntity fireball = entity.Fire(ProjectileEntity.Fireball); // Shoot a fireball.
+				IEntity fireball = getEntity().Fire(ProjectileEntity.Fireball); // Shoot a fireball.
 				ILocation ballLoc = fireball.getLocation();
 
 				if (ballLoc != null)
@@ -133,12 +134,12 @@ public class Dergon
 
 	public IEnderDragon getDragon()
 	{
-		return entity;
+		return getEntity();
 	}
 
 	public boolean isDergon(RunsafeEntity entity)
 	{
-		return entity.getEntityId() == this.entity.getEntityId();
+		return entity.getEntityId() == getEntity().getEntityId();
 	}
 
 	public void powerDown()
@@ -158,12 +159,21 @@ public class Dergon
 		return damageDone;
 	}
 
+	private IEnderDragon getEntity()
+	{
+		if (dragon != null)
+			return dragon;
+
+		return (IEnderDragon) world.getEntityById(entityID);
+	}
+
 	private int currentStep = 0;
 	private int stepTimer;
-	private IEnderDragon entity;
+	private IEnderDragon dragon;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IWorld world;
+	private int entityID;
 	private final int minStep;
 	private final int maxStep;
 	private final int minY;
