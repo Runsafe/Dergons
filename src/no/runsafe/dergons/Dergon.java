@@ -39,7 +39,7 @@ public class Dergon
 	public void spawnEntity()
 	{
 		scheduler.cancelTask(stepTimer);
-		ObjectUnwrapper.getMinecraft(world).addEntity(getEntity());
+		spawn();
 	}
 
 	private void spawn()
@@ -73,6 +73,7 @@ public class Dergon
 					livingDragon.setMaxHealth(health);
 					livingDragon.setHealth(health);
 				}
+				rawWorld.addEntity(dragon);
 			}
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
