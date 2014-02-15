@@ -61,12 +61,15 @@ public class Dergon
 
 		if (idealPlayer != null)
 		{
+			idealPlayer.sendColouredMessage("You are the ideal target.");
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
+				idealPlayer.sendColouredMessage("The world was not null.");
 				dragon = new CustomDergonEntity(world);
 				if (rawWorld.addEntity(dragon))
 				{
+					idealPlayer.sendColouredMessage("We spawned the entity");
 					ILivingEntity livingDragon = getLivingEntity();
 					entityID = livingDragon.getEntityId();
 					livingDragon.setCustomName("Dergon");
