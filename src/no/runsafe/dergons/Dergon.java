@@ -70,6 +70,7 @@ public class Dergon
 				dragon = new CustomDergonEntity(world);
 				if (rawWorld.addEntity(dragon, CreatureSpawnEvent.SpawnReason.NATURAL))
 				{
+					dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 					idealPlayer.sendColouredMessage("We spawned the entity");
 					ILivingEntity livingDragon = getLivingEntity();
 					entityID = livingDragon.getEntityId();
