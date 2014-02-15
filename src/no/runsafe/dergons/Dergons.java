@@ -1,5 +1,6 @@
 package no.runsafe.dergons;
 
+import no.runsafe.dergons.commands.ForceDergonSpawn;
 import no.runsafe.dergons.commands.PurgeDergons;
 import no.runsafe.dergons.commands.SpawnDergon;
 import no.runsafe.framework.RunsafeConfigurablePlugin;
@@ -31,6 +32,7 @@ public class Dergons extends RunsafeConfigurablePlugin
 
 		dergonCommand.addSubCommand(getInstance(PurgeDergons.class));
 		dergonCommand.addSubCommand(getInstance(SpawnDergon.class));
+		dergonCommand.addSubCommand(getInstance(ForceDergonSpawn.class));
 
 	}
 }

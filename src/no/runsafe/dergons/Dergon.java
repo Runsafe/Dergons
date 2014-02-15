@@ -36,6 +36,12 @@ public class Dergon
 			processStep();
 	}
 
+	public void spawnEntity()
+	{
+		scheduler.cancelTask(stepTimer);
+		ObjectUnwrapper.getMinecraft(world).addEntity(getEntity());
+	}
+
 	private void spawn()
 	{
 		IPlayer idealPlayer = null;
@@ -114,7 +120,6 @@ public class Dergon
 	public void runCycle()
 	{
 		ILivingEntity dragon = getLivingEntity();
-
 		List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
 		for (IPlayer checkPlayer : world.getPlayers())
