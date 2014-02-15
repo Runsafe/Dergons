@@ -38,7 +38,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 			{
 				Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class);
 				a.setAccessible(true);
-				a.invoke(a, CustomDergonEntity.class, "Dergon", 12);
+				a.invoke(a, CustomDergonEntity.class, "Dergon", 99);
 				registered = true;
 			}
 			catch (Exception ignored)
