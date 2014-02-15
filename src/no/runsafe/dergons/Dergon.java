@@ -65,7 +65,7 @@ public class Dergon
 			if (rawWorld != null)
 			{
 				//dragon = new CustomDergonEntity(world);
-				dragon = new CustomDergonEntityTest(world);
+				dragon = new CustomDergonEntity(world);
 				if (rawWorld.addEntity(dragon))
 				{
 					ILivingEntity livingDragon = getLivingEntity();
@@ -185,12 +185,12 @@ public class Dergon
 		return damageDone;
 	}
 
-	public CustomDergonEntityTest getEntity()
+	public CustomDergonEntity getEntity()
 	{
 		if (dragon != null)
 			return dragon;
 
-		return (CustomDergonEntityTest) ObjectUnwrapper.getMinecraft(getLivingEntity());
+		return (CustomDergonEntity) ObjectUnwrapper.getMinecraft(getLivingEntity());
 	}
 
 	public ILivingEntity getLivingEntity()
@@ -200,7 +200,7 @@ public class Dergon
 
 	private int currentStep = 0;
 	private int stepTimer;
-	private CustomDergonEntityTest dragon;
+	private CustomDergonEntity dragon;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IWorld world;
