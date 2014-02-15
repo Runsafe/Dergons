@@ -64,7 +64,6 @@ public class Dergon
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				//dragon = new CustomDergonEntity(world);
 				dragon = new CustomDergonEntity(world);
 				if (rawWorld.addEntity(dragon))
 				{
