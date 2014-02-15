@@ -1,5 +1,6 @@
 package no.runsafe.dergons;
 
+import net.minecraft.server.v1_7_R1.EntityTypes;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.entity.IEntityDeathEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -12,6 +13,7 @@ import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.entity.RunsafeEntityDeathEvent;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IEntityDeathEvent
@@ -30,6 +32,21 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 
 	public Dergon spawnDergon(ILocation location)
 	{
+		if (!registered)
+		{
+			try
+			{
+				Method a = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class);
+				a.setAccessible(true);
+				a.invoke(a, CustomDergonEntity.class, "Dergon", 12);
+				registered = true;
+			}
+			catch (Exception ignored)
+			{
+				// Ru-roh!
+			}
+		}
+
 		IWorld world = location.getWorld();
 		if (world == null)
 			return null;
@@ -133,4 +150,5 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 	private int stepCount;
 	private int minSpawnY;
 	private final Random random = new Random();
+	private boolean registered = false;
 }
