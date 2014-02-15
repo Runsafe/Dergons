@@ -72,17 +72,16 @@ public class Dergon
 					livingDragon.setCustomName("Dergon");
 					livingDragon.setMaxHealth(health);
 					livingDragon.setHealth(health);
+					fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							runCycle();
+						}
+					}, 1, 1);
 				}
 			}
-
-			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					runCycle();
-				}
-			}, 1, 1);
 		}
 	}
 
