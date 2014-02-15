@@ -11,6 +11,7 @@ import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.entity.RunsafeEntity;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class Dergon
 			{
 				idealPlayer.sendColouredMessage("The world was not null.");
 				dragon = new CustomDergonEntity(world);
-				if (rawWorld.addEntity(dragon))
+				if (rawWorld.addEntity(dragon, CreatureSpawnEvent.SpawnReason.NATURAL))
 				{
 					idealPlayer.sendColouredMessage("We spawned the entity");
 					ILivingEntity livingDragon = getLivingEntity();
