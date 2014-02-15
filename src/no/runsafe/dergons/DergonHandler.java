@@ -43,7 +43,7 @@ public class DergonHandler implements IPluginDisabled, IConfigurationChanged, IE
 			}
 			catch (Exception ignored)
 			{
-				// Ru-roh!
+				console.logException(ignored);
 			}
 		}
 
