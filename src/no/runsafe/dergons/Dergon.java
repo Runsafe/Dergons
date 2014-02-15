@@ -73,7 +73,6 @@ public class Dergon
 					livingDragon.setMaxHealth(health);
 					livingDragon.setHealth(health);
 				}
-				rawWorld.addEntity(dragon);
 			}
 
 			fireballTimer = scheduler.startSyncRepeatingTask(new Runnable()
