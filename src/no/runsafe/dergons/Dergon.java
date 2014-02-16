@@ -78,6 +78,19 @@ public class Dergon extends EntityEnderDragon
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
+			if (random.nextFloat() < 0.5F)
+			{
+				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
+				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
+				EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
+
+				if (rawChum != null)
+				{
+					rawChum.setPassengerOf(this);
+					ridingPlayer = rawChum;
+				}
+			}
+
 			targetEntity = null;
 			h = locX + random.nextInt(400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
@@ -400,23 +413,6 @@ public class Dergon extends EntityEnderDragon
 	public IWorld getWorld()
 	{
 		return targetWorld;
-	}
-
-	@Override
-	public boolean a(EntityHuman player)
-	{
-		player.die();
-		ItemStack item = player.inventory.getItemInHand();
-
-		// If the player right clicks a Dergon with a saddle.
-		if (item != null && item.getItem() instanceof ItemSaddle)
-		{
-			player.inventory.setItem(player.inventory.itemInHandIndex, null); // Remove saddle.
-			ridingPlayer = player;
-			player.setPassengerOf(this); // Mount the player on the Dergon.
-		}
-
-		return super.a(player);
 	}
 
 	private boolean isRidingPlayer(IPlayer player)
