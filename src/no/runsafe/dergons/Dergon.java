@@ -68,9 +68,9 @@ public class Dergon extends EntityEnderDragon
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
 			targetEntity = null;
-			h = random.nextInt((int) locX + 100) - 100;
+			h = random.nextInt((int) locX + 400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			j = random.nextInt((int) locZ + 100) - 100;
+			j = random.nextInt((int) locZ + 400) + -200;
 			return;
 		}
 		else
