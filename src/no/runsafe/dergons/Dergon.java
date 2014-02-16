@@ -69,9 +69,10 @@ public class Dergon extends EntityEnderDragon
 		console.logInformation("Re-target initiated.");
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
-		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distance(flyOffLocation) > 20)
+		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distanceSquared(flyOffLocation) > 20)
 		{
-			console.logInformation("Distance from fly off loc: " + dergonLocation.distance(flyOffLocation));
+			console.logInformation("Fly off loc: " + flyOffLocation.toString());
+			console.logInformation("Distance from fly off loc: " + dergonLocation.distanceSquared(flyOffLocation));
 			return;
 		}
 		else
