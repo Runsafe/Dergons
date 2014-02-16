@@ -75,6 +75,7 @@ public class Dergon extends EntityEnderDragon
 			h = random.nextInt((int) locX + 400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
 			j = random.nextInt((int) locZ + 400) + -200;
+			console.logInformation(String.format("Relocating to: %s, %s, %s", h, i, j));
 			return;
 		}
 		else
