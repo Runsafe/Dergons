@@ -67,6 +67,7 @@ public class Dergon extends EntityEnderDragon
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(5).isEmpty())
 		{
+			targetEntity = null;
 			h = random.nextInt((int) locX + 100) - 100;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
 			j = random.nextInt((int) locZ + 100) - 100;
