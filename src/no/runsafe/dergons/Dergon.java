@@ -69,26 +69,19 @@ public class Dergon extends EntityEnderDragon
 		console.logInformation("Re-target initiated.");
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
-		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distanceSquared(flyOffLocation) > 20)
-		{
-			console.logInformation("Fly off loc: " + flyOffLocation.toString());
-			console.logInformation("Distance from fly off loc: " + dergonLocation.distanceSquared(flyOffLocation));
+		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distance(flyOffLocation) > 20)
 			return;
-		}
 		else
-		{
-			console.logInformation("Reached fly off loc, setting to null.");
 			flyOffLocation = null;
-		}
 
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
 			console.logInformation("We have target within 10 blocks, relocating.");
 			targetEntity = null;
-			h = random.nextInt((int) locX + 400) + -200;
+			h = locX + random.nextInt(400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			j = random.nextInt((int) locZ + 400) + -200;
+			j = locZ + random.nextInt(400) + -200;
 			console.logInformation(String.format("Relocating to: %s, %s, %s", h, i, j));
 			flyOffLocation = targetWorld.getLocation(h, i, j); // Store the target fly-off location.
 			return;
