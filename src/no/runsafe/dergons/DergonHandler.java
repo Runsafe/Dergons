@@ -48,7 +48,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public float handleDergonDamage(DamageSource source, float damage)
 	{
-		console.logInformation("Taking " + damage + " damage from " + source.p());
+		if (source.p().equalsIgnoreCase("arrow"))
+			damage = 6.0F;
+
 		return damage;
 	}
 
