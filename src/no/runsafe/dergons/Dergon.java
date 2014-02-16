@@ -3,7 +3,6 @@ package no.runsafe.dergons;
 import net.minecraft.server.v1_7_R1.*;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import org.bukkit.GameMode;
@@ -14,12 +13,11 @@ import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
-	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, IConsole console)
+	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 		this.handler = handler;
 		this.targetLocation = targetLocation;
-		this.console = console;
 		this.targetWorld = targetLocation.getWorld();
 	}
 
@@ -76,18 +74,15 @@ public class Dergon extends EntityEnderDragon
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			console.logInformation("We have target within 10 blocks, relocating.");
 			targetEntity = null;
 			h = locX + random.nextInt(400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
 			j = locZ + random.nextInt(400) + -200;
-			console.logInformation(String.format("Relocating to: %s, %s, %s", h, i, j));
 			flyOffLocation = targetWorld.getLocation(h, i, j); // Store the target fly-off location.
 			return;
 		}
 		else
 		{
-			console.logInformation("No players near, targeting random player.");
 			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
 			List<IPlayer> targets = new ArrayList<IPlayer>(0);
 
@@ -111,8 +106,6 @@ public class Dergon extends EntityEnderDragon
 				return;
 			}
 		}
-
-		console.logInformation("No players found, sending back to start.");
 
 		// Send the dergon back to the start point.
 		h = targetLocation.getX();
@@ -401,5 +394,4 @@ public class Dergon extends EntityEnderDragon
 	private ILocation flyOffLocation;
 	private final IWorld targetWorld;
 	private final Random random = new Random();
-	private final IConsole console;
 }
