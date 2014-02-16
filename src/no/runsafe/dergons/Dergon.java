@@ -6,7 +6,9 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import org.bukkit.GameMode;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -82,7 +84,22 @@ public class Dergon extends EntityEnderDragon
 		{
 			console.logInformation("No players near, targeting random player.");
 			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
-			if (!players.isEmpty())
+			List<IPlayer> targets = new ArrayList<IPlayer>(0);
+
+			for (IPlayer player : players)
+			{
+				// Skip the player if we're vanished or in creative mode.
+				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE)
+					continue;
+
+				ILocation playerLocation = player.getLocation();
+
+				// If the player is greater than 50 blocks, we can target them.
+				if (playerLocation != null && playerLocation.distance(targetLocation) > 50)
+					targets.add(player);
+			}
+
+			if (!targets.isEmpty())
 			{
 				// Target a random player in 200 blocks.
 				targetEntity = ObjectUnwrapper.getMinecraft(players.get(random.nextInt(players.size())));
@@ -200,6 +217,8 @@ public class Dergon extends EntityEnderDragon
 					h += random.nextGaussian() * 2.0D;
 					j += random.nextGaussian() * 2.0D;
 				}
+
+				console.logInformation("Current d3: " + d3);
 
 				if (bz || d3 < 100.0D || d3 > 22500.0D || positionChanged || G)
 					bO();
