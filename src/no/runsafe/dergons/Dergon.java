@@ -16,6 +16,7 @@ public class Dergon extends EntityEnderDragon
 		super(ObjectUnwrapper.getMinecraft(world));
 		this.handler = handler;
 		this.targetLocation = targetLocation;
+		this.targetWorld = targetLocation.getWorld();
 	}
 
 	private void bN()
@@ -61,21 +62,33 @@ public class Dergon extends EntityEnderDragon
 	{
 		bz = false;
 
-		List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
-		if (!players.isEmpty())
+		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
+
+		// Check if we have any close players, if we do, fly away.
+		if (dergonLocation != null && !dergonLocation.getPlayersInRange(5).isEmpty())
 		{
-			// Target a random player in 200 blocks.
-			targetEntity = ObjectUnwrapper.getMinecraft(players.get(random.nextInt(players.size())));
+			h = random.nextInt((int) locX + 100) - 100;
+			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
+			j = random.nextInt((int) locZ + 100) - 100;
+			return;
 		}
 		else
 		{
-			// Send the dergon back to the start point.
-			h = targetLocation.getX();
-			i = targetLocation.getY();
-			j = targetLocation.getZ();
-
-			targetEntity = null;
+			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
+			if (!players.isEmpty())
+			{
+				// Target a random player in 200 blocks.
+				targetEntity = ObjectUnwrapper.getMinecraft(players.get(random.nextInt(players.size())));
+				return;
+			}
 		}
+
+		// Send the dergon back to the start point.
+		h = targetLocation.getX();
+		i = targetLocation.getY();
+		j = targetLocation.getZ();
+
+		targetEntity = null;
 	}
 
 	@Override
@@ -354,5 +367,6 @@ public class Dergon extends EntityEnderDragon
 	private Entity targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
+	private final IWorld targetWorld;
 	private final Random random = new Random();
 }
