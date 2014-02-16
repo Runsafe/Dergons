@@ -1,8 +1,6 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R1.DamageSource;
-import net.minecraft.server.v1_7_R1.Entity;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R1.*;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
@@ -58,6 +56,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (attackingEntity != null && attackingEntity instanceof EntityPlayer)
 		{
 			String playerName = attackingEntity.getName();
+
+			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
+				new DergonSnowballEvent(server.getPlayerExact(playerName)).Fire();
+
 			if (!damageCounter.containsKey(playerName))
 				damageCounter.put(playerName, damage);
 			else
