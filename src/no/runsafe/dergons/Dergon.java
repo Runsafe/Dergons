@@ -3,6 +3,7 @@ package no.runsafe.dergons;
 import net.minecraft.server.v1_7_R1.*;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 
@@ -11,11 +12,12 @@ import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
-	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation)
+	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, IConsole console)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 		this.handler = handler;
 		this.targetLocation = targetLocation;
+		this.console = console;
 		this.targetWorld = targetLocation.getWorld();
 	}
 
@@ -62,11 +64,13 @@ public class Dergon extends EntityEnderDragon
 	{
 		bz = false;
 
+		console.logInformation("Re-target initiated.");
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
+			console.logInformation("We have target within 10 blocks, relocating.");
 			targetEntity = null;
 			h = random.nextInt((int) locX + 400) + -200;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
@@ -75,6 +79,7 @@ public class Dergon extends EntityEnderDragon
 		}
 		else
 		{
+			console.logInformation("No players near, targeting random player.");
 			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
 			if (!players.isEmpty())
 			{
@@ -83,6 +88,8 @@ public class Dergon extends EntityEnderDragon
 				return;
 			}
 		}
+
+		console.logInformation("No players found, sending back to start.");
 
 		// Send the dergon back to the start point.
 		h = targetLocation.getX();
@@ -370,4 +377,5 @@ public class Dergon extends EntityEnderDragon
 	private final ILocation targetLocation;
 	private final IWorld targetWorld;
 	private final Random random = new Random();
+	private final IConsole console;
 }

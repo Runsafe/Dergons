@@ -24,7 +24,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			return;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
-		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this); // Construct the dergon.
+		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, console); // Construct the dergon.
 	}
 
 	@Override

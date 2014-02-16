@@ -5,6 +5,7 @@ import net.minecraft.server.v1_7_R1.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
@@ -13,11 +14,12 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler)
+	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, IConsole console)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
 		this.handler = handler;
+		this.console = console;
 
 		world = targetLocation.getWorld();
 
@@ -53,7 +55,7 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				Dergon dragon = new Dergon(world, handler, targetLocation);
+				Dergon dragon = new Dergon(world, handler, targetLocation, console);
 				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				dragon.setCustomName("Dergon");
 				dragon.getAttributeInstance(GenericAttributes.a).setValue(health);
@@ -94,4 +96,5 @@ public class DergonHolder
 	private final int stepCount;
 	private final Random random = new Random();
 	private final DergonHandler handler;
+	private final IConsole console;
 }
