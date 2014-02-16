@@ -78,7 +78,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
-	private HashMap<String, Float> damageCounter;
+	private HashMap<String, Float> damageCounter = new HashMap<String, Float>(0);
 	private final IConsole console;
 	private final Random random = new Random();
 }
