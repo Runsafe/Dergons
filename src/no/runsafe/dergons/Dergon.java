@@ -122,9 +122,6 @@ public class Dergon extends EntityEnderDragon
 	@Override
 	public void e()
 	{
-		// Inform the handler we are processing a tick
-		handler.handleDergonTick(this);
-
 		// Update the health bar to show the percentage of the dergon
 		long pct = Math.round((getHealth() / getMaxHealth()) * 100);
 		setCustomName("Dergon (" + pct + "%)");

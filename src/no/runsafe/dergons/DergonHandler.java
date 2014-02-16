@@ -1,12 +1,16 @@
 package no.runsafe.dergons;
 
 import net.minecraft.server.v1_7_R1.DamageSource;
+import net.minecraft.server.v1_7_R1.Entity;
+import net.minecraft.server.v1_7_R1.EntityDamageSourceIndirect;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
@@ -43,20 +47,29 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		EntityRegister.registerEntity(Dergon.class, "Dergon", 63);
 	}
 
-	public void handleDergonTick(Dergon dergon)
-	{
-		if (dergon.isAlive() && random.nextFloat() < 0.2)
-		{
-
-		}
-	}
-
 	public float handleDergonDamage(DamageSource source, float damage)
 	{
 		if (source.p().equalsIgnoreCase("arrow"))
 			damage = 6.0F;
 
+		Entity attackingEntity = source.getEntity();
+		if (attackingEntity != null && attackingEntity instanceof EntityPlayer)
+		{
+			String playerName = attackingEntity.getName();
+			if (!damageCounter.containsKey(playerName))
+				damageCounter.put(playerName, damage);
+			else
+				damageCounter.put(playerName, damageCounter.get(playerName) + damage);
+
+			console.logInformation("Current damage for " + playerName + " = " + damageCounter.get(playerName));
+		}
+
 		return damage;
+	}
+
+	public void handleDergonDeath(Dergon dergon)
+	{
+
 	}
 
 	private final IScheduler scheduler;
@@ -65,6 +78,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
+	private HashMap<String, Float> damageCounter;
 	private final IConsole console;
 	private final Random random = new Random();
 }
