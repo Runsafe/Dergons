@@ -68,7 +68,7 @@ public class Dergon extends EntityEnderDragon
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
-		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distance(flyOffLocation) > 40)
+		if (dergonLocation != null && flyOffLocation != null && random.nextFloat() == 0.1F)
 			return;
 		else
 			flyOffLocation = null;
