@@ -106,7 +106,7 @@ public class Dergon extends EntityEnderDragon
 			for (IPlayer player : players)
 			{
 				// Skip the player if we're vanished or in creative mode.
-				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE || isRidingPlayer(player))
+				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE || isRidingPlayer(player.getName()))
 					continue;
 
 				ILocation playerLocation = player.getLocation();
@@ -399,7 +399,7 @@ public class Dergon extends EntityEnderDragon
 	@Override
 	protected void d(DamageSource source, float f)
 	{
-		if (ridingPlayer == null || !ridingPlayer.getName().equals(source.getEntity().getName()))
+		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
 			super.d(source, handler.handleDergonDamage(source, f));
 	}
 
@@ -414,6 +414,11 @@ public class Dergon extends EntityEnderDragon
 	public IWorld getWorld()
 	{
 		return targetWorld;
+	}
+
+	private boolean isRidingPlayer(String playerName)
+	{
+		return ridingPlayer != null && ridingPlayer.getName().equals(playerName);
 	}
 
 	private Entity targetEntity;
