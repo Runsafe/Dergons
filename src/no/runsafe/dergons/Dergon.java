@@ -67,7 +67,7 @@ public class Dergon extends EntityEnderDragon
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
-		if (targetEntity != null && dergonLocation != null && random.nextInt(30) == 1)
+		if (targetEntity != null && dergonLocation != null && random.nextInt(20) < 2)
 			targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire);
 
 		if (dergonLocation != null && flyOffLocation != null && random.nextFloat() == 0.1F)
