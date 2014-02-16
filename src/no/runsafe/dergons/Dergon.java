@@ -405,6 +405,7 @@ public class Dergon extends EntityEnderDragon
 	@Override
 	public boolean a(EntityHuman player)
 	{
+		player.die();
 		ItemStack item = player.inventory.getItemInHand();
 
 		// If the player right clicks a Dergon with a saddle.
