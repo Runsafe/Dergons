@@ -337,44 +337,7 @@ public class Dergon extends EntityEnderDragon
 
 	private boolean a(AxisAlignedBB axisalignedbb)
 	{
-		int i = MathHelper.floor(axisalignedbb.a);
-		int j = MathHelper.floor(axisalignedbb.b);
-		int k = MathHelper.floor(axisalignedbb.c);
-		int l = MathHelper.floor(axisalignedbb.d);
-		int i1 = MathHelper.floor(axisalignedbb.e);
-		int j1 = MathHelper.floor(axisalignedbb.f);
-		boolean flag = false;
-		boolean flag1 = false;
-
-		for (int k1 = i; k1 <= l; ++k1)
-		{
-			for (int l1 = j; l1 <= i1; ++l1)
-			{
-				for (int i2 = k; i2 <= j1; ++i2)
-				{
-					Block block = world.getType(k1, l1, i2);
-
-					if (block.getMaterial() != Material.AIR)
-					{
-						if (block != Blocks.OBSIDIAN && block != Blocks.WHITESTONE && block != Blocks.BEDROCK && this.world.getGameRules().getBoolean("mobGriefing"))
-							flag1 = world.setAir(k1, l1, i2) || flag1;
-						else
-							flag = true;
-					}
-				}
-			}
-		}
-
-		if (flag1)
-		{
-			double d0 = axisalignedbb.a + (axisalignedbb.d - axisalignedbb.a) * (double) random.nextFloat();
-			double d1 = axisalignedbb.b + (axisalignedbb.e - axisalignedbb.b) * (double) random.nextFloat();
-			double d2 = axisalignedbb.c + (axisalignedbb.f - axisalignedbb.c) * (double) random.nextFloat();
-
-			world.addParticle("largeexplode", d0, d1, d2, 0.0D, 0.0D, 0.0D);
-		}
-
-		return flag;
+		return false;
 	}
 
 	private float b(double d0)
