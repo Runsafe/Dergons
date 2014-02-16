@@ -5,8 +5,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
-import no.runsafe.framework.minecraft.entity.ProjectileEntity;
-import no.runsafe.framework.minecraft.entity.RunsafeEntity;
+import no.runsafe.framework.minecraft.Item;
 import org.bukkit.GameMode;
 
 import java.util.ArrayList;
@@ -69,14 +68,7 @@ public class Dergon extends EntityEnderDragon
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
 		if (targetEntity != null && dergonLocation != null && random.nextInt(30) == 1)
-		{
-			ILocation entityLocation = targetWorld.getLocation(targetEntity.locX, targetEntity.locY, targetEntity.locZ);
-			if (entityLocation != null)
-			{
-				RunsafeEntity fireball = ProjectileEntity.Fireball.spawn(dergonLocation);
-				fireball.setVelocity(entityLocation.toVector().subtract(dergonLocation.toVector()).normalize());
-			}
-		}
+			targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire);
 
 		if (dergonLocation != null && flyOffLocation != null && random.nextFloat() == 0.1F)
 			return;
