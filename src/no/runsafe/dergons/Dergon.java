@@ -385,6 +385,12 @@ public class Dergon extends EntityEnderDragon
 		return (float) MathHelper.g(d0);
 	}
 
+	@Override
+	protected void d(DamageSource damagesource, float f)
+	{
+		//super.d(damagesource, f);
+	}
+
 	private Entity targetEntity;
 	private final DergonHandler handler;
 }

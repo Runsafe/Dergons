@@ -42,7 +42,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public void handleDergonTick(Dergon dergon)
 	{
-		console.logInformation("Dergon tick: " + dergon.getId());
+
 	}
 
 	private final IScheduler scheduler;
