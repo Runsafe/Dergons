@@ -70,9 +70,15 @@ public class Dergon extends EntityEnderDragon
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
 		if (dergonLocation != null && flyOffLocation != null && dergonLocation.distance(flyOffLocation) > 20)
+		{
+			console.logInformation("Distance from fly off loc: " + dergonLocation.distance(flyOffLocation));
 			return;
+		}
 		else
+		{
+			console.logInformation("Reached fly off loc, setting to null.");
 			flyOffLocation = null;
+		}
 
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
@@ -223,8 +229,6 @@ public class Dergon extends EntityEnderDragon
 					h += random.nextGaussian() * 2.0D;
 					j += random.nextGaussian() * 2.0D;
 				}
-
-				console.logInformation("Current d3: " + d3);
 
 				if (bz || d3 < 100.0D || d3 > 22500.0D || positionChanged || G)
 					bO();
