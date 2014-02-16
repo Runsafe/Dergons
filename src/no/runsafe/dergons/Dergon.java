@@ -93,7 +93,7 @@ public class Dergon extends EntityEnderDragon
 			for (IPlayer player : players)
 			{
 				// Skip the player if we're vanished or in creative mode.
-				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE)
+				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE || isRidingPlayer(player))
 					continue;
 
 				ILocation playerLocation = player.getLocation();
@@ -402,10 +402,32 @@ public class Dergon extends EntityEnderDragon
 		return targetWorld;
 	}
 
+	@Override
+	public boolean a(EntityHuman player)
+	{
+		ItemStack item = player.inventory.getItemInHand();
+
+		// If the player right clicks a Dergon with a saddle.
+		if (item != null && item.getItem() instanceof ItemSaddle)
+		{
+			player.inventory.setItem(player.inventory.itemInHandIndex, null); // Remove saddle.
+			ridingPlayer = player;
+			player.setPassengerOf(this); // Mount the player on the Dergon.
+		}
+
+		return super.a(player);
+	}
+
+	private boolean isRidingPlayer(IPlayer player)
+	{
+		return player.getName().equals(ridingPlayer.getName());
+	}
+
 	private Entity targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
 	private ILocation flyOffLocation;
 	private final IWorld targetWorld;
 	private final Random random = new Random();
+	private EntityHuman ridingPlayer = null;
 }
