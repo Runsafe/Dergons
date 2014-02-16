@@ -389,6 +389,19 @@ public class Dergon extends EntityEnderDragon
 		super.d(source, handler.handleDergonDamage(source, f));
 	}
 
+	@Override
+	protected void aF()
+	{
+		super.aF();
+		if (this.bB == 200)
+			handler.handleDergonDeath(this);
+	}
+
+	public IWorld getWorld()
+	{
+		return targetWorld;
+	}
+
 	private Entity targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
