@@ -386,9 +386,9 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	@Override
-	protected void d(DamageSource damagesource, float f)
+	protected void d(DamageSource source, float f)
 	{
-		//super.d(damagesource, f);
+		super.d(source, handler.handleDergonDamage(source, f));
 	}
 
 	private Entity targetEntity;

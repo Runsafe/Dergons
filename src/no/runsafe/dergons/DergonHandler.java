@@ -1,5 +1,6 @@
 package no.runsafe.dergons;
 
+import net.minecraft.server.v1_7_R1.DamageSource;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
@@ -43,6 +44,12 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public void handleDergonTick(Dergon dergon)
 	{
 
+	}
+
+	public float handleDergonDamage(DamageSource source, float damage)
+	{
+		console.logInformation("Taking " + damage + " damage from " + source.p());
+		return damage;
 	}
 
 	private final IScheduler scheduler;
