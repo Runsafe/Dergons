@@ -420,7 +420,7 @@ public class Dergon extends EntityEnderDragon
 
 	private boolean isRidingPlayer(IPlayer player)
 	{
-		return player.getName().equals(ridingPlayer.getName());
+		return false;
 	}
 
 	private Entity targetEntity;
