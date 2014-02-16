@@ -399,7 +399,8 @@ public class Dergon extends EntityEnderDragon
 	@Override
 	protected void d(DamageSource source, float f)
 	{
-		super.d(source, handler.handleDergonDamage(source, f));
+		if (ridingPlayer == null || !ridingPlayer.getName().equals(source.getEntity().getName()))
+			super.d(source, handler.handleDergonDamage(source, f));
 	}
 
 	@Override
@@ -413,11 +414,6 @@ public class Dergon extends EntityEnderDragon
 	public IWorld getWorld()
 	{
 		return targetWorld;
-	}
-
-	private boolean isRidingPlayer(IPlayer player)
-	{
-		return false;
 	}
 
 	private Entity targetEntity;
