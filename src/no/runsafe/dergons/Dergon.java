@@ -1,44 +1,48 @@
 package no.runsafe.dergons;
 
 import net.minecraft.server.v1_7_R1.*;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 
 import java.util.List;
+import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
-	public Dergon(IWorld world, DergonHandler handler)
+	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 		this.handler = handler;
+		this.targetLocation = targetLocation;
 	}
 
 	private void bN()
 	{
-		if (bC != null)
+		if (bC != null) // Check we have an ender crystal selected.
 		{
-			if (bC.dead)
+			if (bC.dead) // Is the ender crystal we have selected dead?
 			{
 				if (!world.isStatic)
-					a(bq, DamageSource.explosion(null), 10.0F);
+					a(bq, DamageSource.explosion(null), 10.0F); // Damage the dragon for 10 by explosion.
 
-				bC = null;
+				bC = null; // Void the selected crystal.
 			}
 			else if (ticksLived % 10 == 0 && getHealth() < getMaxHealth())
 			{
-				setHealth(getHealth() + 1.0F);
+				setHealth(getHealth() + 1.0F); // Regen the dragon from the crystal.
 			}
 		}
 
-		if (random.nextInt(10) == 0)
+		if (random.nextInt(10) == 0) // 1 in ten chance.
 		{
 			float f = 32.0F;
-			List list = world.a(EntityEnderCrystal.class, boundingBox.grow((double) f, (double) f, (double) f));
+			List list = world.a(EntityEnderCrystal.class, boundingBox.grow((double) f, (double) f, (double) f)); // Grab all crystals in 32 blocks.
 			EntityEnderCrystal entityendercrystal = null;
 			double d0 = Double.MAX_VALUE;
 
-			for (Object rawCrystal : list)
+			for (Object rawCrystal : list) // Loop every crystal.
 			{
 				EntityEnderCrystal crystal = (EntityEnderCrystal) rawCrystal;
 				double d1 = crystal.e(this);
@@ -49,34 +53,26 @@ public class Dergon extends EntityEnderDragon
 					entityendercrystal = crystal;
 				}
 			}
-			bC = entityendercrystal;
+			bC = entityendercrystal; // Set the selected crystal as this one.
 		}
 	}
 
 	private void bO()
 	{
 		bz = false;
-		if (random.nextInt(2) == 0 && !world.players.isEmpty())
+
+		List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
+		if (!players.isEmpty())
 		{
-			targetEntity = (Entity) world.players.get(random.nextInt(world.players.size()));
+			// Target a random player in 200 blocks.
+			targetEntity = ObjectUnwrapper.getMinecraft(players.get(random.nextInt(players.size())));
 		}
 		else
 		{
-			boolean flag;
-
-			do
-			{
-				h = 0.0D;
-				i = (double) (70.0F + random.nextFloat() * 50.0F);
-				j = 0.0D;
-				h += (double) (random.nextFloat() * 120.0F - 60.0F);
-				j += (double) (random.nextFloat() * 120.0F - 60.0F);
-				double d0 = locX - h;
-				double d1 = locY - i;
-				double d2 = locZ - j;
-
-				flag = d0 * d0 + d1 * d1 + d2 * d2 > 100.0D;
-			} while (!flag);
+			// Send the dergon back to the start point.
+			h = targetLocation.getX();
+			i = targetLocation.getY();
+			j = targetLocation.getZ();
 
 			targetEntity = null;
 		}
@@ -106,8 +102,9 @@ public class Dergon extends EntityEnderDragon
 		bx = by;
 		float f2;
 
-		if (getHealth() <= 0.0F)
+		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
+			// If we're dead, play a random explosion effect at a random offset to it's corpse.
 			f = (random.nextFloat() - 0.5F) * 8.0F;
 			f1 = (random.nextFloat() - 0.5F) * 4.0F;
 			f2 = (random.nextFloat() - 0.5F) * 8.0F;
@@ -393,4 +390,6 @@ public class Dergon extends EntityEnderDragon
 
 	private Entity targetEntity;
 	private final DergonHandler handler;
+	private final ILocation targetLocation;
+	private final Random random = new Random();
 }

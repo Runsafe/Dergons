@@ -7,6 +7,8 @@ import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
+import java.util.Random;
+
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
 	public DergonHandler(IScheduler scheduler, IConsole console)
@@ -43,7 +45,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public void handleDergonTick(Dergon dergon)
 	{
+		if (dergon.isAlive() && random.nextFloat() < 0.2)
+		{
 
+		}
 	}
 
 	public float handleDergonDamage(DamageSource source, float damage)
@@ -60,5 +65,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
-	private IConsole console;
+	private final IConsole console;
+	private final Random random = new Random();
 }

@@ -53,7 +53,7 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				Dergon dragon = new Dergon(world, handler);
+				Dergon dragon = new Dergon(world, handler, targetLocation);
 				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				dragon.setCustomName("Dergon");
 				dragon.getAttributeInstance(GenericAttributes.a).setValue(health);
