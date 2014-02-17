@@ -78,7 +78,7 @@ public class Dergon extends EntityEnderDragon
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			if (random.nextFloat() < 0.5F)
+			if (ridingPlayer == null && random.nextFloat() < 0.5F)
 			{
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
