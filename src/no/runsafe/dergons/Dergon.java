@@ -98,9 +98,9 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			targetEntity = null;
-			h = locX + random.nextInt(400) + -200;
+			h = locX + random.nextInt(200) + -100;
 			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			j = locZ + random.nextInt(400) + -200;
+			j = locZ + random.nextInt(200) + -100;
 			flyOffLocation = targetWorld.getLocation(h, i, j); // Store the target fly-off location.
 			return;
 		}
