@@ -88,6 +88,7 @@ public class Dergon extends EntityEnderDragon
 				{
 					rawChum.setPassengerOf(this);
 					ridingPlayer = rawChum;
+					handler.handleDergonMount(ridingPlayer.getName());
 				}
 			}
 

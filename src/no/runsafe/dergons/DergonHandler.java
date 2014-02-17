@@ -106,6 +106,11 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			new DergonSlayEvent(slayer).Fire();
 	}
 
+	public void handleDergonMount(String playerName)
+	{
+		new DergonMountEvent(server.getPlayerExact(playerName)).Fire();
+	}
+
 	private final IScheduler scheduler;
 	private int spawnY;
 	private int eventMinTime;
