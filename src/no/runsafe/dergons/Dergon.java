@@ -6,6 +6,7 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import org.bukkit.GameMode;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class Dergon extends EntityEnderDragon
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.5F)
-			targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire);
+			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
 		if (dergonLocation != null && flyOffLocation != null && random.nextFloat() == 0.1F)
 			return;
