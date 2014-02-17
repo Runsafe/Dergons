@@ -82,13 +82,17 @@ public class Dergon extends EntityEnderDragon
 			{
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
-				EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
 
-				if (rawChum != null)
+				if (!unluckyChum.isVanished() && !unluckyChum.isDead() && unluckyChum.getGameMode() != GameMode.CREATIVE)
 				{
-					rawChum.setPassengerOf(this);
-					ridingPlayer = rawChum;
-					handler.handleDergonMount(ridingPlayer.getName());
+					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
+
+					if (rawChum != null)
+					{
+						rawChum.setPassengerOf(this);
+						ridingPlayer = rawChum;
+						handler.handleDergonMount(ridingPlayer.getName());
+					}
 				}
 			}
 
