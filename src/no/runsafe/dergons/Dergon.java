@@ -137,7 +137,10 @@ public class Dergon extends EntityEnderDragon
 	{
 		// Throw a player off it's back if we're high up.
 		if (ridingPlayer != null && locY >= 90)
+		{
 			ridingPlayer.setPassengerOf(null);
+			ridingPlayer = null;
+		}
 
 
 		// Update the health bar to show the percentage of the dergon
