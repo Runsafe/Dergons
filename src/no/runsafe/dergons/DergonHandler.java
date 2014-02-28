@@ -80,17 +80,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		IWorld world = dergon.getWorld();
 		ILocation location = world.getLocation(dergon.locX, dergon.locY, dergon.locZ);
 
-		RunsafeMeta egg = Item.Special.DragonEgg.getItem();
-		egg.setDisplayName("Dergon Egg");
-		egg.addLore("§3A heavy egg that seems to hum with unnatural energy.");
-		egg.setAmount(1);
-		world.dropItem(location, egg);
-
-		RunsafeMeta bones = Item.Miscellaneous.Bone.getItem();
-		bones.setAmount(random.nextInt(4) + 5); // 4 - 9 bones.
-		bones.setDisplayName("Dergon Bones");
-		bones.addLore("§3Impressive and heavy bones from the corpse of a Dergon.");
-		world.dropItem(location, bones);
+		world.dropItem(location, DergonItems.getEgg(1));
+		world.dropItem(location, DergonItems.getBones(random.nextInt(4) + 5));
 
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
