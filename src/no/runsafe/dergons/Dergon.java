@@ -15,12 +15,13 @@ import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
-	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation)
+	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 		this.handler = handler;
 		this.targetLocation = targetLocation;
 		this.targetWorld = targetLocation.getWorld();
+		this.dergonID = dergonID;
 	}
 
 	private void bN()
@@ -414,7 +415,7 @@ public class Dergon extends EntityEnderDragon
 	protected void d(DamageSource source, float f)
 	{
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
-			super.d(source, handler.handleDergonDamage(source, f));
+			super.d(source, handler.handleDergonDamage(this, source, f));
 	}
 
 	@Override
@@ -435,6 +436,11 @@ public class Dergon extends EntityEnderDragon
 		return ridingPlayer != null && ridingPlayer.getName().equals(playerName);
 	}
 
+	public int getDergonID()
+	{
+		return dergonID;
+	}
+
 	private Entity targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
@@ -442,4 +448,5 @@ public class Dergon extends EntityEnderDragon
 	private final IWorld targetWorld;
 	private final Random random = new Random();
 	private EntityHuman ridingPlayer = null;
+	private final int dergonID;
 }

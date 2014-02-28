@@ -28,7 +28,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			return;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
-		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this); // Construct the dergon.
+		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID); // Construct the dergon.
+		currentDergonID++;
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		EntityRegister.registerEntity(Dergon.class, "Dergon", 63);
 	}
 
-	public float handleDergonDamage(DamageSource source, float damage)
+	public float handleDergonDamage(Dergon dergon, DamageSource source, float damage)
 	{
 		if (source.p().equalsIgnoreCase("arrow"))
 			damage = 6.0F;
@@ -60,10 +61,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
 				new DergonSnowballEvent(server.getPlayerExact(playerName)).Fire();
 
-			if (!damageCounter.containsKey(playerName))
-				damageCounter.put(playerName, damage);
+			int dergonID = dergon.getDergonID();
+
+			if (!damageCounter.containsKey(dergonID))
+				damageCounter.put(dergonID, new HashMap<String, Float>(0));
+
+			if (!damageCounter.get(dergonID).containsKey(playerName))
+				damageCounter.get(dergonID).put(playerName, damage);
 			else
-				damageCounter.put(playerName, damageCounter.get(playerName) + damage);
+				damageCounter.get(dergonID).put(playerName, damageCounter.get(dergonID).get(playerName) + damage);
 		}
 
 		return damage;
@@ -89,17 +95,23 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
 
-		for (Map.Entry<String, Float> node : damageCounter.entrySet())
-		{
-			IPlayer player = server.getPlayerExact(node.getKey());
-			new DergonAssistEvent(player).Fire();
+		int dergonID = dergon.getDergonID();
 
-			float damage = node.getValue();
-			if (damage > slayerDamage)
+		if (damageCounter.containsKey(dergonID))
+		{
+			for (Map.Entry<String, Float> node : damageCounter.get(dergonID).entrySet())
 			{
-				slayer = player;
-				slayerDamage = damage;
+				IPlayer player = server.getPlayerExact(node.getKey());
+				new DergonAssistEvent(player).Fire();
+
+				float damage = node.getValue();
+				if (damage > slayerDamage)
+				{
+					slayer = player;
+					slayerDamage = damage;
+				}
 			}
+			damageCounter.remove(dergonID); // Remove the tracking for this dergon.
 		}
 
 		if (slayer != null)
@@ -117,7 +129,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
-	private HashMap<String, Float> damageCounter = new HashMap<String, Float>(0);
+	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
 	private final IServer server;
 	private final Random random = new Random();
+	private int currentDergonID = 1;
 }

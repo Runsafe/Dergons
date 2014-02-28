@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler)
+	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
@@ -26,6 +26,8 @@ public class DergonHolder
 		this.stepCount = steps;
 
 		this.minY = minY;
+
+		this.dergonID = dergonID;
 
 		if (world != null)
 			processStep();
@@ -53,7 +55,7 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				Dergon dragon = new Dergon(world, handler, targetLocation);
+				Dergon dragon = new Dergon(world, handler, targetLocation, dergonID);
 				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				dragon.setCustomName("Dergon");
 				dragon.getAttributeInstance(GenericAttributes.a).setValue(health);
@@ -94,4 +96,5 @@ public class DergonHolder
 	private final int stepCount;
 	private final Random random = new Random();
 	private final DergonHandler handler;
+	private final int dergonID;
 }
