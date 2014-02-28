@@ -17,6 +17,7 @@ public class PlayerMonitor implements IBlockPhysics
 			ILocation location = block.getLocation();
 			location.getWorld().dropItem(location, DergonItems.getEgg(1));
 			event.cancel();
+			Dergons.Debugger.debugInfo("Dropping dergon egg!");
 		}
 	}
 }
