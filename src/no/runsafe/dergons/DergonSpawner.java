@@ -44,10 +44,7 @@ public class DergonSpawner implements IConfigurationChanged
 					continue;
 
 				if (random.nextInt(100) <= spawnChance + ((playerY - minSpawnY) * 0.5))
-				{
 					selectedPlayers.add(player);
-					break;
-				}
 			}
 		}
 
