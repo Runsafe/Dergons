@@ -10,7 +10,7 @@ public class SpawnDergon extends PlayerCommand
 {
 	public SpawnDergon(DergonHandler handler)
 	{
-		super("spawn", "Spawn a dergon", "runsafe.dergons.spawn", new Player.Online.Required());
+		super("spawn", "Spawn a dergon", "runsafe.dergons.spawn", new Player().onlineOnly().require());
 		this.handler = handler;
 	}
 
