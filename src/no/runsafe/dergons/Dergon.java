@@ -1,6 +1,6 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R1.*;
+import net.minecraft.server.v1_7_R2.*;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
@@ -24,7 +24,7 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	private void bN()
+	private void bP()
 	{
 		if (bC != null) // Check we have an ender crystal selected.
 		{
@@ -208,12 +208,12 @@ public class Dergon extends EntityEnderDragon
 			{
 				if (bh > 0)
 				{
-					d0 = locX + (bi - locX) / (double) bh;
-					d1 = locY + (bj - locY) / (double) bh;
-					d2 = locZ + (bk - locZ) / (double) bh;
+					d0 = locX + (bi - locX) / bh;
+					d1 = locY + (bj - locY) / bh;
+					d2 = locZ + (bk - locZ) / bh;
 					d3 = MathHelper.g(bl - (double) yaw);
-					yaw = (float) ((double) yaw + d3 / (double) bh);
-					pitch = (float) ((double) pitch + (bm - (double) pitch) / (double) bh);
+					yaw = (float) ((double) yaw + d3 / bh);
+					pitch = (float) ((double) pitch + (bm - (double) pitch) / bh);
 					--bh;
 					setPosition(d0, d1, d2);
 					b(yaw, pitch);
@@ -267,8 +267,8 @@ public class Dergon extends EntityEnderDragon
 				if (d9 < -50.0D)
 					d9 = -50.0D;
 
-				Vec3D vec3d = world.getVec3DPool().create(h - locX, i - locY, j - locZ).a();
-				Vec3D vec3d1 = world.getVec3DPool().create((double) MathHelper.sin(yaw * 3.1415927F / 180.0F), motY, (double) (-MathHelper.cos(yaw * 3.1415927F / 180.0F))).a();
+				Vec3D vec3d = Vec3D.a(this.h - this.locX, this.i - this.locY, this.bm - this.locZ).a();
+				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(this.yaw * 3.1415927F / 180.0F), this.motY, (double) (-MathHelper.cos(this.yaw * 3.1415927F / 180.0F))).a();
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
 				if (f4 < 0.0F)
@@ -281,7 +281,7 @@ public class Dergon extends EntityEnderDragon
 				if (d10 > 40.0D)
 					d10 = 40.0D;
 
-				bg = (float) ((double) bg + d9 * (0.699999988079071D / d10 / (double) f5));
+				this.bf = (float) ((double) this.bf + d9 * (0.699999988079071D / d10 / (double) f5));
 				yaw += bg * 0.1F;
 				float f6 = (float) (2.0D / (d10 + 1.0D));
 				float f7 = 0.06F;
@@ -292,7 +292,7 @@ public class Dergon extends EntityEnderDragon
 				else
 					move(motX, motY, motZ);
 
-				Vec3D vec3d2 = world.getVec3DPool().create(motX, motY, motZ).a();
+				Vec3D vec3d2 = Vec3D.a(this.motX, this.motY, this.motZ).a();
 				float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
 
 				f8 = 0.8F + 0.15F * f8;
@@ -419,9 +419,9 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	@Override
-	protected void aF()
+	protected void aE()
 	{
-		super.aF();
+		super.aE();
 		if (this.bB == 200)
 			handler.handleDergonDeath(this);
 	}

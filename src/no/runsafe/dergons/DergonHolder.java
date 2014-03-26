@@ -1,7 +1,7 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R1.GenericAttributes;
-import net.minecraft.server.v1_7_R1.World;
+import net.minecraft.server.v1_7_R2.GenericAttributes;
+import net.minecraft.server.v1_7_R2.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
