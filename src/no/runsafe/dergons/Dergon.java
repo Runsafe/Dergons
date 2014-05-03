@@ -24,45 +24,6 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	private void bP()
-	{
-		if (bC != null) // Check we have an ender crystal selected.
-		{
-			if (bC.dead) // Is the ender crystal we have selected dead?
-			{
-				if (!world.isStatic)
-					a(bq, DamageSource.explosion(null), 10.0F); // Damage the dragon for 10 by explosion.
-
-				bC = null; // Void the selected crystal.
-			}
-			else if (ticksLived % 10 == 0 && getHealth() < getMaxHealth())
-			{
-				setHealth(getHealth() + 1.0F); // Regen the dragon from the crystal.
-			}
-		}
-
-		if (random.nextInt(10) == 0) // 1 in ten chance.
-		{
-			float f = 32.0F;
-			List list = world.a(EntityEnderCrystal.class, boundingBox.grow((double) f, (double) f, (double) f)); // Grab all crystals in 32 blocks.
-			EntityEnderCrystal entityendercrystal = null;
-			double d0 = Double.MAX_VALUE;
-
-			for (Object rawCrystal : list) // Loop every crystal.
-			{
-				EntityEnderCrystal crystal = (EntityEnderCrystal) rawCrystal;
-				double d1 = crystal.e(this);
-
-				if (d1 < d0)
-				{
-					d0 = d1;
-					entityendercrystal = crystal;
-				}
-			}
-			bC = entityendercrystal; // Set the selected crystal as this one.
-		}
-	}
-
 	private void bO()
 	{
 		bz = false;
