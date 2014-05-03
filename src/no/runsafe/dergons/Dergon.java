@@ -243,7 +243,7 @@ public class Dergon extends EntityEnderDragon
 				if (d10 > 40.0D)
 					d10 = 40.0D;
 
-				this.bf = (float) ((double) this.bf + d9 * (0.699999988079071D / d10 / (double) f5));
+				bf = (float) ((double) bf + d9 * (0.699999988079071D / d10 / (double) f5));
 				yaw += bg * 0.1F;
 				float f6 = (float) (2.0D / (d10 + 1.0D));
 				float f7 = 0.06F;
@@ -254,7 +254,7 @@ public class Dergon extends EntityEnderDragon
 				else
 					move(motX, motY, motZ);
 
-				Vec3D vec3d2 = Vec3D.a(this.motX, this.motY, this.motZ).a();
+				Vec3D vec3d2 = Vec3D.a(motX, motY, motZ).a();
 				float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
 
 				f8 = 0.8F + 0.15F * f8;
