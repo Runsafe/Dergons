@@ -244,7 +244,7 @@ public class Dergon extends EntityEnderDragon
 					d10 = 40.0D;
 
 				bf = (float) ((double) bf + d9 * (0.699999988079071D / d10 / (double) f5));
-				yaw += bg * 0.1F;
+				yaw += bf * 0.1F;
 				float f6 = (float) (2.0D / (d10 + 1.0D));
 				float f7 = 0.06F;
 
