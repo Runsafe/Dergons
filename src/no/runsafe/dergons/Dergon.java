@@ -30,9 +30,6 @@ public class Dergon extends EntityEnderDragon
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
-		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.5F)
-			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
-
 		if (dergonLocation != null && flyOffLocation != null && random.nextFloat() == 0.1F)
 			return;
 		else
@@ -114,6 +111,10 @@ public class Dergon extends EntityEnderDragon
 		// Update the health bar to show the percentage of the dergon
 		long pct = Math.round((getHealth() / getMaxHealth()) * 100);
 		setCustomName("Dergon (" + pct + "%)");
+
+		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
+		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
+			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
 		float f;
 		float f1;
