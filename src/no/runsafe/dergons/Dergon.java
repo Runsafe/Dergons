@@ -229,7 +229,7 @@ public class Dergon extends EntityEnderDragon
 				if (d9 < -50.0D)
 					d9 = -50.0D;
 
-				Vec3D vec3d = Vec3D.a(h - locX, i - locY, j - locZ).a();
+				Vec3D vec3d = Vec3D.a(h - locX, i - locY, bm - locZ).a();
 				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(yaw * 3.1415927F / 180.0F), motY, (double) (-MathHelper.cos(yaw * 3.1415927F / 180.0F))).a();
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
