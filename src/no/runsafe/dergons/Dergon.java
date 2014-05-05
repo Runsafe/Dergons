@@ -168,15 +168,15 @@ public class Dergon extends EntityEnderDragon
 
 			if (world.isStatic)
 			{
-				if (bh > 0)
+				if (bg > 0)
 				{
-					d0 = locX + (bi - locX) / bh;
-					d1 = locY + (bj - locY) / bh;
-					d2 = locZ + (bk - locZ) / bh;
+					d0 = locX + (bh - locX) / bg;
+					d1 = locY + (bi - locY) / bg;
+					d2 = locZ + (bj - locZ) / bg;
 					d3 = MathHelper.g(bl - (double) yaw);
-					yaw = (float) ((double) yaw + d3 / bh);
-					pitch = (float) ((double) pitch + (bm - (double) pitch) / bh);
-					--bh;
+					yaw = (float) ((double) yaw + d3 / bg);
+					pitch = (float) ((double) pitch + (bm - (double) pitch) / bg);
+					--bg;
 					setPosition(d0, d1, d2);
 					b(yaw, pitch);
 				}
