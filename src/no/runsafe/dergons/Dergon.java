@@ -173,9 +173,9 @@ public class Dergon extends EntityEnderDragon
 					d0 = locX + (bh - locX) / bg;
 					d1 = locY + (bi - locY) / bg;
 					d2 = locZ + (bj - locZ) / bg;
-					d3 = MathHelper.g(bl - (double) yaw);
+					d3 = MathHelper.g(bk - (double) yaw);
 					yaw = (float) ((double) yaw + d3 / bg);
-					pitch = (float) ((double) pitch + (bm - (double) pitch) / bg);
+					pitch = (float) ((double) pitch + (bl - (double) pitch) / bg);
 					--bg;
 					setPosition(d0, d1, d2);
 					b(yaw, pitch);
@@ -204,7 +204,7 @@ public class Dergon extends EntityEnderDragon
 				else
 				{
 					h += random.nextGaussian() * 2.0D;
-					j += random.nextGaussian() * 2.0D;
+					bm += random.nextGaussian() * 2.0D;
 				}
 
 				if (bz || d3 < 100.0D || d3 > 22500.0D || positionChanged || G)
@@ -236,7 +236,7 @@ public class Dergon extends EntityEnderDragon
 				if (f4 < 0.0F)
 					f4 = 0.0F;
 
-				bg *= 0.8F;
+				bf *= 0.8F;
 				float f5 = MathHelper.sqrt(motX * motX + motZ * motZ) * 1.0F + 1.0F;
 				double d10 = Math.sqrt(motX * motX + motZ * motZ) * 1.0D + 1.0D;
 
