@@ -20,6 +20,7 @@ public class Dergon extends EntityEnderDragon
 	{
 		return h;
 	}
+
 	private void setDergonX(double x)
 	{
 		h = x;
@@ -30,6 +31,7 @@ public class Dergon extends EntityEnderDragon
 	{
 		return i;
 	}
+
 	private void setDergonY(double y)
 	{
 		i = y;
@@ -40,6 +42,7 @@ public class Dergon extends EntityEnderDragon
 	{
 		return bm;
 	}
+
 	private void setDergonZ(double z)
 	{
 		bm = z;
@@ -50,6 +53,7 @@ public class Dergon extends EntityEnderDragon
 	{
 		return f;
 	}
+
 	private void setUnknownFloat0(float x)
 	{
 		f = x;
