@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
-    //Dergon X Accessor and Mutator
+	//Dergon X Accessor and Mutator
 	private double getDergonX()
 	{
 		return h;
@@ -25,7 +25,7 @@ public class Dergon extends EntityEnderDragon
 		h = x;
 	}
 
-    //Dergon Y Accessor and Mutator
+	//Dergon Y Accessor and Mutator
 	private double getDergonY()
 	{
 		return i;
@@ -47,13 +47,13 @@ public class Dergon extends EntityEnderDragon
 
 	//Unknown float in EntityInsentient Accessor and Mutator
 	private float getUnknownFloat0()
-    {
-        return f;
-    }
-    private void setUnknownFloat0(float x)
-    {
-        f = x;
-    }
+	{
+		return f;
+	}
+	private void setUnknownFloat0(float x)
+	{
+		f = x;
+	}
 
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
@@ -64,7 +64,7 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	private void bO()
+	private void updateCurrentTarget()
 	{
 		bz = false;
 
@@ -100,9 +100,7 @@ public class Dergon extends EntityEnderDragon
 			setDergonX(locX + random.nextInt(200) + -100);
 			setDergonY(random.nextInt(100) + 70); // Somewhere above 70 to prevent floor clipping.
 			setDergonZ(locZ + random.nextInt(200) + -100);
-			flyOffLocation = targetWorld.getLocation( // Store the target fly-off location.
-					getDergonX(), getDergonY(), getDergonZ()
-			);
+			flyOffLocation = targetWorld.getLocation(getDergonX(), getDergonY(), getDergonZ());// Store the target fly-off location.
 			return;
 		}
 		else
@@ -139,6 +137,12 @@ public class Dergon extends EntityEnderDragon
 		targetEntity = null;
 	}
 
+	/*
+	* Update function for Dergons.
+	* Names of this function in various spigot versions:
+	* v1_7_R3: e
+	* v1_8_R3: m
+	 */
 	@Override
 	public void e()
 	{
@@ -258,7 +262,7 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				if (bz || doubleValue3 < 100.0D || doubleValue3 > 22500.0D || positionChanged || G)
-					bO();
+					updateCurrentTarget();
 
 				doubleValue1 /= (double) MathHelper.sqrt(doubleValue0 * doubleValue0 + doubleValue2 * doubleValue2);
 				floatValue3 = 0.6F;
