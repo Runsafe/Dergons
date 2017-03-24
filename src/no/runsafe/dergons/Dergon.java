@@ -48,11 +48,8 @@ public class Dergon extends EntityEnderDragon
 		bm = z;
 	}
 
-	//Unknown float in EntityInsentient Accessor and Mutator
-	private float getUnknownFloat0()
-	{
-		return f;
-	}
+    //Unknown float0 in EntityInsentient
+	private float unknownFloat0 = f;
 
 	private void setUnknownFloat0(float x)
 	{
@@ -93,7 +90,7 @@ public class Dergon extends EntityEnderDragon
 
 					if (rawChum != null)
 					{
-						rawChum.setPassengerOf(this);
+						rawChum.mount(this);
 						ridingPlayer = rawChum;
 						handler.handleDergonMount(ridingPlayer.getName());
 					}
@@ -153,7 +150,7 @@ public class Dergon extends EntityEnderDragon
 		// Throw a player off it's back if we're high up.
 		if (ridingPlayer != null && locY >= 90)
 		{
-			ridingPlayer.setPassengerOf(null);
+			ridingPlayer.mount(null);
 			ridingPlayer = null;
 		}
 
@@ -173,7 +170,7 @@ public class Dergon extends EntityEnderDragon
 		{
 			setUnknownFloat0(MathHelper.cos(by * 3.1415927F * 2.0F));
 			floatValue1 = MathHelper.cos(bx * 3.1415927F * 2.0F);
-			if (floatValue1 <= -0.3F && getUnknownFloat0() >= -0.3F)
+			if (floatValue1 <= -0.3F && unknownFloat0 >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
@@ -198,10 +195,10 @@ public class Dergon extends EntityEnderDragon
 		}
 		else
 		{
-			this.bN();
+			this.bN();//Function changed to .cc() in 1.8
 			setUnknownFloat0(0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F));
-			setUnknownFloat0(getUnknownFloat0() * (float) Math.pow(2.0D, motY));
-			by += (bA ? getUnknownFloat0() * 0.5F : getUnknownFloat0());
+			setUnknownFloat0(unknownFloat0 * (float) Math.pow(2.0D, motY));
+			by += (bA ? unknownFloat0 * 0.5F : unknownFloat0);
 
 			yaw = MathHelper.g(yaw);
 			if (bo < 0)
@@ -464,6 +461,11 @@ public class Dergon extends EntityEnderDragon
 		return (float) MathHelper.g(d0);
 	}
 
+	/*
+	* Names of this function in various spigot versions:
+	* v1_7_R3: d, returns void
+	* v1_8_R3: d, returns boolean
+	 */
 	@Override
 	protected void d(DamageSource source, float f)
 	{
