@@ -15,6 +15,9 @@ import java.util.Random;
 
 public class Dergon extends EntityEnderDragon
 {
+	private final float PI_FLOAT = 3.1415927F;
+	private final double PI_DOUBLE = 3.1415927410125732D;
+
 	//Dergon X Accessor and Mutator
 	private double getDergonX()
 	{
@@ -56,6 +59,13 @@ public class Dergon extends EntityEnderDragon
 		f = x;
 	}
 
+	/**
+	 * Dergon constructor.
+	 * @param world World to spawn in.
+	 * @param handler
+	 * @param targetLocation Coordinates of the dergon's dinner.
+	 * @param dergonID Dergon's ID.
+	 */
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
@@ -65,6 +75,9 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
+	/**
+	 * Selects someone new for the dergon to eat.
+	 */
 	private void updateCurrentTarget()
 	{
 		bz = false;
@@ -84,7 +97,10 @@ public class Dergon extends EntityEnderDragon
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
 
-				if (!unluckyChum.isVanished() && !unluckyChum.isDead() && unluckyChum.getGameMode() != GameMode.CREATIVE)
+				if (!unluckyChum.isVanished()
+					&& !unluckyChum.isDead()
+					&& unluckyChum.getGameMode() != GameMode.CREATIVE
+				)//TODO: in 1.8 also check for spectator mode
 				{
 					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
 
@@ -112,7 +128,10 @@ public class Dergon extends EntityEnderDragon
 			for (IPlayer player : players)
 			{
 				// Skip the player if we're vanished or in creative mode.
-				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE || isRidingPlayer(player.getName()))
+				if (player.isVanished()
+					|| player.getGameMode() == GameMode.CREATIVE
+					|| isRidingPlayer(player.getName())
+				)//TODO: in 1.8 also check for spectator mode
 					continue;
 
 				ILocation playerLocation = player.getLocation();
@@ -138,11 +157,11 @@ public class Dergon extends EntityEnderDragon
 		targetEntity = null;
 	}
 
-	/*
-	* Update function for Dergons.
-	* Names of this function in various spigot versions:
-	* v1_7_R3: e
-	* v1_8_R3: m
+	/**
+	 * Update function for Dergons.
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: e
+	 * v1_8_R3: m
 	 */
 	@Override
 	public void e()
@@ -154,7 +173,6 @@ public class Dergon extends EntityEnderDragon
 			ridingPlayer = null;
 		}
 
-
 		// Update the health bar to show the percentage of the dergon
 		long healthPercentage = Math.round((getHealth() / getMaxHealth()) * 100);
 		setCustomName("Dergon (" + healthPercentage + "%)");
@@ -163,39 +181,32 @@ public class Dergon extends EntityEnderDragon
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
 			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
-		float floatValue0;
-		float floatValue1;
-
-		if (world.isStatic)
+		if (world.isStatic)//TODO: In 1.8 replace with .isClientSide
 		{
-			setUnknownFloat0(MathHelper.cos(by * 3.1415927F * 2.0F));
-			floatValue1 = MathHelper.cos(bx * 3.1415927F * 2.0F);
-			if (floatValue1 <= -0.3F && unknownFloat0 >= -0.3F)
+			setUnknownFloat0(MathHelper.cos(by * PI_FLOAT * 2.0F));
+			float floatValue0 = MathHelper.cos(bx * PI_FLOAT * 2.0F);
+			if (floatValue0 <= -0.3F && unknownFloat0 >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
 		bx = by;
-		float floatValue2;
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
 			// If we're dead, play a random explosion effect at a random offset to it's corpse.
-			floatValue0 = (random.nextFloat() - 0.5F) * 8.0F;
-			floatValue1 = (random.nextFloat() - 0.5F) * 4.0F;
-			floatValue2 = (random.nextFloat() - 0.5F) * 8.0F;
 			world.addParticle(
 					"largeexplode",
-					locX + (double) floatValue0,
-					locY + 2.0D + (double) floatValue1,
-					locZ + (double) floatValue2,
+					locX + (double) ((random.nextFloat() - 0.5F) * 8.0F),
+					locY + (double) ((random.nextFloat() - 0.5F) * 4.0F) + 2.0D,
+					locZ + (double) ((random.nextFloat() - 0.5F) * 8.0F),
 					0.0D,
 					0.0D,
 					0.0D
 			);
 		}
 		else
-		{
-			this.bN();//Function changed to .cc() in 1.8
+		{ // Function ends right after this code block.
+			this.bN();//Function name changed to .cc() in 1.8. Getter for a boolean value.
 			setUnknownFloat0(0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F));
 			setUnknownFloat0(unknownFloat0 * (float) Math.pow(2.0D, motY));
 			by += (bA ? unknownFloat0 * 0.5F : unknownFloat0);
@@ -215,33 +226,33 @@ public class Dergon extends EntityEnderDragon
 
 			bn[bo][0] = (double) yaw;
 			bn[bo][1] = locY;
-			double doubleValue0;
-			double doubleValue1;
-			double doubleValue2;
+			double valueX;
+			double valueY;
+			double valueZ;
 			double doubleValue3;
 			float floatValue3;
 
-			if (world.isStatic)
+			if (world.isStatic)//TODO: In 1.8 replace with .isClientSide
 			{
 				if (bg > 0)
 				{
-					doubleValue0 = locX + (bh - locX) / bg;
-					doubleValue1 = locY + (bi - locY) / bg;
-					doubleValue2 = locZ + (bj - locZ) / bg;
-					doubleValue3 = MathHelper.g(bk - (double) yaw);
+					valueX = locX + (bh - locX) / bg;
+					valueY = locY + (bi - locY) / bg;
+					valueZ = locZ + (bj - locZ) / bg;
+					doubleValue3 = MathHelper.g(bk - (double) yaw);//.g trims degree value to within -180 to 180
 					yaw = (float) ((double) yaw + doubleValue3 / bg);
 					pitch = (float) ((double) pitch + (bl - (double) pitch) / bg);
 					--bg;
-					setPosition(doubleValue0, doubleValue1, doubleValue2);
+					setPosition(valueX, valueY, valueZ);
 					b(yaw, pitch);
 				}
 			}
 			else
 			{
-				doubleValue0 = getDergonX() - locX;
-				doubleValue1 = getDergonY() - locY;
-				doubleValue2 = getDergonZ() - locZ;
-				doubleValue3 = doubleValue0 * doubleValue0 + doubleValue1 * doubleValue1 + doubleValue2 * doubleValue2;
+				valueX = getDergonX() - locX;
+				valueY = getDergonY() - locY;
+				valueZ = getDergonZ() - locZ;
+				doubleValue3 = valueX * valueX + valueY * valueY + valueZ * valueZ;
 				if (targetEntity != null)
 				{
 					setDergonX(targetEntity.locX);
@@ -265,17 +276,17 @@ public class Dergon extends EntityEnderDragon
 				if (bz || doubleValue3 < 100.0D || doubleValue3 > 22500.0D || positionChanged || G)
 					updateCurrentTarget();
 
-				doubleValue1 /= (double) MathHelper.sqrt(doubleValue0 * doubleValue0 + doubleValue2 * doubleValue2);
+				valueY /= (double) MathHelper.sqrt(valueX * valueX + valueZ * valueZ);
 				floatValue3 = 0.6F;
-				if (doubleValue1 < (double) (-floatValue3))
-					doubleValue1 = (double) (-floatValue3);
+				if (valueY < (double) (-floatValue3))
+					valueY = (double) (-floatValue3);
 
-				if (doubleValue1 > (double) floatValue3)
-					doubleValue1 = (double) floatValue3;
+				if (valueY > (double) floatValue3)
+					valueY = (double) floatValue3;
 
-				motY += doubleValue1 * 0.10000000149011612D;
+				motY += valueY * 0.10000000149011612D;
 				yaw = MathHelper.g(yaw);
-				double doubleValue8 = 180.0D - Math.atan2(doubleValue0, doubleValue2) * 180.0D / 3.1415927410125732D;
+				double doubleValue8 = 180.0D - Math.atan2(valueX, valueZ) * 180.0D / PI_DOUBLE;
 				double doubleValue9 = MathHelper.g(doubleValue8 - (double) yaw);
 
 				if (doubleValue9 > 50.0D)
@@ -284,8 +295,9 @@ public class Dergon extends EntityEnderDragon
 				if (doubleValue9 < -50.0D)
 					doubleValue9 = -50.0D;
 
+				float yawRadians = yaw * PI_FLOAT / 180.0F; //Convert yaw from degrees to radians
 				Vec3D vec3d = Vec3D.a(getDergonX() - locX, getDergonY() - locY, bm - locZ).a();
-				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(yaw * 3.1415927F / 180.0F), motY, (double) (-MathHelper.cos(yaw * 3.1415927F / 180.0F))).a();
+				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(yawRadians), motY, (double) (-MathHelper.cos(yawRadians))).a();
 				float floatValue4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
 				if (floatValue4 < 0.0F)
@@ -319,48 +331,52 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			aN = yaw;
-			bq.width = bq.length = 3.0F;
-			bs.width = bs.length = 2.0F;
-			bt.width = bt.length = 2.0F;
-			bu.width = bu.length = 2.0F;
-			br.length = 3.0F;
+			bq.width = bq.length = 3.0F;//Head
+			bs.width = bs.length = 2.0F;//Tail
+			bt.width = bt.length = 2.0F;//Tail
+			bu.width = bu.length = 2.0F;//Tail
+			br.length = 3.0F;//Body
 			br.width = 5.0F;
-			bv.length = 2.0F;
+			bv.length = 2.0F;//Wing
 			bv.width = 4.0F;
-			bw.length = 3.0F;
+			bw.length = 3.0F;//Wing
 			bw.width = 4.0F;
-			floatValue1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * 3.1415927F;
-			floatValue2 = MathHelper.cos(floatValue1);
-			float floatValue9 = -MathHelper.sin(floatValue1);
-			float floatValue10 = yaw * 3.1415927F / 180.0F;
-			float floatValue11 = MathHelper.sin(floatValue10);
-			float floatValue12 = MathHelper.cos(floatValue10);
+			float floatValue1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI_FLOAT;
+			float cosFloat1 = MathHelper.cos(floatValue1);
+			float negSinFloat1 = -MathHelper.sin(floatValue1);
+			float yawRadians = yaw * PI_FLOAT / 180.0F; //Convert yaw from degrees to radians
+			float sinYaw = MathHelper.sin(yawRadians);//11
+			float cosYaw = MathHelper.cos(yawRadians);//12
 
+			//Rotate that body
 			br.h();
 			br.setPositionRotation(
-					locX + (double) (floatValue11 * 0.5F),
-					locY, locZ - (double) (floatValue12 * 0.5F),
+					locX + (double) (sinYaw * 0.5F),
+					locY,
+					locZ - (double) (cosYaw * 0.5F),
 					0.0F,
 					0.0F
 			);
+			//Rotate wing
 			bv.h();
 			bv.setPositionRotation(
-					locX + (double) (floatValue12 * 4.5F),
+					locX + (double) (cosYaw * 4.5F),
 					locY + 2.0D,
-					locZ + (double) (floatValue11 * 4.5F),
+					locZ + (double) (sinYaw * 4.5F),
 					0.0F,
 					0.0F
 			);
+			//Rotate wing
 			bw.h();
 			bw.setPositionRotation(
-					locX - (double) (floatValue12 * 4.5F),
+					locX - (double) (cosYaw * 4.5F),
 					locY + 2.0D,
-					locZ - (double) (floatValue11 * 4.5F),
+					locZ - (double) (sinYaw * 4.5F),
 					0.0F,
 					0.0F
 			);
 
-			if (!world.isStatic && hurtTicks == 0)
+			if (!world.isStatic && hurtTicks == 0)//TODO: In 1.8 replace .isStatic with .isClientSide
 			{
 				a(world.getEntities(this, bv.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
 				a(world.getEntities(this, bw.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
@@ -370,76 +386,80 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			floatValue3 = MathHelper.sin(yaw * 3.1415927F / 180.0F - bg * 0.01F);
-			float floatValue13 = MathHelper.cos(yaw * 3.1415927F / 180.0F - bg * 0.01F);
+			floatValue3 = MathHelper.sin(yaw * PI_FLOAT / 180.0F - bg * 0.01F);
+			float floatValue13 = MathHelper.cos((yaw * PI_FLOAT / 180.0F) - bg * 0.01F);
 
+			//Rotate head
 			bq.h();
 			bq.setPositionRotation(
-					locX + (double) (floatValue3 * 5.5F * floatValue2),
-					locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (floatValue9 * 5.5F),
-					locZ - (double) (floatValue13 * 5.5F * floatValue2),
+					locX + (double) (floatValue3 * 5.5F * cosFloat1),
+					locY + (double) (negSinFloat1 * 5.5F) + (adouble1[1] - adouble[1]) * 1.0D,
+					locZ - (double) (floatValue13 * 5.5F * cosFloat1),
 					0.0F,
 					0.0F
 			);
 
-			for (int forLoopIndex = 0; forLoopIndex < 3; ++forLoopIndex)
+			//Move the tail
+			for (int tailNumber = 0; tailNumber < 3; ++tailNumber)
 			{
-				EntityComplexPart entitycomplexpart = null;
+				EntityComplexPart tailSection = null;
 
-				if (forLoopIndex == 0)
-					entitycomplexpart = bs;
+				switch (tailNumber)
+				{
+					case 0: tailSection = bs; break;
+					case 1: tailSection = bt; break;
+					case 2: tailSection = bu; break;
+				}
 
-				if (forLoopIndex == 1)
-					entitycomplexpart = bt;
+				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
+				float float14 = yawRadians + b(adouble2[0] - adouble[0]) * (PI_FLOAT / 180.0F) * 1.0F;
+				float sinFloat14 = MathHelper.sin(float14);
+				float cosFloat14 = MathHelper.cos(float14);
+				float constValue17 = 1.5F;
+				float floatValue18 = (float) (tailNumber + 1) * 2.0F; // 2, 4, 6
 
-				if (forLoopIndex == 2)
-					entitycomplexpart = bu;
-
-				double[] adouble2 = b(12 + forLoopIndex * 2, 1.0F);
-				float floatValue14 = yaw * 3.1415927F / 180.0F + b(adouble2[0] - adouble[0]) * 3.1415927F / 180.0F * 1.0F;
-				float floatValue15 = MathHelper.sin(floatValue14);
-				float floatValue16 = MathHelper.cos(floatValue14);
-				float floatValue17 = 1.5F;
-				float floatValue18 = (float) (forLoopIndex + 1) * 2.0F;
-
-				entitycomplexpart.h();
-				entitycomplexpart.setPositionRotation(
-						locX - (double) ((floatValue11 * floatValue17 + floatValue15 * floatValue18) * floatValue2),
-						locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((floatValue18 + floatValue17) * floatValue9) + 1.5D,
-						locZ + (double) ((floatValue12 * floatValue17 + floatValue16 * floatValue18) * floatValue2),
+				tailSection.h();
+				tailSection.setPositionRotation(
+						locX - (double) ((sinYaw * constValue17 + sinFloat14 * floatValue18) * cosFloat1),
+						locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((floatValue18 + constValue17) * negSinFloat1) + 1.5D,
+						locZ + (double) ((cosYaw * constValue17 + cosFloat14 * floatValue18) * cosFloat1),
 						0.0F,
 						0.0F
 				);
 			}
 
-			if (!world.isStatic)
+			if (!world.isStatic) //TODO: In 1.8 replace with .isClientSide
 				bA = a(bq.boundingBox) | a(br.boundingBox);
 		}
 	}
 
 	private void a(List list)
 	{
-		double doubleValue0 = (br.boundingBox.a + br.boundingBox.d) / 2.0D;
-		double doubleValue1 = (br.boundingBox.c + br.boundingBox.f) / 2.0D;
+		double bodyBoundingBoxValue0 = (br.boundingBox.a + br.boundingBox.d) / 2.0D;
+		double bodyBoundingBoxValue1 = (br.boundingBox.c + br.boundingBox.f) / 2.0D;
 
 		for (Object rawEntity : list)
 		{
 			Entity entity = (Entity) rawEntity;
 			if (entity instanceof EntityLiving)
 			{
-				double doubleValue2 = entity.locX - doubleValue0;
-				double doubleValue3 = entity.locZ - doubleValue1;
-				double doubleValue4 = doubleValue2 * doubleValue2 + doubleValue3 * doubleValue3;
+				double doubleValue2 = entity.locX - bodyBoundingBoxValue0;
+				double doubleValue3 = entity.locZ - bodyBoundingBoxValue1;
+				double LineLengthSquared = doubleValue2 * doubleValue2 + doubleValue3 * doubleValue3;
 
-				entity.g(
-						doubleValue2 / doubleValue4 * 4.0D,
+				entity.g(//Change Velocity
+						doubleValue2 / LineLengthSquared * 4.0D,
 						0.20000000298023224D,
-						doubleValue3 / doubleValue4 * 4.0D
+						doubleValue3 / LineLengthSquared  * 4.0D
 				);
 			}
 		}
 	}
 
+	/**
+	 * Attack list of EntityLiving with 20.0F damage.
+	 * @param list Liest of entities to attack.
+	 */
 	private void b(List list)
 	{
 		for (Object rawEntity : list)
@@ -461,10 +481,14 @@ public class Dergon extends EntityEnderDragon
 		return (float) MathHelper.g(d0);
 	}
 
-	/*
-	* Names of this function in various spigot versions:
-	* v1_7_R3: d, returns void
-	* v1_8_R3: d, returns boolean
+	/**
+	 * Damage the dergon.
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: d, returns void
+	 * v1_8_R3: d, returns boolean
+	 * @param source damage source
+	 * @param f Damage amount
+	 * @return In 1.8 true if damaged, false if not damaged. Returns void in 1.7.
 	 */
 	@Override
 	protected void d(DamageSource source, float f)
@@ -473,6 +497,12 @@ public class Dergon extends EntityEnderDragon
 			super.d(source, handler.handleDergonDamage(this, source, f));
 	}
 
+	/**
+	 * Handle dergon death.
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: aE
+	 * v1_8_R3: aZ
+ 	 */
 	@Override
 	protected void aE()
 	{
