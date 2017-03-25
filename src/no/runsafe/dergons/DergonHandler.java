@@ -1,6 +1,6 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R3.*;
+import net.minecraft.server.v1_8_R3.*;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
@@ -75,7 +75,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public void handleDergonDeath(Dergon dergon)
 	{
-		IWorld world = dergon.getWorld();
+		IWorld world = dergon.getDergonWorld();
 		ILocation location = world.getLocation(dergon.locX, dergon.locY, dergon.locZ);
 
 		world.dropItem(location, DergonItems.getEgg(1));
