@@ -1,7 +1,7 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_7_R3.GenericAttributes;
-import net.minecraft.server.v1_7_R3.World;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
@@ -58,7 +58,7 @@ public class DergonHolder
 				Dergon dragon = new Dergon(world, handler, targetLocation, dergonID);
 				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				dragon.setCustomName("Dergon");
-				dragon.getAttributeInstance(GenericAttributes.a).setValue(health);
+				dragon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
 				dragon.setHealth(health);
 				rawWorld.addEntity(dragon);
 			}
