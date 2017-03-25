@@ -17,14 +17,14 @@ import java.util.Random;
  * Names of obfuscated variables in various spigot versions:
  *
  * Variables in EntityEnderDragon:
- * Type					v1_7_R3		v1_8_R3		v1_9_R2
+ * Type			v1_7_R3		v1_8_R3		v1_9_R2
  * public double		h			a			?	//DergonX
  * public double		i			b			?	//DergonY
  * public double		bm			c			?	//DergonZ
- * public double[][]	bn			bk			b
+ * public double[][]		bn			bk			b
  * public int			bo			bl			c
- * public float			bx			bu			bD	//Radius?
- * public float			by			bv			bE	//Radius?
+ * public float		bx			bu			bD	//Radius?
+ * public float		by			bv			bE	//Radius?
  * public boolean		bz			bw			?	//Currently has a selected target?
  * public boolean		bA			bx			bF
  * public int			bB			by			bG
@@ -40,7 +40,7 @@ import java.util.Random;
  * protected double		bj			bf			bk
  * protected double		bk			bg			bl
  * protected double		bl			bh			bm
- * public float			aN			aJ			aO	//Yaw?
+ * public float		aN			aJ			aO	//Yaw?
  * protected float		bf			bb			Either be, bf, or bg.
  *
  */
@@ -401,9 +401,9 @@ public class Dergon extends EntityEnderDragon
 
 			/*
 			 * Names of obfuscated function in various spigot versions:
-		     * v1_7_R3: .h()
-		     * v1_8_R3: .t_()
-		     * v1_9_R2: .m()   <--Behaves slightly differently, but probably the same function.
+			 * v1_7_R3: .h()
+			 * v1_8_R3: .t_()
+			 * v1_9_R2: .m()   <--Behaves slightly differently, but probably the same function.
 			 */
 
 			//Move body
