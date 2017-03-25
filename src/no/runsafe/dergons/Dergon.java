@@ -13,6 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/*
+ * Names of obfuscated variables in various spigot versions:
+ *
+ * Variables in EntityEnderDragon:
+ * Type					v1_7_R3		v1_8_R3		v1_9_R2
+ * public double		h			a			?
+ * public double		i			b			?
+ * public double		bm			c			?
+ * public double[][]	bn			bk			?
+ * public int			bo			bl			c
+ * public float			bx			bu			bD	//Radius?
+ * public float			by			bv			bE	//Radius?
+ * public boolean		bz			bw			?
+ * public boolean		bA			bx			bF
+ * public int			bB			by			bG
+ *
+ * Entity.class:
+ * public double		j			j
+ * public boolean		G			F
+ *
+ * EntityLiving.Class:
+ * protected int		bg			bc
+ * protected double		bh			bd
+ * protected double		bi			be
+ * protected double		bj			bf
+ * public float			aN			aJ	//Yaw?
+ * protected double		bk			bg
+ * protected float		bf			bb
+ *
+ */
+
+
 public class Dergon extends EntityEnderDragon
 {
 	private final float PI_FLOAT = 3.1415927F;
@@ -51,6 +83,7 @@ public class Dergon extends EntityEnderDragon
 		bm = z;
 	}
 
+	/*
     //Pitch in EntityInsentient
 	private float getPitch()
 	{
@@ -61,6 +94,28 @@ public class Dergon extends EntityEnderDragon
 	{
 		f = x;
 	}
+	*/
+
+	/*
+	 * Dergon bodily appendages.
+	 * Names in various spigot versions:
+	 * v1_7_R3		v1_8_R3		v1_9_R2
+	 * bq			bn			bv		Head
+	 * br			bo			bx		Body
+	 * bv			bs			bB		Wing
+	 * bw			bt			bC		Wing
+	 * bs			bp			by		Tail section closest to body
+	 * bt			bq			bz		Middle tail section
+	 * bu			br			bA		Last tail section
+	 * N/A			N/A			bw		Neck (Only in 1.9+)
+	 */
+	private EntityComplexPart dergonHead = bq;
+	private EntityComplexPart dergonBody = br;
+	private EntityComplexPart dergonWing0 = bv;
+	private EntityComplexPart dergonWing1 = bw;
+	private EntityComplexPart dergonTailSection0 = bs;
+	private EntityComplexPart dergonTailSection1 = bt;
+	private EntityComplexPart dergonTailSection2 = bu;
 
 	/**
 	 * Dergon constructor.
@@ -165,6 +220,7 @@ public class Dergon extends EntityEnderDragon
 	 * Names of this function in various spigot versions:
 	 * v1_7_R3: e
 	 * v1_8_R3: m
+	 * v1_9_R2: n
 	 */
 	@Override
 	public void e()
@@ -186,9 +242,9 @@ public class Dergon extends EntityEnderDragon
 
 		if (world.isStatic)//TODO: In 1.8 replace with .isClientSide
 		{
-			setPitch(MathHelper.cos(by * PI_FLOAT * 2.0F));
-			float floatValue0 = MathHelper.cos(bx * PI_FLOAT * 2.0F);
-			if (floatValue0 <= -0.3F && pitch >= -0.3F)
+			float floatValue0 = MathHelper.cos(by * PI_FLOAT * 2.0F);
+			float floatValue1 = MathHelper.cos(bx * PI_FLOAT * 2.0F);
+			if (floatValue1 <= -0.3F && floatValue0 >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
@@ -209,11 +265,14 @@ public class Dergon extends EntityEnderDragon
 		}
 		else
 		{ // Function ends right after this code block.
-			this.bN();//Function name changed to .cc() in 1.8. Getter for a boolean value.
-			//TODO: is bN/CC supposed to be bP/n?
-			setPitch(0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F));
-			setPitch(getPitch() * (float) Math.pow(2.0D, motY));
-			by += (bA ? getPitch() * 0.5F : getPitch());
+			//this.bN();
+			/* Was: this.bN()/CC()  Should be: this.bP()/.n()/.cW()
+			 * However .bP appears to deal with ender crystals, since the dergon
+			 * doesn't interact with ender crystals it's safe to disable it.
+			 */
+			float floatValue0 = 0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
+			floatValue0 *= (float) Math.pow(2.0D, motY);
+			by += (bA ? floatValue0 * 0.5F : floatValue0);
 
 			yaw = trimDegrees(yaw);
 			if (bo < 0)
@@ -246,7 +305,7 @@ public class Dergon extends EntityEnderDragon
 					pitch = (float) ((double) pitch + (bl - (double) pitch) / bg);
 					--bg;
 					setPosition(valueX, valueY, valueZ);
-					b(yaw, pitch);
+					b(yaw, pitch);//TODO: In 1.8 change to .setYawPitch()
 				}
 			}
 			else
@@ -333,16 +392,16 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			aN = yaw;
-			bq.width = bq.length = 3.0F;//Head
-			bs.width = bs.length = 2.0F;//Closest tail section
-			bt.width = bt.length = 2.0F;//Middle tail section
-			bu.width = bu.length = 2.0F;//Furthest tail section
-			br.length = 3.0F;//Body
-			br.width = 5.0F;
-			bv.length = 2.0F;//Wing
-			bv.width = 4.0F;
-			bw.length = 3.0F;//Wing
-			bw.width = 4.0F;
+			dergonHead.width = dergonHead.length = 3.0F;
+			dergonTailSection0.width = dergonTailSection0.length = 2.0F;
+			dergonTailSection1.width = dergonTailSection1.length = 2.0F;
+			dergonTailSection2.width = dergonTailSection2.length = 2.0F;
+			dergonBody.length = 3.0F;
+			dergonBody.width = 5.0F;
+			dergonWing0.length = 2.0F;
+			dergonWing0.width = 4.0F;
+			dergonWing1.length = 3.0F;
+			dergonWing1.width = 4.0F;
 			float floatValue1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI_FLOAT;
 			float cosFloat1 = MathHelper.cos(floatValue1);
 			float negSinFloat1 = -MathHelper.sin(floatValue1);
@@ -350,9 +409,15 @@ public class Dergon extends EntityEnderDragon
 			float sinYaw = MathHelper.sin(yawRadians);
 			float cosYaw = MathHelper.cos(yawRadians);
 
+			/*
+			 * Names of obfuscated function in various spigot versions:
+		     * v1_7_R3: .h()
+		     * v1_8_R3: .t_()
+		     * v1_9_R2: .m()   <--Behaves slightly differently, but probably the same function.
+			 */
 			//Move body
-			br.h();
-			br.setPositionRotation(
+			dergonBody.h();
+			dergonBody.setPositionRotation(
 					locX + (double) (sinYaw * 0.5F),
 					locY,
 					locZ - (double) (cosYaw * 0.5F),
@@ -360,8 +425,8 @@ public class Dergon extends EntityEnderDragon
 					0.0F
 			);
 			//Move wing
-			bv.h();
-			bv.setPositionRotation(
+			dergonWing0.h();
+			dergonWing0.setPositionRotation(
 					locX + (double) (cosYaw * 4.5F),
 					locY + 2.0D,
 					locZ + (double) (sinYaw * 4.5F),
@@ -369,8 +434,8 @@ public class Dergon extends EntityEnderDragon
 					0.0F
 			);
 			//Move wing
-			bw.h();
-			bw.setPositionRotation(
+			dergonWing1.h();
+			dergonWing1.setPositionRotation(
 					locX - (double) (cosYaw * 4.5F),
 					locY + 2.0D,
 					locZ - (double) (sinYaw * 4.5F),
@@ -380,9 +445,14 @@ public class Dergon extends EntityEnderDragon
 
 			if (!world.isStatic && hurtTicks == 0)//TODO: In 1.8 replace .isStatic with .isClientSide
 			{
-				launchEntities(world.getEntities(this, bv.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				launchEntities(world.getEntities(this, bw.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				hitEntities(world.getEntities(this, bq.boundingBox.grow(1.0D, 1.0D, 1.0D)));
+				/*
+				 * Names of obfuscated function in various spigot versions:
+				 * v1_7_R3: .d()
+				 * v1_8_R3: .shrink()
+				 */
+				launchEntities(world.getEntities(this, dergonWing0.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				launchEntities(world.getEntities(this, dergonWing1.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				hitEntities(world.getEntities(this, dergonHead.boundingBox.grow(1.0D, 1.0D, 1.0D)));
 			}
 
 			double[] adouble = b(5, 1.0F);
@@ -392,8 +462,8 @@ public class Dergon extends EntityEnderDragon
 			float floatValue13 = MathHelper.cos(yawRadians - bg * 0.01F);
 
 			//Move head
-			bq.h();
-			bq.setPositionRotation(
+			dergonHead.h();
+			dergonHead.setPositionRotation(
 					locX + (double) (floatValue3 * 5.5F * cosFloat1),
 					locY + (double) (negSinFloat1 * 5.5F) + (adouble1[1] - adouble[1]) * 1.0D,
 					locZ - (double) (floatValue13 * 5.5F * cosFloat1),
@@ -408,30 +478,30 @@ public class Dergon extends EntityEnderDragon
 
 				switch (tailNumber)
 				{
-					case 0: tailSection = bs; break;
-					case 1: tailSection = bt; break;
-					case 2: tailSection = bu; break;
+					case 0: tailSection = dergonTailSection0; break;
+					case 1: tailSection = dergonTailSection1; break;
+					case 2: tailSection = dergonTailSection2; break;
 				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
 				float float14 = yawRadians + (float) trimDegrees(adouble2[0] - adouble[0]) * (PI_FLOAT / 180.0F) * 1.0F;
 				float sinFloat14 = MathHelper.sin(float14);
 				float cosFloat14 = MathHelper.cos(float14);
-				float constValue17 = 1.5F;
-				float floatValue18 = (float) (tailNumber + 1) * 2.0F; // 2, 4, 6
+				final float ONE_DOT_FIVE = 1.5F;
+				float floatValue15 = (float) (tailNumber + 1) * 2.0F; // 2, 4, 6
 
 				tailSection.h();
 				tailSection.setPositionRotation(
-						locX - (double) ((sinYaw * constValue17 + sinFloat14 * floatValue18) * cosFloat1),
-						locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((floatValue18 + constValue17) * negSinFloat1) + 1.5D,
-						locZ + (double) ((cosYaw * constValue17 + cosFloat14 * floatValue18) * cosFloat1),
+						locX - (double) ((sinYaw * ONE_DOT_FIVE + sinFloat14 * floatValue15) * cosFloat1),
+						locY - (double) ((floatValue15 + ONE_DOT_FIVE) * negSinFloat1) + ((adouble2[1] - adouble[1]) * 1.0D)+ 1.5D,
+						locZ + (double) ((cosYaw * ONE_DOT_FIVE + cosFloat14 * floatValue15) * cosFloat1),
 						0.0F,
 						0.0F
 				);
 			}
 
 			if (!world.isStatic) //TODO: In 1.8 replace with .isClientSide
-				bA = a(bq.boundingBox) | a(br.boundingBox);
+				bA = breakBlocks(dergonHead.boundingBox) | breakBlocks(dergonBody.boundingBox);
 		}
 	}
 
@@ -441,8 +511,8 @@ public class Dergon extends EntityEnderDragon
 	 */
 	private void launchEntities(List list)
 	{
-		double bodyBoundingBoxValue0 = (br.boundingBox.a + br.boundingBox.d) / 2.0D;
-		double bodyBoundingBoxValue1 = (br.boundingBox.c + br.boundingBox.f) / 2.0D;
+		double bodyBoundingBoxValue0 = (dergonBody.boundingBox.a + dergonBody.boundingBox.d) / 2.0D;
+		double bodyBoundingBoxValue1 = (dergonBody.boundingBox.c + dergonBody.boundingBox.f) / 2.0D;
 
 		for (Object rawEntity : list)
 		{
@@ -477,29 +547,46 @@ public class Dergon extends EntityEnderDragon
 		}
 	}
 
-	private boolean a(AxisAlignedBB axisalignedbb)
+	/**
+	 * Handles breaking blocks; blocks are not to be broken.
+	 * @param axisalignedbb Does nothing.
+	 * @return True if blocks destroyed, false if no blocks destroyed. Always returns false.
+	 */
+	private boolean breakBlocks(AxisAlignedBB axisalignedbb)
 	{
 		return false;
 	}
 
-	private float trimDegrees(float d0)
+	/**
+	 * Trims down a degree value to between -180 and 180.
+	 * @param degreeValue Number to trim.
+	 * @return Trimmed degree value.
+	 */
+	private float trimDegrees(float degreeValue)
 	{
-		return MathHelper.g(d0);//.g trims degree value to within -180 to 180
+		return MathHelper.g(degreeValue);//.g trims degree value to within -180 to 180
 	}
 
-	private double trimDegrees(double d0)
+	/**
+	 * Trims down a degree value to between -180 and 180.
+	 * @param degreeValue Number to trim.
+	 * @return Trimmed degree value.
+	 */
+	private double trimDegrees(double degreeValue)
 	{
-		return MathHelper.g(d0);//.g trims degree value to within -180 to 180
+		return MathHelper.g(degreeValue);//.g trims degree value to within -180 to 180
 	}
 
 	/**
 	 * Damage the dergon.
+	 * Overrides method in EntityLiving.class
 	 * Names of this function in various spigot versions:
-	 * v1_7_R3: d, returns void
-	 * v1_8_R3: d, returns boolean
+	 * v1_7_R3: d, returns void and is in
+	 * v1_8_R3: d, returns boolean and is in EntityLiving
+	 * v1_9_R2: damageEntity0
 	 * @param source damage source
 	 * @param f Damage amount
-	 * @return In 1.8 true if damaged, false if not damaged. Returns void in 1.7.
+	 * @return In 1.8 and up true if damaged, false if not damaged. Returns void in 1.7.
 	 */
 	@Override
 	protected void d(DamageSource source, float f)
@@ -522,16 +609,30 @@ public class Dergon extends EntityEnderDragon
 			handler.handleDergonDeath(this);
 	}
 
-	public IWorld getWorld()
+	/**
+	 * Gets the world the dergon is in.
+	 * getWorld() would be a better name, but 1.8 does not like that name.
+	 * @return World the dergon is in.
+	 */
+	public IWorld getDergonWorld()
 	{
 		return targetWorld;
 	}
 
+	/**
+	 * Check if dergon is riding a particular player.
+	 * @param playerName Check if this player is being ridden by the dergon.
+	 * @return True if dergon is riding input player.
+	 */
 	private boolean isRidingPlayer(String playerName)
 	{
 		return ridingPlayer != null && ridingPlayer.getName().equals(playerName);
 	}
 
+	/**
+	 * Get the dergon's ID
+	 * @return Dergon's ID
+	 */
 	public int getDergonID()
 	{
 		return dergonID;
