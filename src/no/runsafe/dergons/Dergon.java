@@ -112,7 +112,10 @@ public class Dergon extends EntityEnderDragon
 	private EntityComplexPart dergonTailSection1 = bq;
 	private EntityComplexPart dergonTailSection2 = br;
 
-	private void bO()
+	/**
+	 * Selects new player target.
+	 */
+	private void updateCurrentTarget()
 	{
 		bw = false;
 
@@ -308,7 +311,7 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				if (bw || d3 < 100.0D || d3 > 22500.0D || positionChanged || F)
-					bO();
+					updateCurrentTarget();
 
 				d1 /= (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
 				f3 = 0.6F;
