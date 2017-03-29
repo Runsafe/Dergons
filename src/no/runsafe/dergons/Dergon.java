@@ -314,12 +314,12 @@ public class Dergon extends EntityEnderDragon
 					updateCurrentTarget();
 
 				targetPosY /= (double) MathHelper.sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
-				float f3 = 0.6F;
-				if (targetPosY < (double) (-f3))
-					targetPosY = (double) (-f3);
+				final float Y_LIMIT = 0.6F;
+				if (targetPosY < (double) (-Y_LIMIT))
+					targetPosY = (double) (-Y_LIMIT);
 
-				if (targetPosY > (double) f3)
-					targetPosY = (double) f3;
+				if (targetPosY > (double) Y_LIMIT)
+					targetPosY = (double) Y_LIMIT;
 
 				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
