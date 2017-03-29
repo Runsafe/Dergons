@@ -480,7 +480,11 @@ public class Dergon extends EntityEnderDragon
 			handler.handleDergonDeath(this);
 	}
 
-	public IWorld getWorld()
+	/**
+	 * Gets the world the dergon is in.
+	 * @return World the dergon is in.
+	 */
+	public IWorld getDergonWorld()
 	{
 		return targetWorld;
 	}

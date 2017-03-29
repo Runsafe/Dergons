@@ -75,7 +75,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public void handleDergonDeath(Dergon dergon)
 	{
-		IWorld world = dergon.getWorld();
+		IWorld world = dergon.getDergonWorld();
 		ILocation location = world.getLocation(dergon.locX, dergon.locY, dergon.locZ);
 
 		world.dropItem(location, DergonItems.getEgg(1));
