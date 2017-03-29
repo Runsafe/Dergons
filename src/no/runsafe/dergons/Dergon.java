@@ -134,7 +134,11 @@ public class Dergon extends EntityEnderDragon
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
 
-				if (!unluckyChum.isVanished() && !unluckyChum.isDead() && unluckyChum.getGameMode() != GameMode.CREATIVE)
+				if (!unluckyChum.isVanished()
+					&& !unluckyChum.isDead()
+					&& unluckyChum.getGameMode() != GameMode.CREATIVE
+					&& unluckyChum.getGameMode() != GameMode.SPECTATOR
+				)
 				{
 					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
 
@@ -161,8 +165,12 @@ public class Dergon extends EntityEnderDragon
 
 			for (IPlayer player : players)
 			{
-				// Skip the player if we're vanished or in creative mode.
-				if (player.isVanished() || player.getGameMode() == GameMode.CREATIVE || isRidingPlayer(player.getName()))
+				// Skip the player if we're vanished, in creative mode, or in spectator mode.
+				if (player.isVanished()
+					|| player.getGameMode() == GameMode.CREATIVE
+					|| player.getGameMode() == GameMode.SPECTATOR
+					|| isRidingPlayer(player.getName())
+				)
 					continue;
 
 				ILocation playerLocation = player.getLocation();
