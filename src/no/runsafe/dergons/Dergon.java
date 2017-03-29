@@ -24,6 +24,39 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
+	//Dergon X Accessor and Mutator
+	private double getDergonX()
+	{
+		return a;
+	}
+
+	private void setDergonX(double x)
+	{
+		a = x;
+	}
+
+	//Dergon Y Accessor and Mutator
+	private double getDergonY()
+	{
+		return b;
+	}
+
+	private void setDergonY(double y)
+	{
+		b = y;
+	}
+
+	//Dergon Z Accessor and Mutator
+	private double getDergonZ()
+	{
+		return c;
+	}
+
+	private void setDergonZ(double z)
+	{
+		c = z;
+	}
+
 	private void bO()
 	{
 		bz = false;
@@ -57,10 +90,10 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			targetEntity = null;
-			h = locX + random.nextInt(200) + -100;
-			i = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			j = locZ + random.nextInt(200) + -100;
-			flyOffLocation = targetWorld.getLocation(h, i, j); // Store the target fly-off location.
+			setDergonX(locX + random.nextInt(200) + -100);
+			setDergonY(random.nextInt(100) + 70); // Somewhere above 70 to prevent floor clipping.
+			setDergonZ(locZ + random.nextInt(200) + -100);
+			flyOffLocation = targetWorld.getLocation(getDergonX(), getDergonY(), getDergonZ()); // Store the target fly-off location.
 			return;
 		}
 		else
@@ -90,9 +123,9 @@ public class Dergon extends EntityEnderDragon
 		}
 
 		// Send the dergon back to the start point.
-		h = targetLocation.getX();
-		i = targetLocation.getY();
-		j = targetLocation.getZ();
+		setDergonX(targetLocation.getX());
+		setDergonY(targetLocation.getY());
+		setDergonZ(targetLocation.getZ());
 
 		targetEntity = null;
 	}
@@ -183,28 +216,28 @@ public class Dergon extends EntityEnderDragon
 			}
 			else
 			{
-				d0 = h - locX;
-				d1 = i - locY;
-				d2 = j - locZ;
+				d0 = getDergonX() - locX;
+				d1 = getDergonY() - locY;
+				d2 = getDergonZ() - locZ;
 				d3 = d0 * d0 + d1 * d1 + d2 * d2;
 				if (targetEntity != null)
 				{
-					h = targetEntity.locX;
-					j = targetEntity.locZ;
-					double d4 = h - locX;
-					double d5 = j - locZ;
+					setDergonX(targetEntity.locX);
+					setDergonZ(targetEntity.locZ);
+					double d4 = getDergonX() - locX;
+					double d5 = getDergonZ() - locZ;
 					double d6 = Math.sqrt(d4 * d4 + d5 * d5);
 					double d7 = 0.4000000059604645D + d6 / 80.0D - 1.0D;
 
 					if (d7 > 10.0D)
 						d7 = 10.0D;
 
-					i = targetEntity.boundingBox.b + d7;
+					setDergonY(targetEntity.boundingBox().b + ascendDistance);
 				}
 				else
 				{
-					h += random.nextGaussian() * 2.0D;
-					bm += random.nextGaussian() * 2.0D;
+					setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
+					setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
 				}
 
 				if (bz || d3 < 100.0D || d3 > 22500.0D || positionChanged || G)
@@ -229,7 +262,7 @@ public class Dergon extends EntityEnderDragon
 				if (d9 < -50.0D)
 					d9 = -50.0D;
 
-				Vec3D vec3d = Vec3D.a(h - locX, i - locY, bm - locZ).a();
+				Vec3D vec3d = Vec3D.a(getDergonX() - locX, getDergonY() - locY, getDergonZ() - locZ).a();
 				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(yaw * 3.1415927F / 180.0F), motY, (double) (-MathHelper.cos(yaw * 3.1415927F / 180.0F))).a();
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
