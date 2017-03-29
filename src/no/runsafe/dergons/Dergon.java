@@ -214,19 +214,15 @@ public class Dergon extends EntityEnderDragon
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
 			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
-		float f;
-		float f1;
-
 		if (world.isClientSide)
 		{
-			f = MathHelper.cos(bv * PI * 2.0F);
-			f1 = MathHelper.cos(bu * PI * 2.0F);
+			float f = MathHelper.cos(bv * PI * 2.0F);
+			float f1 = MathHelper.cos(bu * PI * 2.0F);
 			if (f1 <= -0.3F && f >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
 		bu = bv;
-		float f2;
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
@@ -244,7 +240,7 @@ public class Dergon extends EntityEnderDragon
 		else
 		{
 			this.enderCrystalInteraction();
-			f = 0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
+			float f = 0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
 			f *= (float) Math.pow(2.0D, motY);
 			bv += (bx ? f * 0.5F : f);
 
@@ -377,8 +373,8 @@ public class Dergon extends EntityEnderDragon
 			dergonWing0.width = 4.0F;
 			dergonWing1.length = 3.0F;
 			dergonWing1.width = 4.0F;
-			f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI;
-			f2 = MathHelper.cos(f1);
+			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI;
+			float f2 = MathHelper.cos(f1);
 			float f9 = -MathHelper.sin(f1);
 			float f10 = yaw * PI / 180.0F;
 			float f11 = MathHelper.sin(f10);
