@@ -278,7 +278,7 @@ public class Dergon extends EntityEnderDragon
 					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
 					--bc;
 					setPosition(d0, d1, d2);
-					b(yaw, pitch);
+					setYawPitch(yaw, pitch);
 				}
 			}
 			else
