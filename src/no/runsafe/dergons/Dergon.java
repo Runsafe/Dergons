@@ -478,11 +478,24 @@ public class Dergon extends EntityEnderDragon
 		return (float) MathHelper.g(d0);
 	}
 
+	/**
+	 * Damage the dergon.
+	 * Overrides method in EntityLiving.class
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: d, returns void
+	 * v1_8_R3: d, returns boolean and is in EntityLiving
+	 * v1_9_R2: damageEntity0
+	 * @param source damage source
+	 * @param f Damage amount
+	 * @return True if damaged, false if not damaged.
+	 */
 	@Override
-	protected void d(DamageSource source, float f)
+	protected boolean d(DamageSource source, float f)
 	{
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
-			super.d(source, handler.handleDergonDamage(this, source, f));
+			return super.d(source, handler.handleDergonDamage(this, source, f));
+
+		return false;
 	}
 
 	/**
