@@ -231,7 +231,15 @@ public class Dergon extends EntityEnderDragon
 			f = (random.nextFloat() - 0.5F) * 8.0F;
 			f1 = (random.nextFloat() - 0.5F) * 4.0F;
 			f2 = (random.nextFloat() - 0.5F) * 8.0F;
-			world.addParticle("largeexplode", locX + (double) f, locY + 2.0D + (double) f1, locZ + (double) f2, 0.0D, 0.0D, 0.0D);
+			world.addParticle(
+					EnumParticle.EXPLOSION_LARGE,
+					locX + (double) f,
+					locY + 2.0D + (double) f1,
+					locZ + (double) f2,
+					0.0D,
+					0.0D,
+					0.0D
+			);
 		}
 		else
 		{
