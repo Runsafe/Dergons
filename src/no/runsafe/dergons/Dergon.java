@@ -267,20 +267,15 @@ public class Dergon extends EntityEnderDragon
 
 			bk[bl][0] = (double) yaw;
 			bk[bl][1] = locY;
-			double d0;
-			double d1;
-			double d2;
-			double d3;
-			float f3;
 
 			if (world.isClientSide)
 			{
 				if (bc > 0)
 				{
-					d0 = locX + (bd - locX) / bc;
-					d1 = locY + (be - locY) / bc;
-					d2 = locZ + (bf - locZ) / bc;
-					d3 = trimDegrees(bg - (double) yaw);
+					double d0 = locX + (bd - locX) / bc;
+					double d1 = locY + (be - locY) / bc;
+					double d2 = locZ + (bf - locZ) / bc;
+					double d3 = trimDegrees(bg - (double) yaw);
 					yaw = (float) ((double) yaw + d3 / bc);
 					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
 					--bc;
@@ -290,10 +285,10 @@ public class Dergon extends EntityEnderDragon
 			}
 			else
 			{
-				d0 = getDergonX() - locX;
-				d1 = getDergonY() - locY;
-				d2 = getDergonZ() - locZ;
-				d3 = d0 * d0 + d1 * d1 + d2 * d2;
+				double d0 = getDergonX() - locX;
+				double d1 = getDergonY() - locY;
+				double d2 = getDergonZ() - locZ;
+				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 				if (targetEntity != null)
 				{
 					setDergonX(targetEntity.locX);
@@ -318,7 +313,7 @@ public class Dergon extends EntityEnderDragon
 					updateCurrentTarget();
 
 				d1 /= (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
-				f3 = 0.6F;
+				float f3 = 0.6F;
 				if (d1 < (double) (-f3))
 					d1 = (double) (-f3);
 
@@ -424,7 +419,7 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			f3 = MathHelper.sin(yaw * PI / 180.0F - bc * 0.01F);
+			float f3 = MathHelper.sin(yaw * PI / 180.0F - bc * 0.01F);
 			float f13 = MathHelper.cos(yaw * PI / 180.0F - bc * 0.01F);
 
 			dergonHead.t_();
