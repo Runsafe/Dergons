@@ -429,7 +429,7 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			if (!world.isClientSide)
-				bx = a(dergonHead.getBoundingBox()) | a(dergonBody.getBoundingBox());
+				bx = breakBlocks(dergonHead.getBoundingBox()) | breakBlocks(dergonBody.getBoundingBox());
 		}
 	}
 
@@ -463,7 +463,12 @@ public class Dergon extends EntityEnderDragon
 		}
 	}
 
-	private boolean a(AxisAlignedBB axisalignedbb)
+	/**
+	 * Handles breaking blocks; blocks are not to be broken.
+	 * @param axisalignedbb Does nothing.
+	 * @return True if blocks destroyed, false if no blocks destroyed. Always returns false.
+	 */
+	private boolean breakBlocks(AxisAlignedBB axisalignedbb)
 	{
 		return false;
 	}
