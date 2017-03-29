@@ -392,7 +392,7 @@ public class Dergon extends EntityEnderDragon
 			{
 				a(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
 				a(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				b(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
+				hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 			}
 
 			double[] adouble = b(5, 1.0F);
@@ -452,7 +452,11 @@ public class Dergon extends EntityEnderDragon
 		}
 	}
 
-	private void b(List list)
+	/**
+	 * Attack list of EntityLiving with 20.0F damage.
+	 * @param list Entities to hit
+	 */
+	private void hitEntities(List list)
 	{
 		for (Object rawEntity : list)
 		{
