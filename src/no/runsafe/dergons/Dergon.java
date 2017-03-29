@@ -409,14 +409,12 @@ public class Dergon extends EntityEnderDragon
 			{
 				EntityComplexPart tailSection = null;
 
-				if (tailNumber == 0)
-					tailSection = dergonTailSection0;
-
-				if (tailNumber == 1)
-					tailSection = dergonTailSection1;
-
-				if (tailNumber == 2)
-					tailSection = dergonTailSection2;
+				switch (tailNumber)
+				{
+					case 0: tailSection = dergonTailSection0; break;
+					case 1: tailSection = dergonTailSection1; break;
+					case 2: tailSection = dergonTailSection2; break;
+				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
 				float f14 = yaw * PI / 180.0F + b(adouble2[0] - adouble[0]) * PI / 180.0F * 1.0F;
