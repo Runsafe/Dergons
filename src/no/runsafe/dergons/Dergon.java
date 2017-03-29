@@ -324,13 +324,13 @@ public class Dergon extends EntityEnderDragon
 				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
 				double targetDirection = 180.0D - Math.atan2(targetPosX, targetPosZ) * 180.0D / Math.PI;
-				double d9 = trimDegrees(targetDirection - (double) yaw);
+				double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
 
-				if (d9 > 50.0D)
-					d9 = 50.0D;
+				if (targetHeadingDifference > 50.0D)
+					targetHeadingDifference = 50.0D;
 
-				if (d9 < -50.0D)
-					d9 = -50.0D;
+				if (targetHeadingDifference < -50.0D)
+					targetHeadingDifference = -50.0D;
 
 				Vec3D vec3d = new Vec3D(getDergonX() - locX, getDergonY() - locY, getDergonZ() - locZ).a();
 				Vec3D vec3d1 = new Vec3D((double) MathHelper.sin(yaw * PI / 180.0F), motY, (double) (-MathHelper.cos(yaw * PI / 180.0F))).a();
@@ -346,7 +346,7 @@ public class Dergon extends EntityEnderDragon
 				if (d10 > 40.0D)
 					d10 = 40.0D;
 
-				bb = (float) ((double) bb + d9 * (0.699999988079071D / d10 / (double) f5));
+				bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
 				yaw += bb * 0.1F;
 				float f6 = (float) (2.0D / (d10 + 1.0D));
 				float f7 = 0.06F;
