@@ -232,7 +232,7 @@ public class Dergon extends EntityEnderDragon
 					if (d7 > 10.0D)
 						d7 = 10.0D;
 
-					setDergonY(targetEntity.boundingBox().b + ascendDistance);
+					setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
 				}
 				else
 				{
@@ -323,9 +323,9 @@ public class Dergon extends EntityEnderDragon
 
 			if (!world.isStatic && hurtTicks == 0)
 			{
-				a(world.getEntities(this, bv.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				a(world.getEntities(this, bw.boundingBox.grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				b(world.getEntities(this, bq.boundingBox.grow(1.0D, 1.0D, 1.0D)));
+				a(world.getEntities(this, bv.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				a(world.getEntities(this, bw.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				b(world.getEntities(this, bq.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 			}
 
 			double[] adouble = b(5, 1.0F);
@@ -362,14 +362,14 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			if (!world.isStatic)
-				bA = a(bq.boundingBox) | a(br.boundingBox);
+				bA = a(bq.getBoundingBox()) | a(br.getBoundingBox());
 		}
 	}
 
 	private void a(List list)
 	{
-		double d0 = (br.boundingBox.a + br.boundingBox.d) / 2.0D;
-		double d1 = (br.boundingBox.c + br.boundingBox.f) / 2.0D;
+		double d0 = (br.getBoundingBox().a + br.getBoundingBox().d) / 2.0D;
+		double d1 = (br.getBoundingBox().c + br.getBoundingBox().f) / 2.0D;
 
 		for (Object rawEntity : list)
 		{
