@@ -374,11 +374,11 @@ public class Dergon extends EntityEnderDragon
 			float f11 = MathHelper.sin(f10);
 			float f12 = MathHelper.cos(f10);
 
-			dergonBody.h();
+			dergonBody.t_();
 			dergonBody.setPositionRotation(locX + (double) (f11 * 0.5F), locY, locZ - (double) (f12 * 0.5F), 0.0F, 0.0F);
-			dergonWing0.h();
+			dergonWing0.t_();
 			dergonWing0.setPositionRotation(locX + (double) (f12 * 4.5F), locY + 2.0D, locZ + (double) (f11 * 4.5F), 0.0F, 0.0F);
-			dergonWing1.h();
+			dergonWing1.t_();
 			dergonWing1.setPositionRotation(locX - (double) (f12 * 4.5F), locY + 2.0D, locZ - (double) (f11 * 4.5F), 0.0F, 0.0F);
 
 			if (!world.isClientSide && hurtTicks == 0)
@@ -394,7 +394,7 @@ public class Dergon extends EntityEnderDragon
 			f3 = MathHelper.sin(yaw * 3.1415927F / 180.0F - bc * 0.01F);
 			float f13 = MathHelper.cos(yaw * 3.1415927F / 180.0F - bc * 0.01F);
 
-			dergonHead.h();
+			dergonHead.t_();
 			dergonHead.setPositionRotation(locX + (double) (f3 * 5.5F * f2), locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (f9 * 5.5F), locZ - (double) (f13 * 5.5F * f2), 0.0F, 0.0F);
 
 			for (int j = 0; j < 3; ++j)
@@ -417,7 +417,7 @@ public class Dergon extends EntityEnderDragon
 				float f17 = 1.5F;
 				float f18 = (float) (j + 1) * 2.0F;
 
-				entitycomplexpart.h();
+				entitycomplexpart.t_();
 				entitycomplexpart.setPositionRotation(locX - (double) ((f11 * f17 + f15 * f18) * f2), locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f18 + f17) * f9) + 1.5D, locZ + (double) ((f12 * f17 + f16 * f18) * f2), 0.0F, 0.0F);
 			}
 
