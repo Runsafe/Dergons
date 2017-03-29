@@ -445,11 +445,11 @@ public class Dergon extends EntityEnderDragon
 			Entity entity = (Entity) rawEntity;
 			if (entity instanceof EntityLiving)
 			{
-				double d2 = entity.locX - bodyBoundingBoxValue0;
-				double d3 = entity.locZ - bodyBoundingBoxValue1;
-				double d4 = d2 * d2 + d3 * d3;
+				double xDistance = entity.locX - bodyBoundingBoxValue0;
+				double zDistance = entity.locZ - bodyBoundingBoxValue1;
+				double distanceSquared = xDistance * xDistance + zDistance * zDistance;
 
-				entity.g(d2 / d4 * 4.0D, 0.20000000298023224D, d3 / d4 * 4.0D);
+				entity.g(xDistance / distanceSquared * 4.0D, 0.20000000298023224D, zDistance / distanceSquared * 4.0D);
 			}
 		}
 	}
