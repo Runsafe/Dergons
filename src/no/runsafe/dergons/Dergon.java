@@ -381,11 +381,30 @@ public class Dergon extends EntityEnderDragon
 			float f12 = MathHelper.cos(f10);
 
 			dergonBody.t_();
-			dergonBody.setPositionRotation(locX + (double) (f11 * 0.5F), locY, locZ - (double) (f12 * 0.5F), 0.0F, 0.0F);
+			dergonBody.setPositionRotation(
+					locX + (double) (f11 * 0.5F),
+					locY,
+					locZ - (double) (f12 * 0.5F),
+					0.0F,
+					0.0F
+			);
+
 			dergonWing0.t_();
-			dergonWing0.setPositionRotation(locX + (double) (f12 * 4.5F), locY + 2.0D, locZ + (double) (f11 * 4.5F), 0.0F, 0.0F);
+			dergonWing0.setPositionRotation(
+					locX + (double) (f12 * 4.5F),
+					locY + 2.0D,
+					locZ + (double) (f11 * 4.5F),
+					0.0F,
+					0.0F
+			);
+
 			dergonWing1.t_();
-			dergonWing1.setPositionRotation(locX - (double) (f12 * 4.5F), locY + 2.0D, locZ - (double) (f11 * 4.5F), 0.0F, 0.0F);
+			dergonWing1.setPositionRotation(
+					locX - (double) (f12 * 4.5F),
+					locY + 2.0D,
+					locZ - (double) (f11 * 4.5F),
+					0.0F, 0.0F
+			);
 
 			if (!world.isClientSide && hurtTicks == 0)
 			{
