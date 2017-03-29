@@ -407,16 +407,16 @@ public class Dergon extends EntityEnderDragon
 			//Move the tail
 			for (int tailNumber = 0; tailNumber < 3; ++tailNumber)
 			{
-				EntityComplexPart entitycomplexpart = null;
+				EntityComplexPart tailSection = null;
 
 				if (tailNumber == 0)
-					entitycomplexpart = dergonTailSection0;
+					tailSection = dergonTailSection0;
 
 				if (tailNumber == 1)
-					entitycomplexpart = dergonTailSection1;
+					tailSection = dergonTailSection1;
 
 				if (tailNumber == 2)
-					entitycomplexpart = dergonTailSection2;
+					tailSection = dergonTailSection2;
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
 				float f14 = yaw * PI / 180.0F + b(adouble2[0] - adouble[0]) * PI / 180.0F * 1.0F;
@@ -425,8 +425,8 @@ public class Dergon extends EntityEnderDragon
 				float f17 = 1.5F;
 				float f18 = (float) (tailNumber + 1) * 2.0F;
 
-				entitycomplexpart.t_();
-				entitycomplexpart.setPositionRotation(locX - (double) ((f11 * f17 + f15 * f18) * f2), locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f18 + f17) * f9) + 1.5D, locZ + (double) ((f12 * f17 + f16 * f18) * f2), 0.0F, 0.0F);
+				tailSection.t_();
+				tailSection.setPositionRotation(locX - (double) ((f11 * f17 + f15 * f18) * f2), locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f18 + f17) * f9) + 1.5D, locZ + (double) ((f12 * f17 + f16 * f18) * f2), 0.0F, 0.0F);
 			}
 
 			if (!world.isClientSide)
