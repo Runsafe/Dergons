@@ -205,7 +205,7 @@ public class Dergon extends EntityEnderDragon
 		float f;
 		float f1;
 
-		if (world.isStatic)
+		if (world.isClientSide)
 		{
 			f = MathHelper.cos(bv * 3.1415927F * 2.0F);
 			f1 = MathHelper.cos(bu * 3.1415927F * 2.0F);
@@ -252,7 +252,7 @@ public class Dergon extends EntityEnderDragon
 			double d3;
 			float f3;
 
-			if (world.isStatic)
+			if (world.isClientSide)
 			{
 				if (bc > 0)
 				{
@@ -374,7 +374,7 @@ public class Dergon extends EntityEnderDragon
 			dergonWing1.h();
 			dergonWing1.setPositionRotation(locX - (double) (f12 * 4.5F), locY + 2.0D, locZ - (double) (f11 * 4.5F), 0.0F, 0.0F);
 
-			if (!world.isStatic && hurtTicks == 0)
+			if (!world.isClientSide && hurtTicks == 0)
 			{
 				a(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
 				a(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
@@ -414,7 +414,7 @@ public class Dergon extends EntityEnderDragon
 				entitycomplexpart.setPositionRotation(locX - (double) ((f11 * f17 + f15 * f18) * f2), locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f18 + f17) * f9) + 1.5D, locZ + (double) ((f12 * f17 + f16 * f18) * f2), 0.0F, 0.0F);
 			}
 
-			if (!world.isStatic)
+			if (!world.isClientSide)
 				bx = a(dergonHead.getBoundingBox()) | a(dergonBody.getBoundingBox());
 		}
 	}
