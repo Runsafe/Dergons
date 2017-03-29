@@ -248,7 +248,7 @@ public class Dergon extends EntityEnderDragon
 			f *= (float) Math.pow(2.0D, motY);
 			bv += (bx ? f * 0.5F : f);
 
-			yaw = MathHelper.g(yaw);
+			yaw = (float) trimDegrees(yaw);
 			if (bl < 0)
 			{
 				for (int d05 = 0; d05 < bk.length; ++d05)
@@ -276,7 +276,7 @@ public class Dergon extends EntityEnderDragon
 					d0 = locX + (bd - locX) / bc;
 					d1 = locY + (be - locY) / bc;
 					d2 = locZ + (bf - locZ) / bc;
-					d3 = MathHelper.g(bg - (double) yaw);
+					d3 = trimDegrees(bg - (double) yaw);
 					yaw = (float) ((double) yaw + d3 / bc);
 					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
 					--bc;
@@ -322,9 +322,9 @@ public class Dergon extends EntityEnderDragon
 					d1 = (double) f3;
 
 				motY += d1 * 0.10000000149011612D;
-				yaw = MathHelper.g(yaw);
+				yaw = (float) trimDegrees(yaw);
 				double d8 = 180.0D - Math.atan2(d0, d2) * 180.0D / Math.PI;
-				double d9 = MathHelper.g(d8 - (double) yaw);
+				double d9 = trimDegrees(d8 - (double) yaw);
 
 				if (d9 > 50.0D)
 					d9 = 50.0D;
@@ -420,7 +420,7 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
-				float f14 = yaw * PI / 180.0F + b(adouble2[0] - adouble[0]) * PI / 180.0F * 1.0F;
+				float f14 = yaw * PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * PI / 180.0F * 1.0F;
 				float f15 = MathHelper.sin(f14);
 				float f16 = MathHelper.cos(f14);
 				float f17 = 1.5F;
@@ -483,9 +483,14 @@ public class Dergon extends EntityEnderDragon
 		return false;
 	}
 
-	private float b(double d0)
+	/**
+	 * Trims down a degree value to between -180 and 180.
+	 * @param degreeValue Number to trim.
+	 * @return Trimmed degree value.
+	 */
+	private double trimDegrees(double degreeValue)
 	{
-		return (float) MathHelper.g(d0);
+		return MathHelper.g(degreeValue);
 	}
 
 	/**
