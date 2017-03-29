@@ -183,8 +183,15 @@ public class Dergon extends EntityEnderDragon
 		targetEntity = null;
 	}
 
+	/**
+	 * Update method for Dergons.
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: e
+	 * v1_8_R3: m
+	 * v1_9_R2: n
+	 */
 	@Override
-	public void e()
+	public void m()
 	{
 		// Throw a player off it's back if we're high up.
 		if (ridingPlayer != null && locY >= 90)
