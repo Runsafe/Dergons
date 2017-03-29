@@ -393,8 +393,8 @@ public class Dergon extends EntityEnderDragon
 
 			if (!world.isClientSide && hurtTicks == 0)
 			{
-				a(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
-				a(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+				launchEntities(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+				launchEntities(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
 				hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 			}
 
@@ -435,7 +435,11 @@ public class Dergon extends EntityEnderDragon
 		}
 	}
 
-	private void a(List list)
+	/**
+	 * Launches entities a short distance.
+	 * @param list Entities to launch
+	 */
+	private void launchEntities(List list)
 	{
 		double d0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
 		double d1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
