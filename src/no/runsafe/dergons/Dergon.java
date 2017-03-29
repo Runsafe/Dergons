@@ -13,6 +13,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/*
+ * Names of obfuscated variables in various spigot versions:
+ *
+ * Variables in EntityEnderDragon:
+ * Type			v1_7_R3		v1_8_R3		v1_9_R2
+ * public double		h			a			?		DergonX
+ * public double		i			b			?		DergonY
+ * public double		bm			c			?		DergonZ
+ * public double[][]		bn			bk			b
+ * public int			bo			bl			c
+ * public float		bx			bu			bD		Radius?
+ * public float		by			bv			bE		Radius?
+ * public boolean		bz			bw			?	Currently has a selected target?
+ * public boolean		bA			bx			bF
+ * public int			bB			by			bG
+ *
+ * Entity.class:
+ * public double		j			j			?
+ * public boolean		G			F			C
+ *
+ * EntityLiving.Class:
+ * protected int		bg			bc			bh
+ * protected double		bh			bd			bi		Might have something to do with coordintes.
+ * protected double		bi			be			bj		Might have something to do with coordintes.
+ * protected double		bj			bf			bk		Might have something to do with coordintes.
+ * protected double		bk			bg			bl
+ * protected double		bl			bh			bm
+ * public float		aN			aJ			aO		Yaw?
+ * protected float		bf			bb			Either be, bf, or bg.
+ */
+
 public class Dergon extends EntityEnderDragon
 {
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
@@ -81,7 +112,7 @@ public class Dergon extends EntityEnderDragon
 
 	private void bO()
 	{
-		bz = false;
+		bw = false;
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 
@@ -176,13 +207,13 @@ public class Dergon extends EntityEnderDragon
 
 		if (world.isStatic)
 		{
-			f = MathHelper.cos(by * 3.1415927F * 2.0F);
-			f1 = MathHelper.cos(bx * 3.1415927F * 2.0F);
+			f = MathHelper.cos(bv * 3.1415927F * 2.0F);
+			f1 = MathHelper.cos(bu * 3.1415927F * 2.0F);
 			if (f1 <= -0.3F && f >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
-		bx = by;
+		bu = bv;
 		float f2;
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
@@ -198,23 +229,23 @@ public class Dergon extends EntityEnderDragon
 			this.bN();
 			f = 0.2F / (MathHelper.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
 			f *= (float) Math.pow(2.0D, motY);
-			by += (bA ? f * 0.5F : f);
+			bv += (bx ? f * 0.5F : f);
 
 			yaw = MathHelper.g(yaw);
-			if (bo < 0)
+			if (bl < 0)
 			{
-				for (int d05 = 0; d05 < bn.length; ++d05)
+				for (int d05 = 0; d05 < bk.length; ++d05)
 				{
-					bn[d05][0] = (double) yaw;
-					bn[d05][1] = locY;
+					bk[d05][0] = (double) yaw;
+					bk[d05][1] = locY;
 				}
 			}
 
-			if (++bo == bn.length)
-				bo = 0;
+			if (++bl == bk.length)
+				bl = 0;
 
-			bn[bo][0] = (double) yaw;
-			bn[bo][1] = locY;
+			bk[bl][0] = (double) yaw;
+			bk[bl][1] = locY;
 			double d0;
 			double d1;
 			double d2;
@@ -223,15 +254,15 @@ public class Dergon extends EntityEnderDragon
 
 			if (world.isStatic)
 			{
-				if (bg > 0)
+				if (bc > 0)
 				{
-					d0 = locX + (bh - locX) / bg;
-					d1 = locY + (bi - locY) / bg;
-					d2 = locZ + (bj - locZ) / bg;
-					d3 = MathHelper.g(bk - (double) yaw);
-					yaw = (float) ((double) yaw + d3 / bg);
-					pitch = (float) ((double) pitch + (bl - (double) pitch) / bg);
-					--bg;
+					d0 = locX + (bd - locX) / bc;
+					d1 = locY + (be - locY) / bc;
+					d2 = locZ + (bf - locZ) / bc;
+					d3 = MathHelper.g(bg - (double) yaw);
+					yaw = (float) ((double) yaw + d3 / bc);
+					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
+					--bc;
 					setPosition(d0, d1, d2);
 					b(yaw, pitch);
 				}
@@ -262,7 +293,7 @@ public class Dergon extends EntityEnderDragon
 					setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
 				}
 
-				if (bz || d3 < 100.0D || d3 > 22500.0D || positionChanged || G)
+				if (bw || d3 < 100.0D || d3 > 22500.0D || positionChanged || F)
 					bO();
 
 				d1 /= (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
@@ -291,20 +322,20 @@ public class Dergon extends EntityEnderDragon
 				if (f4 < 0.0F)
 					f4 = 0.0F;
 
-				bf *= 0.8F;
+				bb *= 0.8F;
 				float f5 = MathHelper.sqrt(motX * motX + motZ * motZ) * 1.0F + 1.0F;
 				double d10 = Math.sqrt(motX * motX + motZ * motZ) * 1.0D + 1.0D;
 
 				if (d10 > 40.0D)
 					d10 = 40.0D;
 
-				bf = (float) ((double) bf + d9 * (0.699999988079071D / d10 / (double) f5));
-				yaw += bf * 0.1F;
+				bb = (float) ((double) bb + d9 * (0.699999988079071D / d10 / (double) f5));
+				yaw += bb * 0.1F;
 				float f6 = (float) (2.0D / (d10 + 1.0D));
 				float f7 = 0.06F;
 
 				a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
-				if (bA)
+				if (bx)
 					move(motX * 0.800000011920929D, motY * 0.800000011920929D, motZ * 0.800000011920929D);
 				else
 					move(motX, motY, motZ);
@@ -318,7 +349,7 @@ public class Dergon extends EntityEnderDragon
 				motY *= 0.9100000262260437D;
 			}
 
-			aN = yaw;
+			aJ = yaw;
 			dergonHead.width = dergonHead.length = 3.0F;
 			dergonTailSection0.width = dergonTailSection0.length = 2.0F;
 			dergonTailSection1.width = dergonTailSection1.length = 2.0F;
@@ -353,8 +384,8 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			f3 = MathHelper.sin(yaw * 3.1415927F / 180.0F - bg * 0.01F);
-			float f13 = MathHelper.cos(yaw * 3.1415927F / 180.0F - bg * 0.01F);
+			f3 = MathHelper.sin(yaw * 3.1415927F / 180.0F - bc * 0.01F);
+			float f13 = MathHelper.cos(yaw * 3.1415927F / 180.0F - bc * 0.01F);
 
 			dergonHead.h();
 			dergonHead.setPositionRotation(locX + (double) (f3 * 5.5F * f2), locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (f9 * 5.5F), locZ - (double) (f13 * 5.5F * f2), 0.0F, 0.0F);
@@ -384,7 +415,7 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			if (!world.isStatic)
-				bA = a(dergonHead.getBoundingBox()) | a(dergonBody.getBoundingBox());
+				bx = a(dergonHead.getBoundingBox()) | a(dergonBody.getBoundingBox());
 		}
 	}
 
@@ -439,7 +470,7 @@ public class Dergon extends EntityEnderDragon
 	protected void aE()
 	{
 		super.aE();
-		if (this.bB == 200)
+		if (this.by == 200)
 			handler.handleDergonDeath(this);
 	}
 
