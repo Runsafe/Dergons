@@ -57,6 +57,28 @@ public class Dergon extends EntityEnderDragon
 		c = z;
 	}
 
+	/*
+	 * Dergon bodily appendages.
+	 * Only their hitboxes.
+	 * Names in various spigot versions:
+	 * v1_7_R3		v1_8_R3		v1_9_R2
+	 * bq			bn			bv		Head
+	 * br			bo			bx		Body
+	 * bv			bs			bB		Wing
+	 * bw			bt			bC		Wing
+	 * bs			bp			by		Tail section closest to body
+	 * bt			bq			bz		Middle tail section
+	 * bu			br			bA		Last tail section
+	 * N/A			N/A			bw		Neck (Only in 1.9+)
+	 */
+	private EntityComplexPart dergonHead = bn;
+	private EntityComplexPart dergonBody = bo;
+	private EntityComplexPart dergonWing0 = bs;
+	private EntityComplexPart dergonWing1 = bt;
+	private EntityComplexPart dergonTailSection0 = bp;
+	private EntityComplexPart dergonTailSection1 = bq;
+	private EntityComplexPart dergonTailSection2 = br;
+
 	private void bO()
 	{
 		bz = false;
@@ -297,16 +319,16 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			aN = yaw;
-			bq.width = bq.length = 3.0F;
-			bs.width = bs.length = 2.0F;
-			bt.width = bt.length = 2.0F;
-			bu.width = bu.length = 2.0F;
-			br.length = 3.0F;
-			br.width = 5.0F;
-			bv.length = 2.0F;
-			bv.width = 4.0F;
-			bw.length = 3.0F;
-			bw.width = 4.0F;
+			dergonHead.width = dergonHead.length = 3.0F;
+			dergonTailSection0.width = dergonTailSection0.length = 2.0F;
+			dergonTailSection1.width = dergonTailSection1.length = 2.0F;
+			dergonTailSection2.width = dergonTailSection2.length = 2.0F;
+			dergonBody.length = 3.0F;
+			dergonBody.width = 5.0F;
+			dergonWing0.length = 2.0F;
+			dergonWing0.width = 4.0F;
+			dergonWing1.length = 3.0F;
+			dergonWing1.width = 4.0F;
 			f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * 3.1415927F;
 			f2 = MathHelper.cos(f1);
 			float f9 = -MathHelper.sin(f1);
@@ -314,18 +336,18 @@ public class Dergon extends EntityEnderDragon
 			float f11 = MathHelper.sin(f10);
 			float f12 = MathHelper.cos(f10);
 
-			br.h();
-			br.setPositionRotation(locX + (double) (f11 * 0.5F), locY, locZ - (double) (f12 * 0.5F), 0.0F, 0.0F);
-			bv.h();
-			bv.setPositionRotation(locX + (double) (f12 * 4.5F), locY + 2.0D, locZ + (double) (f11 * 4.5F), 0.0F, 0.0F);
-			bw.h();
-			bw.setPositionRotation(locX - (double) (f12 * 4.5F), locY + 2.0D, locZ - (double) (f11 * 4.5F), 0.0F, 0.0F);
+			dergonBody.h();
+			dergonBody.setPositionRotation(locX + (double) (f11 * 0.5F), locY, locZ - (double) (f12 * 0.5F), 0.0F, 0.0F);
+			dergonWing0.h();
+			dergonWing0.setPositionRotation(locX + (double) (f12 * 4.5F), locY + 2.0D, locZ + (double) (f11 * 4.5F), 0.0F, 0.0F);
+			dergonWing1.h();
+			dergonWing1.setPositionRotation(locX - (double) (f12 * 4.5F), locY + 2.0D, locZ - (double) (f11 * 4.5F), 0.0F, 0.0F);
 
 			if (!world.isStatic && hurtTicks == 0)
 			{
-				a(world.getEntities(this, bv.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				a(world.getEntities(this, bw.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
-				b(world.getEntities(this, bq.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
+				a(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				a(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).d(0.0D, -2.0D, 0.0D)));
+				b(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 			}
 
 			double[] adouble = b(5, 1.0F);
@@ -334,21 +356,21 @@ public class Dergon extends EntityEnderDragon
 			f3 = MathHelper.sin(yaw * 3.1415927F / 180.0F - bg * 0.01F);
 			float f13 = MathHelper.cos(yaw * 3.1415927F / 180.0F - bg * 0.01F);
 
-			bq.h();
-			bq.setPositionRotation(locX + (double) (f3 * 5.5F * f2), locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (f9 * 5.5F), locZ - (double) (f13 * 5.5F * f2), 0.0F, 0.0F);
+			dergonHead.h();
+			dergonHead.setPositionRotation(locX + (double) (f3 * 5.5F * f2), locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (f9 * 5.5F), locZ - (double) (f13 * 5.5F * f2), 0.0F, 0.0F);
 
 			for (int j = 0; j < 3; ++j)
 			{
 				EntityComplexPart entitycomplexpart = null;
 
 				if (j == 0)
-					entitycomplexpart = bs;
+					entitycomplexpart = dergonTailSection0;
 
 				if (j == 1)
-					entitycomplexpart = bt;
+					entitycomplexpart = dergonTailSection1;
 
 				if (j == 2)
-					entitycomplexpart = bu;
+					entitycomplexpart = dergonTailSection2;
 
 				double[] adouble2 = b(12 + j * 2, 1.0F);
 				float f14 = yaw * 3.1415927F / 180.0F + b(adouble2[0] - adouble[0]) * 3.1415927F / 180.0F * 1.0F;
@@ -362,14 +384,14 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			if (!world.isStatic)
-				bA = a(bq.getBoundingBox()) | a(br.getBoundingBox());
+				bA = a(dergonHead.getBoundingBox()) | a(dergonBody.getBoundingBox());
 		}
 	}
 
 	private void a(List list)
 	{
-		double d0 = (br.getBoundingBox().a + br.getBoundingBox().d) / 2.0D;
-		double d1 = (br.getBoundingBox().c + br.getBoundingBox().f) / 2.0D;
+		double d0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
+		double d1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
 
 		for (Object rawEntity : list)
 		{
