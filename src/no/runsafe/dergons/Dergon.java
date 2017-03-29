@@ -291,13 +291,13 @@ public class Dergon extends EntityEnderDragon
 				{
 					setDergonX(targetEntity.locX);
 					setDergonZ(targetEntity.locZ);
-					double d4 = getDergonX() - locX;
-					double d5 = getDergonZ() - locZ;
-					double d6 = Math.sqrt(d4 * d4 + d5 * d5);
-					double d7 = 0.4000000059604645D + d6 / 80.0D - 1.0D;
+					double xDistanceToTarget = getDergonX() - locX;
+					double yDistanceToTarget = getDergonZ() - locZ;
+					double distanceToTarget = Math.sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
+					double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
 
-					if (d7 > 10.0D)
-						d7 = 10.0D;
+					if (ascendDistance > 10.0D)
+						ascendDistance = 10.0D;
 
 					setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
 				}
