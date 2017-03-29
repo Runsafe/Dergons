@@ -323,8 +323,8 @@ public class Dergon extends EntityEnderDragon
 
 				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
-				double d8 = 180.0D - Math.atan2(targetPosX, targetPosZ) * 180.0D / Math.PI;
-				double d9 = trimDegrees(d8 - (double) yaw);
+				double targetDirection = 180.0D - Math.atan2(targetPosX, targetPosZ) * 180.0D / Math.PI;
+				double d9 = trimDegrees(targetDirection - (double) yaw);
 
 				if (d9 > 50.0D)
 					d9 = 50.0D;
