@@ -437,16 +437,16 @@ public class Dergon extends EntityEnderDragon
 	 */
 	private void launchEntities(List list)
 	{
-		double d0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
-		double d1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
+		double bodyBoundingBoxValue0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
+		double bodyBoundingBoxValue1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
 
 		for (Object rawEntity : list)
 		{
 			Entity entity = (Entity) rawEntity;
 			if (entity instanceof EntityLiving)
 			{
-				double d2 = entity.locX - d0;
-				double d3 = entity.locZ - d1;
+				double d2 = entity.locX - bodyBoundingBoxValue0;
+				double d3 = entity.locZ - bodyBoundingBoxValue1;
 				double d4 = d2 * d2 + d3 * d3;
 
 				entity.g(d2 / d4 * 4.0D, 0.20000000298023224D, d3 / d4 * 4.0D);
