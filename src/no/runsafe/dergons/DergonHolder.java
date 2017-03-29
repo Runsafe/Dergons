@@ -58,7 +58,7 @@ public class DergonHolder
 				Dergon dragon = new Dergon(world, handler, targetLocation, dergonID);
 				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				dragon.setCustomName("Dergon");
-				dragon.getAttributeInstance(GenericAttributes.a).setValue(health);
+				dragon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
 				dragon.setHealth(health);
 				rawWorld.addEntity(dragon);
 			}
