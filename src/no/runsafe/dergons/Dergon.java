@@ -329,8 +329,8 @@ public class Dergon extends EntityEnderDragon
 				if (d9 < -50.0D)
 					d9 = -50.0D;
 
-				Vec3D vec3d = Vec3D.a(getDergonX() - locX, getDergonY() - locY, getDergonZ() - locZ).a();
-				Vec3D vec3d1 = Vec3D.a((double) MathHelper.sin(yaw * PI / 180.0F), motY, (double) (-MathHelper.cos(yaw * PI / 180.0F))).a();
+				Vec3D vec3d = new Vec3D(getDergonX() - locX, getDergonY() - locY, getDergonZ() - locZ).a();
+				Vec3D vec3d1 = new Vec3D((double) MathHelper.sin(yaw * PI / 180.0F), motY, (double) (-MathHelper.cos(yaw * PI / 180.0F))).a();
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
 				if (f4 < 0.0F)
@@ -354,7 +354,7 @@ public class Dergon extends EntityEnderDragon
 				else
 					move(motX, motY, motZ);
 
-				Vec3D vec3d2 = Vec3D.a(motX, motY, motZ).a();
+				Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
 				float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
 
 				f8 = 0.8F + 0.15F * f8;
