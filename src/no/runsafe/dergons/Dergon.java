@@ -228,14 +228,11 @@ public class Dergon extends EntityEnderDragon
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
 			// If we're dead, play a random explosion effect at a random offset to it's corpse.
-			f = (random.nextFloat() - 0.5F) * 8.0F;
-			f1 = (random.nextFloat() - 0.5F) * 4.0F;
-			f2 = (random.nextFloat() - 0.5F) * 8.0F;
 			world.addParticle(
 					EnumParticle.EXPLOSION_LARGE,
-					locX + (double) f,
-					locY + 2.0D + (double) f1,
-					locZ + (double) f2,
+					locX + (double) (random.nextFloat() - 0.5F) * 8.0F,
+					locY + (double) (random.nextFloat() - 0.5F) * 4.0F + 2.0D,
+					locZ + (double) (random.nextFloat() - 0.5F) * 8.0F,
 					0.0D,
 					0.0D,
 					0.0D
