@@ -285,10 +285,11 @@ public class Dergon extends EntityEnderDragon
 			}
 			else
 			{
-				double d0 = getDergonX() - locX;
-				double d1 = getDergonY() - locY;
-				double d2 = getDergonZ() - locZ;
-				double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+				//Get target position relative to Dergon
+				double targetPosX = getDergonX() - locX;
+				double targetPosY = getDergonY() - locY;
+				double targetPosZ = getDergonZ() - locZ;
+				double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
 				if (targetEntity != null)
 				{
 					setDergonX(targetEntity.locX);
@@ -309,20 +310,20 @@ public class Dergon extends EntityEnderDragon
 					setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
 				}
 
-				if (bw || d3 < 100.0D || d3 > 22500.0D || positionChanged || F)
+				if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
 					updateCurrentTarget();
 
-				d1 /= (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+				targetPosY /= (double) MathHelper.sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
 				float f3 = 0.6F;
-				if (d1 < (double) (-f3))
-					d1 = (double) (-f3);
+				if (targetPosY < (double) (-f3))
+					targetPosY = (double) (-f3);
 
-				if (d1 > (double) f3)
-					d1 = (double) f3;
+				if (targetPosY > (double) f3)
+					targetPosY = (double) f3;
 
-				motY += d1 * 0.10000000149011612D;
+				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
-				double d8 = 180.0D - Math.atan2(d0, d2) * 180.0D / Math.PI;
+				double d8 = 180.0D - Math.atan2(targetPosX, targetPosZ) * 180.0D / Math.PI;
 				double d9 = trimDegrees(d8 - (double) yaw);
 
 				if (d9 > 50.0D)
