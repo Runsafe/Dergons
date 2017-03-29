@@ -466,10 +466,16 @@ public class Dergon extends EntityEnderDragon
 			super.d(source, handler.handleDergonDamage(this, source, f));
 	}
 
+	/**
+	 * Handle dergon death.
+	 * Names of this function in various spigot versions:
+	 * v1_7_R3: aE
+	 * v1_8_R3: aZ
+	 */
 	@Override
-	protected void aE()
+	protected void aZ()
 	{
-		super.aE();
+		super.aZ();
 		if (this.by == 200)
 			handler.handleDergonDeath(this);
 	}
