@@ -272,14 +272,14 @@ public class Dergon extends EntityEnderDragon
 			{
 				if (bc > 0)
 				{
-					double d0 = locX + (bd - locX) / bc;
-					double d1 = locY + (be - locY) / bc;
-					double d2 = locZ + (bf - locZ) / bc;
+					double newXPosition = locX + (bd - locX) / bc;
+					double newYPosition = locY + (be - locY) / bc;
+					double newZPosition = locZ + (bf - locZ) / bc;
 					double d3 = trimDegrees(bg - (double) yaw);
 					yaw = (float) ((double) yaw + d3 / bc);
 					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
 					--bc;
-					setPosition(d0, d1, d2);
+					setPosition(newXPosition, newYPosition, newZPosition);
 					setYawPitch(yaw, pitch);
 				}
 			}
@@ -378,35 +378,35 @@ public class Dergon extends EntityEnderDragon
 			dergonWing1.length = 3.0F;
 			dergonWing1.width = 4.0F;
 			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI;
-			float f2 = MathHelper.cos(f1);
-			float f9 = -MathHelper.sin(f1);
-			float f10 = yaw * PI / 180.0F;
-			float f11 = MathHelper.sin(f10);
-			float f12 = MathHelper.cos(f10);
+			float cosF1 = MathHelper.cos(f1);
+			float sinF1 = -MathHelper.sin(f1);
+			float yawRad = yaw * PI / 180.0F;
+			float sinYaw = MathHelper.sin(yawRad);
+			float cosYaw = MathHelper.cos(yawRad);
 
 			dergonBody.t_();
 			dergonBody.setPositionRotation(
-					locX + (double) (f11 * 0.5F),
+					locX + (double) (sinYaw * 0.5F),
 					locY,
-					locZ - (double) (f12 * 0.5F),
+					locZ - (double) (cosYaw * 0.5F),
 					0.0F,
 					0.0F
 			);
 
 			dergonWing0.t_();
 			dergonWing0.setPositionRotation(
-					locX + (double) (f12 * 4.5F),
+					locX + (double) (cosYaw * 4.5F),
 					locY + 2.0D,
-					locZ + (double) (f11 * 4.5F),
+					locZ + (double) (sinYaw * 4.5F),
 					0.0F,
 					0.0F
 			);
 
 			dergonWing1.t_();
 			dergonWing1.setPositionRotation(
-					locX - (double) (f12 * 4.5F),
+					locX - (double) (cosYaw * 4.5F),
 					locY + 2.0D,
-					locZ - (double) (f11 * 4.5F),
+					locZ - (double) (sinYaw * 4.5F),
 					0.0F, 0.0F
 			);
 
@@ -424,7 +424,13 @@ public class Dergon extends EntityEnderDragon
 			float f13 = MathHelper.cos(yaw * PI / 180.0F - bc * 0.01F);
 
 			dergonHead.t_();
-			dergonHead.setPositionRotation(locX + (double) (f3 * 5.5F * f2), locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (f9 * 5.5F), locZ - (double) (f13 * 5.5F * f2), 0.0F, 0.0F);
+			dergonHead.setPositionRotation(
+					locX + (double) (f3 * 5.5F * cosF1),
+					locY + (adouble1[1] - adouble[1]) * 1.0D + (double) (sinF1 * 5.5F),
+					locZ - (double) (f13 * 5.5F * cosF1),
+					0.0F,
+					0.0F
+			);
 
 			//Move the tail
 			for (int tailNumber = 0; tailNumber < 3; ++tailNumber)
@@ -440,13 +446,19 @@ public class Dergon extends EntityEnderDragon
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
 				float f14 = yaw * PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * PI / 180.0F * 1.0F;
-				float f15 = MathHelper.sin(f14);
-				float f16 = MathHelper.cos(f14);
-				float f17 = 1.5F;
-				float f18 = (float) (tailNumber + 1) * 2.0F;
+				float sinF14 = MathHelper.sin(f14);
+				float cosF14 = MathHelper.cos(f14);
+				final float ONE_POINT_FIVE = 1.5F;
+				float f16 = (float) (tailNumber + 1) * 2.0F; // 2, 4, 6
 
 				tailSection.t_();
-				tailSection.setPositionRotation(locX - (double) ((f11 * f17 + f15 * f18) * f2), locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f18 + f17) * f9) + 1.5D, locZ + (double) ((f12 * f17 + f16 * f18) * f2), 0.0F, 0.0F);
+				tailSection.setPositionRotation(
+						locX - (double) ((sinYaw * ONE_POINT_FIVE + sinF14 * f16) * cosF1),
+						locY + (adouble2[1] - adouble[1]) * 1.0D - (double) ((f16 + ONE_POINT_FIVE) * sinF1) + 1.5D,
+						locZ + (double) ((cosYaw * ONE_POINT_FIVE + cosF14 * f16) * cosF1),
+						0.0F,
+						0.0F
+				);
 			}
 
 			if (!world.isClientSide)
