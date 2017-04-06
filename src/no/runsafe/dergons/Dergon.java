@@ -332,8 +332,16 @@ public class Dergon extends EntityEnderDragon
 				if (targetHeadingDifference < -50.0D)
 					targetHeadingDifference = -50.0D;
 
-				Vec3D vec3d = new Vec3D(getDergonX() - locX, getDergonY() - locY, getDergonZ() - locZ).a();
-				Vec3D vec3d1 = new Vec3D((double) MathHelper.sin(yaw * PI / 180.0F), motY, (double) (-MathHelper.cos(yaw * PI / 180.0F))).a();
+				Vec3D vec3d = new Vec3D(
+						getDergonX() - locX,
+						getDergonY() - locY,
+						getDergonZ() - locZ
+				).a();
+				Vec3D vec3d1 = new Vec3D(
+						(double) MathHelper.sin(yaw * PI / 180.0F),
+						motY,
+						(double) (-MathHelper.cos(yaw * PI / 180.0F))
+				).a();
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
 				if (f4 < 0.0F)
@@ -353,7 +361,10 @@ public class Dergon extends EntityEnderDragon
 
 				a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
 				if (bx)
-					move(motX * 0.800000011920929D, motY * 0.800000011920929D, motZ * 0.800000011920929D);
+					move(motX * 0.800000011920929D,
+						motY * 0.800000011920929D,
+						motZ * 0.800000011920929D
+					);
 				else
 					move(motX, motY, motZ);
 
@@ -407,7 +418,8 @@ public class Dergon extends EntityEnderDragon
 					locX - (double) (cosYaw * 4.5F),
 					locY + 2.0D,
 					locZ - (double) (sinYaw * 4.5F),
-					0.0F, 0.0F
+					0.0F,
+					0.0F
 			);
 
 			if (!world.isClientSide && hurtTicks == 0)
@@ -484,7 +496,10 @@ public class Dergon extends EntityEnderDragon
 				double zDistance = entity.locZ - bodyBoundingBoxValue1;
 				double distanceSquared = xDistance * xDistance + zDistance * zDistance;
 
-				entity.g(xDistance / distanceSquared * 4.0D, 0.20000000298023224D, zDistance / distanceSquared * 4.0D);
+				entity.g(xDistance / distanceSquared * 4.0D,
+						0.20000000298023224D,
+						zDistance / distanceSquared * 4.0D
+				);
 			}
 		}
 	}
