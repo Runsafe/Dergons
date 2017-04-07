@@ -18,29 +18,25 @@ import java.util.Random;
  *
  * Variables in EntityEnderDragon:
  * Type			v1_7_R3		v1_8_R3		v1_9_R2
- * public double		h			a			?		DergonX
- * public double		i			b			?		DergonY
- * public double		bm			c			?		DergonZ
- * public double[][]		bn			bk			b
- * public int			bo			bl			c
- * public float		bx			bu			bD		Radius?
- * public float		by			bv			bE		Radius?
- * public boolean		bz			bw			?	Currently has a selected target?
+ * public double[][]		bn			bk			b		Buffer array for the last 64 Y-positions and yaw rotations.
+ * public int			bo			bl			c		Ring buffer index
+ * public float		bx			bu			bD		Previous animation time.
+ * public float		by			bv			bE		Animation time.
+ * public boolean		bz			bw			?		Currently has a selected target?
  * public boolean		bA			bx			bF
- * public int			bB			by			bG
+ * public int			bB			by			bG		Death Ticks
  *
  * Entity.class:
- * public double		j			j			?
  * public boolean		G			F			C
  *
  * EntityLiving.Class:
- * protected int		bg			bc			bh
- * protected double		bh			bd			bi		Might have something to do with coordintes.
- * protected double		bi			be			bj		Might have something to do with coordintes.
- * protected double		bj			bf			bk		Might have something to do with coordintes.
- * protected double		bk			bg			bl
- * protected double		bl			bh			bm
- * public float		aN			aJ			aO		Yaw?
+ * protected int		bg			bc			bh		Position rotation increment
+ * protected double		bh			bd			bi		X position entity will be set to.
+ * protected double		bi			be			bj		Y position entity will be set to.
+ * protected double		bj			bf			bk		Z position entity will be set to.
+ * protected double		bk			bg			bl		Yaw position entity will be set to.
+ * protected double		bl			bh			bm		Pitch position entity will be set to.
+ * public float		aN			aJ			aO		Might have something to do with yaw?
  * protected float		bf			bb			Either be, bf, or bg.
  */
 
@@ -56,7 +52,13 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	static final float PI = (float) Math.PI;
-
+	/*
+	 * Dergon coordinates to fly to.
+	 * v1_7_R3		v1_8_R3		v1_9_R2
+	 * h			a			?		DergonX
+	 * i			b			?		DergonY
+	 * bm			c			?		DergonZ
+	 */
 	//Dergon X Accessor and Mutator
 	private double getDergonX()
 	{
@@ -388,6 +390,7 @@ public class Dergon extends EntityEnderDragon
 			dergonWing0.width = 4.0F;
 			dergonWing1.length = 3.0F;
 			dergonWing1.width = 4.0F;
+			//b(int, float) gets movement offsets.
 			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI;
 			float cosF1 = (float) Math.cos(f1);
 			float sinF1 = (float) -Math.sin(f1);
@@ -395,6 +398,7 @@ public class Dergon extends EntityEnderDragon
 			float sinYaw = (float) Math.sin(yawRad);
 			float cosYaw = (float) Math.cos(yawRad);
 
+			//t_() means on update.
 			dergonBody.t_();
 			dergonBody.setPositionRotation(
 					locX + (double) (sinYaw * 0.5F),
