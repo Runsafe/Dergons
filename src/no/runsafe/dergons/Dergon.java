@@ -51,7 +51,7 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	static final float PI = (float) Math.PI;
+	private static final float PI = (float) Math.PI;
 
 	/*
 	 * Dergon coordinates to fly to.
