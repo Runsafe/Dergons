@@ -52,6 +52,7 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	static final float PI = (float) Math.PI;
+
 	/*
 	 * Dergon coordinates to fly to.
 	 * v1_7_R3		v1_8_R3		v1_9_R2
