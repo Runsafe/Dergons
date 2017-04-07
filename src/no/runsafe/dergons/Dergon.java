@@ -226,9 +226,9 @@ public class Dergon extends EntityEnderDragon
 
 		if (world.isClientSide)
 		{
-			float f = (float) Math.cos(bv * PI * 2.0F);
-			float f1 = (float) Math.cos(bu * PI * 2.0F);
-			if (f1 <= -0.3F && f >= -0.3F)
+			float animationPoint = (float) Math.cos(bv * PI * 2.0F);
+			float previousAnimationPoint = (float) Math.cos(bu * PI * 2.0F);
+			if (previousAnimationPoint <= -0.3F && animationPoint >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
 
@@ -257,10 +257,10 @@ public class Dergon extends EntityEnderDragon
 			yaw = (float) trimDegrees(yaw);
 			if (bl < 0)
 			{
-				for (int d05 = 0; d05 < bk.length; ++d05)
+				for (int i = 0; i < bk.length; ++i)
 				{
-					bk[d05][0] = (double) yaw;
-					bk[d05][1] = locY;
+					bk[i][0] = (double) yaw;
+					bk[i][1] = locY;
 				}
 			}
 
@@ -277,8 +277,8 @@ public class Dergon extends EntityEnderDragon
 					double newXPosition = locX + (bd - locX) / bc;
 					double newYPosition = locY + (be - locY) / bc;
 					double newZPosition = locZ + (bf - locZ) / bc;
-					double d3 = trimDegrees(bg - (double) yaw);
-					yaw = (float) ((double) yaw + d3 / bc);
+					double newYawIncrement = trimDegrees(bg - (double) yaw);
+					yaw = (float) ((double) yaw + newYawIncrement / bc);
 					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
 					--bc;
 					setPosition(newXPosition, newYPosition, newZPosition);
@@ -338,12 +338,12 @@ public class Dergon extends EntityEnderDragon
 						getDergonX() - locX,
 						getDergonY() - locY,
 						getDergonZ() - locZ
-				).a();
+				).a();// .a() -> Normalize values
 				Vec3D vec3d1 = new Vec3D(
 						Math.sin(yaw * PI / 180.0F),
 						motY,
 						(-Math.cos(yaw * PI / 180.0F))
-				).a();
+				).a();// .a() -> Normalize values
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
 				if (f4 < 0.0F)
@@ -465,13 +465,13 @@ public class Dergon extends EntityEnderDragon
 				float sinF14 = (float) Math.sin(f14);
 				float cosF14 = (float) Math.cos(f14);
 				final float ONE_POINT_FIVE = 1.5F;
-				float f16 = (float) (tailNumber + 1) * 2.0F; // 2, 4, 6
+				float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
 
 				tailSection.t_();
 				tailSection.setPositionRotation(
-						locX - (double) ((sinYaw * ONE_POINT_FIVE + sinF14 * f16) * cosF1),
-						locY + (adouble2[1] - adouble[1]) - (double) ((f16 + ONE_POINT_FIVE) * sinF1) + 1.5D,
-						locZ + (double) ((cosYaw * ONE_POINT_FIVE + cosF14 * f16) * cosF1),
+						locX - (double) ((sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1),
+						locY + (adouble2[1] - adouble[1]) - (double) ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
+						locZ + (double) ((cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1),
 						0.0F,
 						0.0F
 				);
