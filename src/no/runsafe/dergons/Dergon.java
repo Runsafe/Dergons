@@ -135,11 +135,7 @@ public class Dergon extends EntityEnderDragon
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
 
-				if (!unluckyChum.isVanished()
-					&& !unluckyChum.isDead()
-					&& unluckyChum.getGameMode() != GameMode.CREATIVE
-					&& unluckyChum.getGameMode() != GameMode.SPECTATOR
-				)
+				if (isValidTarget(unluckyChum))
 				{
 					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
 
@@ -167,11 +163,7 @@ public class Dergon extends EntityEnderDragon
 			for (IPlayer player : players)
 			{
 				// Skip the player if we're vanished, in creative mode, or in spectator mode.
-				if (player.isVanished()
-					|| player.getGameMode() == GameMode.CREATIVE
-					|| player.getGameMode() == GameMode.SPECTATOR
-					|| isRidingPlayer(player.getName())
-				)
+				if (!isValidTarget(player) || isRidingPlayer(player.getName()))
 					continue;
 
 				ILocation playerLocation = player.getLocation();
@@ -600,6 +592,20 @@ public class Dergon extends EntityEnderDragon
 	public IWorld getDergonWorld()
 	{
 		return targetWorld;
+	}
+
+	/**
+	 * Checks if player should be targeted.
+	 * Will not return true if player is vanished, dead, in creative, or in spectator mode.
+	 * @param player Person to consider targeting.
+	 * @return True if targetable.
+	 */
+	private boolean isValidTarget(IPlayer player)
+	{
+		return !player.isVanished()
+				&& !player.isDead()
+				&& player.getGameMode() != GameMode.CREATIVE
+				&& player.getGameMode() != GameMode.SPECTATOR;
 	}
 
 	private boolean isRidingPlayer(String playerName)
