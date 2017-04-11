@@ -51,8 +51,6 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	private static final float PI = (float) Math.PI;
-
 	/*
 	 * Dergon coordinates to fly to.
 	 * v1_7_R3		v1_8_R3		v1_9_R2
@@ -227,8 +225,8 @@ public class Dergon extends EntityEnderDragon
 
 		if (world.isClientSide)
 		{
-			float animationPoint = (float) Math.cos(bv * PI * 2.0F);
-			float previousAnimationPoint = (float) Math.cos(bu * PI * 2.0F);
+			float animationPoint = (float) Math.cos(bv * Math.PI * 2.0F);
+			float previousAnimationPoint = (float) Math.cos(bu * Math.PI * 2.0F);
 			if (previousAnimationPoint <= -0.3F && animationPoint >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
@@ -341,9 +339,9 @@ public class Dergon extends EntityEnderDragon
 						getDergonZ() - locZ
 				).a();// .a() -> Normalize values
 				Vec3D vec3d1 = new Vec3D(
-						Math.sin(yaw * PI / 180.0F),
+						Math.sin(yaw * (float) Math.PI / 180.0F),
 						motY,
-						(-Math.cos(yaw * PI / 180.0F))
+						(-Math.cos(yaw * (float) Math.PI / 180.0F))
 				).a();// .a() -> Normalize values
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
@@ -392,10 +390,10 @@ public class Dergon extends EntityEnderDragon
 			dergonWing1.length = 3.0F;
 			dergonWing1.width = 4.0F;
 			//b(int, float) gets movement offsets.
-			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * PI;
+			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * (float) Math.PI;
 			float cosF1 = (float) Math.cos(f1);
 			float sinF1 = (float) -Math.sin(f1);
-			float yawRad = yaw * PI / 180.0F;
+			float yawRad = yaw * (float) Math.PI / 180.0F;
 			float sinYaw = (float) Math.sin(yawRad);
 			float cosYaw = (float) Math.cos(yawRad);
 
@@ -437,8 +435,8 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			float f3 = (float) Math.sin(yaw * PI / 180.0F - bc * 0.01F);
-			float f13 = (float) Math.cos(yaw * PI / 180.0F - bc * 0.01F);
+			float f3 = (float) Math.sin(yaw * (float) Math.PI / 180.0F - bc * 0.01F);
+			float f13 = (float) Math.cos(yaw * (float) Math.PI / 180.0F - bc * 0.01F);
 
 			dergonHead.t_();
 			dergonHead.setPositionRotation(
@@ -462,7 +460,7 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
-				float f14 = yaw * PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * PI / 180.0F;
+				float f14 = yaw * (float) Math.PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * (float) Math.PI / 180.0F;
 				float sinF14 = (float) Math.sin(f14);
 				float cosF14 = (float) Math.cos(f14);
 				final float ONE_POINT_FIVE = 1.5F;
