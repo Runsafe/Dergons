@@ -240,7 +240,6 @@ public class Dergon extends EntityEnderDragon
 		}
 		else
 		{
-			this.enderCrystalInteraction();
 			float f = 0.2F / ((float) Math.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
 			f *= (float) Math.pow(2.0D, motY);
 			bv += (bx ? f * 0.5F : f);
@@ -560,15 +559,6 @@ public class Dergon extends EntityEnderDragon
 			return super.d(source, handler.handleDergonDamage(this, source, f));
 
 		return false;
-	}
-
-	/**
-	 * Handle ender crystal interactions.
-	 * Does nothing.
-	 */
-	private void enderCrystalInteraction()
-	{
-		//Unlike regular ender dragons, dergons do not associate with the likes of ender crystals.
 	}
 
 	/**
