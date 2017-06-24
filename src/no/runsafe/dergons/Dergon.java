@@ -379,8 +379,11 @@ public class Dergon extends EntityEnderDragon
 			dergonBody.width = 5.0F;
 			dergonWing0.length = dergonWing1.length = 2.0F;
 			dergonWing0.width = dergonWing1.width = 4.0F;
-			//b(int, float) gets movement offsets.
-			float f1 = (float) toRadians((b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F);
+
+			float f1 = (float) toRadians((
+				getMovementOffset(5)[1]
+				- getMovementOffset(10)[1]
+			) * 10.0F);
 			float cosF1 = (float) cos(f1);
 			float sinF1 = (float) -sin(f1);
 			float yawRad = (float) toRadians(yaw);
@@ -422,8 +425,8 @@ public class Dergon extends EntityEnderDragon
 				hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 			}
 
-			double[] adouble = b(5, 1.0F);
-			double[] adouble1 = b(0, 1.0F);
+			double[] adouble = getMovementOffset(5);
+			double[] adouble1 = getMovementOffset(0);
 
 			float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
 			float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
@@ -449,7 +452,7 @@ public class Dergon extends EntityEnderDragon
 					case 2: tailSection = dergonTailSection2; break;
 				}
 
-				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
+				double[] adouble2 = getMovementOffset(12 + tailNumber * 2);
 				float f14 = (float) toRadians(yaw + trimDegrees(adouble2[0] - adouble[0]));
 				float sinF14 = (float) sin(f14);
 				float cosF14 = (float) cos(f14);
@@ -573,6 +576,24 @@ public class Dergon extends EntityEnderDragon
 			return degreeValue + 360.0D;
 
 		return degreeValue;
+	}
+
+	/**
+	 * Gets a movement offset. Useful for calculating trailing tail and neck positions.
+	 * @param bufferIndexOffset Offset for the ring buffer.
+	 * @return A double [2] array with movement offsets.
+	 * [0] = yaw offset, [1] = y offset
+	 */
+	private double[] getMovementOffset(int bufferIndexOffset)
+	{
+		int j = bl - bufferIndexOffset & 63;
+		double[] movementOffset = new double[2];
+		//Set yaw offset
+		movementOffset[0] = bk[j][0];
+		//set y offset.
+		movementOffset[1] = bk[j][1];
+
+		return movementOffset;
 	}
 
 	/**
