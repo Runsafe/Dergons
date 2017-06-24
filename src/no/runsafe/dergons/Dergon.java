@@ -237,229 +237,228 @@ public class Dergon extends EntityEnderDragon
 				0.0D,
 				0.0D
 			);
+			return;
+		}
+
+		float f = 0.2F / ((float) sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
+		f *= (float) pow(2.0D, motY);
+		bv += (bx ? f * 0.5F : f);
+
+		yaw = (float) trimDegrees(yaw);
+		if (bl < 0)
+		{
+			for (int i = 0; i < bk.length; ++i)
+			{
+				bk[i][0] = (double) yaw;
+				bk[i][1] = locY;
+			}
+		}
+
+		if (++bl == bk.length)
+			bl = 0;
+
+		bk[bl][0] = (double) yaw;
+		bk[bl][1] = locY;
+
+		if (world.isClientSide)
+		{
+			if (bc > 0)
+			{
+				double newXPosition = locX + (bd - locX) / bc;
+				double newYPosition = locY + (be - locY) / bc;
+				double newZPosition = locZ + (bf - locZ) / bc;
+				double newYawIncrement = trimDegrees(bg - (double) yaw);
+				yaw = (float) ((double) yaw + newYawIncrement / bc);
+				pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
+				--bc;
+				setPosition(newXPosition, newYPosition, newZPosition);
+				setYawPitch(yaw, pitch);
+			}
 		}
 		else
 		{
-			float f = 0.2F / ((float) sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
-			f *= (float) pow(2.0D, motY);
-			bv += (bx ? f * 0.5F : f);
-
-			yaw = (float) trimDegrees(yaw);
-			if (bl < 0)
+			//Get target position relative to Dergon
+			double targetPosX = getDergonX() - locX;
+			double targetPosY = getDergonY() - locY;
+			double targetPosZ = getDergonZ() - locZ;
+			double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
+			if (targetEntity != null)
 			{
-				for (int i = 0; i < bk.length; ++i)
-				{
-					bk[i][0] = (double) yaw;
-					bk[i][1] = locY;
-				}
-			}
+				setDergonX(targetEntity.locX);
+				setDergonZ(targetEntity.locZ);
+				double xDistanceToTarget = getDergonX() - locX;
+				double yDistanceToTarget = getDergonZ() - locZ;
+				double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
+				double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
 
-			if (++bl == bk.length)
-				bl = 0;
+				if (ascendDistance > 10.0D)
+					ascendDistance = 10.0D;
 
-			bk[bl][0] = (double) yaw;
-			bk[bl][1] = locY;
-
-			if (world.isClientSide)
-			{
-				if (bc > 0)
-				{
-					double newXPosition = locX + (bd - locX) / bc;
-					double newYPosition = locY + (be - locY) / bc;
-					double newZPosition = locZ + (bf - locZ) / bc;
-					double newYawIncrement = trimDegrees(bg - (double) yaw);
-					yaw = (float) ((double) yaw + newYawIncrement / bc);
-					pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
-					--bc;
-					setPosition(newXPosition, newYPosition, newZPosition);
-					setYawPitch(yaw, pitch);
-				}
+				setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
 			}
 			else
 			{
-				//Get target position relative to Dergon
-				double targetPosX = getDergonX() - locX;
-				double targetPosY = getDergonY() - locY;
-				double targetPosZ = getDergonZ() - locZ;
-				double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
-				if (targetEntity != null)
-				{
-					setDergonX(targetEntity.locX);
-					setDergonZ(targetEntity.locZ);
-					double xDistanceToTarget = getDergonX() - locX;
-					double yDistanceToTarget = getDergonZ() - locZ;
-					double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
-					double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
-
-					if (ascendDistance > 10.0D)
-						ascendDistance = 10.0D;
-
-					setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
-				}
-				else
-				{
-					setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
-					setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
-				}
-
-				if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
-					updateCurrentTarget();
-
-				targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
-				final float Y_LIMIT = 0.6F;
-				if (targetPosY < (double) (-Y_LIMIT))
-					targetPosY = (double) (-Y_LIMIT);
-
-				if (targetPosY > (double) Y_LIMIT)
-					targetPosY = (double) Y_LIMIT;
-
-				motY += targetPosY * 0.10000000149011612D;
-				yaw = (float) trimDegrees(yaw);
-				double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
-				double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
-
-				if (targetHeadingDifference > 50.0D)
-					targetHeadingDifference = 50.0D;
-
-				if (targetHeadingDifference < -50.0D)
-					targetHeadingDifference = -50.0D;
-
-				Vec3D vec3d = new Vec3D(
-					getDergonX() - locX,
-					getDergonY() - locY,
-					getDergonZ() - locZ
-				).a();// .a() -> Normalize values
-				Vec3D vec3d1 = new Vec3D(
-					sin(toRadians(yaw)),
-					motY,
-					(-cos(toRadians(yaw)))
-				).a();// .a() -> Normalize values
-				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
-
-				if (f4 < 0.0F)
-					f4 = 0.0F;
-
-				bb *= 0.8F;
-				float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
-				double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
-
-				if (d10 > 40.0D)
-					d10 = 40.0D;
-
-				bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
-				yaw += bb * 0.1F;
-				float f6 = (float) (2.0D / (d10 + 1.0D));
-				float f7 = 0.06F;
-
-				a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
-				if (bx)
-					move(motX * 0.800000011920929D,
-						motY * 0.800000011920929D,
-						motZ * 0.800000011920929D
-					);
-				else
-					move(motX, motY, motZ);
-
-				Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
-				float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
-
-				f8 = 0.8F + 0.15F * f8;
-				motX *= (double) f8;
-				motZ *= (double) f8;
-				motY *= 0.9100000262260437D;
+				setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
+				setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
 			}
 
-			aJ = yaw;
-			dergonHead.width = dergonHead.length = 3.0F;
-			dergonTailSection0.width = dergonTailSection0.length = 2.0F;
-			dergonTailSection1.width = dergonTailSection1.length = 2.0F;
-			dergonTailSection2.width = dergonTailSection2.length = 2.0F;
-			dergonBody.length = 3.0F;
-			dergonBody.width = 5.0F;
-			dergonWing0.length = dergonWing1.length = 2.0F;
-			dergonWing0.width = dergonWing1.width = 4.0F;
+			if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
+				updateCurrentTarget();
 
-			float f1 = (float) toRadians((
-				getMovementOffset(5)[1]
-				- getMovementOffset(10)[1]
-			) * 10.0F);
-			float cosF1 = (float) cos(f1);
-			float sinF1 = (float) -sin(f1);
-			float yawRad = (float) toRadians(yaw);
-			float sinYaw = (float) sin(yawRad);
-			float cosYaw = (float) cos(yawRad);
+			targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
+			final float Y_LIMIT = 0.6F;
+			if (targetPosY < (double) (-Y_LIMIT))
+				targetPosY = (double) (-Y_LIMIT);
 
-			incrementHitboxLocation(
-				dergonBody,
-				(sinYaw / 2),
-				0,
-				-(cosYaw / 2)
-			);
+			if (targetPosY > (double) Y_LIMIT)
+				targetPosY = (double) Y_LIMIT;
 
-			incrementHitboxLocation(
-				dergonWing0,
-				(cosYaw * 4.5),
-				1,
-				(sinYaw * 4.5)
-			);
+			motY += targetPosY * 0.10000000149011612D;
+			yaw = (float) trimDegrees(yaw);
+			double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
+			double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
 
-			incrementHitboxLocation(
-				dergonWing1,
-				-(cosYaw * 4.5),
-				1,
-				-(sinYaw * 4.5)
-			);
+			if (targetHeadingDifference > 50.0D)
+				targetHeadingDifference = 50.0D;
 
-			if (!world.isClientSide && hurtTicks == 0)
-			{
-				launchEntities(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
-				launchEntities(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
-				hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
-			}
+			if (targetHeadingDifference < -50.0D)
+				targetHeadingDifference = -50.0D;
 
-			double[] adouble = getMovementOffset(5);
-			double[] adouble1 = getMovementOffset(0);
+			Vec3D vec3d = new Vec3D(
+				getDergonX() - locX,
+				getDergonY() - locY,
+				getDergonZ() - locZ
+			).a();// .a() -> Normalize values
+			Vec3D vec3d1 = new Vec3D(
+				sin(toRadians(yaw)),
+				motY,
+				(-cos(toRadians(yaw)))
+			).a();// .a() -> Normalize values
+			float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
-			float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
-			float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
+			if (f4 < 0.0F)
+				f4 = 0.0F;
 
-			incrementHitboxLocation(
-				dergonHead,
-				(f3 * 5.5 * cosF1),
-				(adouble1[1] - adouble[1]) + (sinF1 * 5.5),
-				-(f13 * 5.5 * cosF1)
-			);
+			bb *= 0.8F;
+			float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
+			double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
 
-			//Move the tail
-			for (int tailNumber = 0; tailNumber < 3; ++tailNumber)
-			{
-				EntityComplexPart tailSection = null;
+			if (d10 > 40.0D)
+				d10 = 40.0D;
 
-				switch (tailNumber)
-				{
-					case 0: tailSection = dergonTailSection0; break;
-					case 1: tailSection = dergonTailSection1; break;
-					case 2: tailSection = dergonTailSection2; break;
-				}
+			bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
+			yaw += bb * 0.1F;
+			float f6 = (float) (2.0D / (d10 + 1.0D));
+			float f7 = 0.06F;
 
-				double[] adouble2 = getMovementOffset(12 + tailNumber * 2);
-				float f14 = (float) toRadians(yaw + trimDegrees(adouble2[0] - adouble[0]));
-				float sinF14 = (float) sin(f14);
-				float cosF14 = (float) cos(f14);
-				final float ONE_POINT_FIVE = 1.5F;
-				float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
-
-				incrementHitboxLocation(
-					tailSection,
-					-(sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1,
-					(adouble2[1] - adouble[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
-					(cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1
+			a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
+			if (bx)
+				move(motX * 0.800000011920929D,
+					motY * 0.800000011920929D,
+					motZ * 0.800000011920929D
 				);
+			else
+				move(motX, motY, motZ);
+
+			Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
+			float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
+
+			f8 = 0.8F + 0.15F * f8;
+			motX *= (double) f8;
+			motZ *= (double) f8;
+			motY *= 0.9100000262260437D;
+		}
+
+		aJ = yaw;
+		dergonHead.width = dergonHead.length = 3.0F;
+		dergonTailSection0.width = dergonTailSection0.length = 2.0F;
+		dergonTailSection1.width = dergonTailSection1.length = 2.0F;
+		dergonTailSection2.width = dergonTailSection2.length = 2.0F;
+		dergonBody.length = 3.0F;
+		dergonBody.width = 5.0F;
+		dergonWing0.length = dergonWing1.length = 2.0F;
+		dergonWing0.width = dergonWing1.width = 4.0F;
+
+		float f1 = (float) toRadians((
+			getMovementOffset(5)[1]
+			- getMovementOffset(10)[1]
+		) * 10.0F);
+		float cosF1 = (float) cos(f1);
+		float sinF1 = (float) -sin(f1);
+		float yawRad = (float) toRadians(yaw);
+		float sinYaw = (float) sin(yawRad);
+		float cosYaw = (float) cos(yawRad);
+
+		incrementHitboxLocation(
+			dergonBody,
+			(sinYaw / 2),
+			0,
+			-(cosYaw / 2)
+		);
+
+		incrementHitboxLocation(
+			dergonWing0,
+			(cosYaw * 4.5),
+			1,
+			(sinYaw * 4.5)
+		);
+
+		incrementHitboxLocation(
+			dergonWing1,
+			-(cosYaw * 4.5),
+			1,
+			-(sinYaw * 4.5)
+		);
+
+		if (!world.isClientSide && hurtTicks == 0)
+		{
+			launchEntities(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+			launchEntities(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+			hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
+		}
+
+		double[] adouble = getMovementOffset(5);
+		double[] adouble1 = getMovementOffset(0);
+
+		float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
+		float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
+
+		incrementHitboxLocation(
+			dergonHead,
+			(f3 * 5.5 * cosF1),
+			(adouble1[1] - adouble[1]) + (sinF1 * 5.5),
+			-(f13 * 5.5 * cosF1)
+		);
+
+		//Move the tail
+		for (int tailNumber = 0; tailNumber < 3; ++tailNumber)
+		{
+			EntityComplexPart tailSection = null;
+
+			switch (tailNumber)
+			{
+				case 0: tailSection = dergonTailSection0; break;
+				case 1: tailSection = dergonTailSection1; break;
+				case 2: tailSection = dergonTailSection2; break;
 			}
 
-			if (!world.isClientSide)
-				bx = breakBlocks(dergonHead.getBoundingBox()) | breakBlocks(dergonBody.getBoundingBox());
+			double[] adouble2 = getMovementOffset(12 + tailNumber * 2);
+			float f14 = (float) toRadians(yaw + trimDegrees(adouble2[0] - adouble[0]));
+			float sinF14 = (float) sin(f14);
+			float cosF14 = (float) cos(f14);
+			final float ONE_POINT_FIVE = 1.5F;
+			float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
+
+			incrementHitboxLocation(
+				tailSection,
+				-(sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1,
+				(adouble2[1] - adouble[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
+				(cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1
+			);
 		}
+
+		if (!world.isClientSide)
+			bx = breakBlocks(dergonHead.getBoundingBox()) | breakBlocks(dergonBody.getBoundingBox());
 	}
 
 	/**
@@ -508,18 +507,18 @@ public class Dergon extends EntityEnderDragon
 		for (Object rawEntity : list)
 		{
 			Entity entity = (Entity) rawEntity;
-			if (entity instanceof EntityLiving)
-			{
-				double xDistance = entity.locX - bodyBoundingBoxValue0;
-				double zDistance = entity.locZ - bodyBoundingBoxValue1;
-				double distanceSquared = xDistance * xDistance + zDistance * zDistance;
+			if (!(entity instanceof EntityLiving))
+				continue;
 
-				entity.g(
-					xDistance / distanceSquared * 4.0D,
-					0.20000000298023224D,
-					zDistance / distanceSquared * 4.0D
-				);
-			}
+			double xDistance = entity.locX - bodyBoundingBoxValue0;
+			double zDistance = entity.locZ - bodyBoundingBoxValue1;
+			double distanceSquared = xDistance * xDistance + zDistance * zDistance;
+
+			entity.g(
+				xDistance / distanceSquared * 4.0D,
+				0.20000000298023224D,
+				zDistance / distanceSquared * 4.0D
+			);
 		}
 	}
 
