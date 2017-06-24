@@ -22,8 +22,6 @@ import static java.lang.Math.*;
  * Type			v1_7_R3		v1_8_R3		v1_9_R2
  * public double[][]		bn			bk			b		Buffer array for the last 64 Y-positions and yaw rotations.
  * public int			bo			bl			c		Ring buffer index
- * public float		bx			bu			bD		Previous animation time.
- * public float		by			bv			bE		Animation time.
  * public boolean		bz			bw			?		Currently has a selected target?
  *
  * Entity.class:
@@ -31,12 +29,6 @@ import static java.lang.Math.*;
  *
  * EntityLiving.Class:
  * protected int		bg			bc			bh		Position rotation increment
- * protected double		bh			bd			bi		X position entity will be set to.
- * protected double		bi			be			bj		Y position entity will be set to.
- * protected double		bj			bf			bk		Z position entity will be set to.
- * protected double		bk			bg			bl		Yaw position entity will be set to.
- * protected double		bl			bh			bm		Pitch position entity will be set to.
- * public float		aN			aJ			aO		Might have something to do with yaw?
  * protected float		bf			bb			Either be, bf, or bg.
  */
 
@@ -214,16 +206,6 @@ public class Dergon extends EntityEnderDragon
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
 			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
-		if (world.isClientSide)
-		{
-			float animationPoint = (float) cos(bv * PI * 2.0F);
-			float previousAnimationPoint = (float) cos(bu * PI * 2.0F);
-			if (previousAnimationPoint <= -0.3F && animationPoint >= -0.3F)
-				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
-		}
-
-		bu = bv;
-
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
 			// If we're dead, play a random explosion effect at a random offset to it's corpse.
@@ -238,10 +220,6 @@ public class Dergon extends EntityEnderDragon
 			);
 			return;
 		}
-
-		float f = 0.2F / ((float) sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
-		f *= (float) pow(2.0D, motY);
-		bv += f;
 
 		yaw = (float) trimDegrees(yaw);
 		if (bl < 0)
@@ -259,110 +237,91 @@ public class Dergon extends EntityEnderDragon
 		bk[bl][0] = (double) yaw;
 		bk[bl][1] = locY;
 
-		if (world.isClientSide)
+		//Get target position relative to Dergon
+		double targetPosX = getDergonX() - locX;
+		double targetPosY = getDergonY() - locY;
+		double targetPosZ = getDergonZ() - locZ;
+		double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
+		if (targetEntity != null)
 		{
-			if (bc > 0)
-			{
-				double newXPosition = locX + (bd - locX) / bc;
-				double newYPosition = locY + (be - locY) / bc;
-				double newZPosition = locZ + (bf - locZ) / bc;
-				double newYawIncrement = trimDegrees(bg - (double) yaw);
-				yaw = (float) ((double) yaw + newYawIncrement / bc);
-				pitch = (float) ((double) pitch + (bh - (double) pitch) / bc);
-				--bc;
-				setPosition(newXPosition, newYPosition, newZPosition);
-				setYawPitch(yaw, pitch);
-			}
+			setDergonX(targetEntity.locX);
+			setDergonZ(targetEntity.locZ);
+			double xDistanceToTarget = getDergonX() - locX;
+			double yDistanceToTarget = getDergonZ() - locZ;
+			double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
+			double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
+
+			if (ascendDistance > 10.0D)
+				ascendDistance = 10.0D;
+
+			setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
 		}
 		else
 		{
-			//Get target position relative to Dergon
-			double targetPosX = getDergonX() - locX;
-			double targetPosY = getDergonY() - locY;
-			double targetPosZ = getDergonZ() - locZ;
-			double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
-			if (targetEntity != null)
-			{
-				setDergonX(targetEntity.locX);
-				setDergonZ(targetEntity.locZ);
-				double xDistanceToTarget = getDergonX() - locX;
-				double yDistanceToTarget = getDergonZ() - locZ;
-				double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
-				double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
-
-				if (ascendDistance > 10.0D)
-					ascendDistance = 10.0D;
-
-				setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
-			}
-			else
-			{
-				setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
-				setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
-			}
-
-			if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
-				updateCurrentTarget();
-
-			targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
-			final float Y_LIMIT = 0.6F;
-			if (targetPosY < (double) (-Y_LIMIT))
-				targetPosY = (double) (-Y_LIMIT);
-
-			if (targetPosY > (double) Y_LIMIT)
-				targetPosY = (double) Y_LIMIT;
-
-			motY += targetPosY * 0.10000000149011612D;
-			yaw = (float) trimDegrees(yaw);
-			double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
-			double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
-
-			if (targetHeadingDifference > 50.0D)
-				targetHeadingDifference = 50.0D;
-
-			if (targetHeadingDifference < -50.0D)
-				targetHeadingDifference = -50.0D;
-
-			Vec3D vec3d = new Vec3D(
-				getDergonX() - locX,
-				getDergonY() - locY,
-				getDergonZ() - locZ
-			).a();// .a() -> Normalize values
-			Vec3D vec3d1 = new Vec3D(
-				sin(toRadians(yaw)),
-				motY,
-				(-cos(toRadians(yaw)))
-			).a();// .a() -> Normalize values
-			float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
-
-			if (f4 < 0.0F)
-				f4 = 0.0F;
-
-			bb *= 0.8F;
-			float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
-			double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
-
-			if (d10 > 40.0D)
-				d10 = 40.0D;
-
-			bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
-			yaw += bb * 0.1F;
-			float f6 = (float) (2.0D / (d10 + 1.0D));
-			float f7 = 0.06F;
-
-			a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
-			move(motX, motY, motZ);
-
-			Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
-			float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
-
-			f8 = 0.8F + 0.15F * f8;
-			motX *= (double) f8;
-			motZ *= (double) f8;
-			motY *= 0.9100000262260437D;
+			setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
+			setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
 		}
 
-		aJ = yaw;
+		if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
+			updateCurrentTarget();
+
+		targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
+		final float Y_LIMIT = 0.6F;
+		if (targetPosY < (double) (-Y_LIMIT))
+			targetPosY = (double) (-Y_LIMIT);
+
+		if (targetPosY > (double) Y_LIMIT)
+			targetPosY = (double) Y_LIMIT;
+
+		motY += targetPosY * 0.10000000149011612D;
+		yaw = (float) trimDegrees(yaw);
+		double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
+		double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
+
+		if (targetHeadingDifference > 50.0D)
+			targetHeadingDifference = 50.0D;
+
+		if (targetHeadingDifference < -50.0D)
+			targetHeadingDifference = -50.0D;
+
+		Vec3D vec3d = new Vec3D(
+			getDergonX() - locX,
+			getDergonY() - locY,
+			getDergonZ() - locZ
+		).a();// .a() -> Normalize values
+		Vec3D vec3d1 = new Vec3D(
+			sin(toRadians(yaw)),
+			motY,
+			(-cos(toRadians(yaw)))
+		).a();// .a() -> Normalize values
+		float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
+
+		if (f4 < 0.0F)
+			f4 = 0.0F;
+
+		bb *= 0.8F;
+		float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
+		double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
+
+		if (d10 > 40.0D)
+			d10 = 40.0D;
+
+		bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
+		yaw += bb * 0.1F;
+		float f6 = (float) (2.0D / (d10 + 1.0D));
+		float f7 = 0.06F;
+
+		a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
+		move(motX, motY, motZ);
+
+		Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
+		float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
+
+		f8 = 0.8F + 0.15F * f8;
+		motX *= (double) f8;
+		motZ *= (double) f8;
+		motY *= 0.9100000262260437D;
+
 		dergonHead.width = dergonHead.length = 3.0F;
 		dergonTailSection0.width = dergonTailSection0.length = 2.0F;
 		dergonTailSection1.width = dergonTailSection1.length = 2.0F;
@@ -403,7 +362,7 @@ public class Dergon extends EntityEnderDragon
 			-(sinYaw * 4.5)
 		);
 
-		if (!world.isClientSide && hurtTicks == 0)
+		if (hurtTicks == 0)
 		{
 			launchEntities(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
 			launchEntities(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
