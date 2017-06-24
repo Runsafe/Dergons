@@ -218,7 +218,7 @@ public class Dergon extends EntityEnderDragon
 		if (targetHeadingDifference < -50.0D)
 			targetHeadingDifference = -50.0D;
 
-		Vec3D vec3d = new Vec3D(
+		Vec3D relativeTargetCoordinates = new Vec3D(
 			targetX - locX,
 			targetY - locY,
 			targetZ - locZ
@@ -228,28 +228,28 @@ public class Dergon extends EntityEnderDragon
 			motY,
 			(-cos(toRadians(yaw)))
 		).a();// .a() -> Normalize values
-		float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
+		float f4 = (float) (vec3d1.b(relativeTargetCoordinates) + 0.5D) / 1.5F;
 
 		if (f4 < 0.0F)
 			f4 = 0.0F;
 
 		bb *= 0.8F;
-		float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
-		double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
+		float movementSpeedStart = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
+		double movementSpeedTrimmed = sqrt(motX * motX + motZ * motZ) + 1.0D;
 
-		if (d10 > 40.0D)
-			d10 = 40.0D;
+		if (movementSpeedTrimmed > 40.0D)
+			movementSpeedTrimmed = 40.0D;
 
-		bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / d10 / (double) f5));
+		bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
 		yaw += bb * 0.1F;
-		float f6 = (float) (2.0D / (d10 + 1.0D));
+		float f6 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float f7 = 0.06F;
 
 		a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
 		move(motX, motY, motZ);
 
-		Vec3D vec3d2 = new Vec3D(motX, motY, motZ).a();
-		float f8 = (float) (vec3d2.b(vec3d1) + 1.0D) / 2.0F;
+		Vec3D movementVector = new Vec3D(motX, motY, motZ).a();
+		float f8 = (float) (movementVector.b(vec3d1) + 1.0D) / 2.0F;
 
 		f8 = 0.8F + 0.15F * f8;
 		motX *= (double) f8;
@@ -303,17 +303,17 @@ public class Dergon extends EntityEnderDragon
 			hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 		}
 
-		double[] adouble = getMovementOffset(5);
-		double[] adouble1 = getMovementOffset(0);
+		double[] olderPosition = getMovementOffset(5);
+		double[] currentPosition = getMovementOffset(0);
 
-		float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
-		float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
+		float xHeadDirectionIncremented = (float) sin(toRadians(yaw) - bc * 0.01F);
+		float zHeadDirectionIncremented = (float) cos(toRadians(yaw) - bc * 0.01F);
 
 		incrementHitboxLocation(
 			dergonHead,
-			(f3 * 5.5 * cosF1),
-			(adouble1[1] - adouble[1]) + (sinF1 * 5.5),
-			-(f13 * 5.5 * cosF1)
+			(xHeadDirectionIncremented * 5.5 * cosF1),
+			(currentPosition[1] - olderPosition[1]) + (sinF1 * 5.5),
+			-(zHeadDirectionIncremented * 5.5 * cosF1)
 		);
 
 		//Move the tail
@@ -328,8 +328,8 @@ public class Dergon extends EntityEnderDragon
 				case 2: tailSection = dergonTailSection2; break;
 			}
 
-			double[] adouble2 = getMovementOffset(12 + tailNumber * 2);
-			float f14 = (float) toRadians(yaw + trimDegrees(adouble2[0] - adouble[0]));
+			double[] oldPosition = getMovementOffset(12 + tailNumber * 2);
+			float f14 = (float) toRadians(yaw + trimDegrees(oldPosition[0] - olderPosition[0]));
 			float sinF14 = (float) sin(f14);
 			float cosF14 = (float) cos(f14);
 			final float ONE_POINT_FIVE = 1.5F;
@@ -338,7 +338,7 @@ public class Dergon extends EntityEnderDragon
 			incrementHitboxLocation(
 				tailSection,
 				-(sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1,
-				(adouble2[1] - adouble[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
+				(oldPosition[1] - olderPosition[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
 				(cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1
 			);
 		}
