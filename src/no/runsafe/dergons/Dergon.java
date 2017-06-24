@@ -44,46 +44,6 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	/*
-	 * Dergon coordinates to fly to.
-	 * v1_7_R3		v1_8_R3		v1_9_R2
-	 * h			a			?		DergonX
-	 * i			b			?		DergonY
-	 * bm			c			?		DergonZ
-	 */
-	//Dergon X Accessor and Mutator
-	private double getDergonX()
-	{
-		return a;
-	}
-
-	private void setDergonX(double x)
-	{
-		a = x;
-	}
-
-	//Dergon Y Accessor and Mutator
-	private double getDergonY()
-	{
-		return b;
-	}
-
-	private void setDergonY(double y)
-	{
-		b = y;
-	}
-
-	//Dergon Z Accessor and Mutator
-	private double getDergonZ()
-	{
-		return c;
-	}
-
-	private void setDergonZ(double z)
-	{
-		c = z;
-	}
-
-	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
 	 * Names in various spigot versions:
@@ -141,10 +101,10 @@ public class Dergon extends EntityEnderDragon
 			}
 
 			targetEntity = null;
-			setDergonX(locX + random.nextInt(200) + -100);
-			setDergonY(random.nextInt(100) + 70); // Somewhere above 70 to prevent floor clipping.
-			setDergonZ(locZ + random.nextInt(200) + -100);
-			flyOffLocation = targetWorld.getLocation(getDergonX(), getDergonY(), getDergonZ()); // Store the target fly-off location.
+			targetX = locX + random.nextInt(200) + -100;
+			targetY = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
+			targetZ = locZ + random.nextInt(200) + -100;
+			flyOffLocation = targetWorld.getLocation(targetX, targetY, targetZ); // Store the target fly-off location.
 			return;
 		}
 		else
@@ -174,9 +134,9 @@ public class Dergon extends EntityEnderDragon
 		}
 
 		// Send the dergon back to the start point.
-		setDergonX(targetLocation.getX());
-		setDergonY(targetLocation.getY());
-		setDergonZ(targetLocation.getZ());
+		targetX = targetLocation.getX();
+		targetY = targetLocation.getY();
+		targetZ = targetLocation.getZ();
 
 		targetEntity = null;
 	}
@@ -237,29 +197,29 @@ public class Dergon extends EntityEnderDragon
 		bk[bl][0] = (double) yaw;
 		bk[bl][1] = locY;
 
-		//Get target position relative to Dergon
-		double targetPosX = getDergonX() - locX;
-		double targetPosY = getDergonY() - locY;
-		double targetPosZ = getDergonZ() - locZ;
+		// Get target position relative to Dergon
+		double targetPosX = targetX - locX;
+		double targetPosY = targetY - locY;
+		double targetPosZ = targetZ - locZ;
 		double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
 		if (targetEntity != null)
 		{
-			setDergonX(targetEntity.locX);
-			setDergonZ(targetEntity.locZ);
-			double xDistanceToTarget = getDergonX() - locX;
-			double yDistanceToTarget = getDergonZ() - locZ;
+			targetX = targetEntity.locX;
+			targetZ = targetEntity.locZ;
+			double xDistanceToTarget = targetX - locX;
+			double yDistanceToTarget = targetZ - locZ;
 			double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
 			double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
 
 			if (ascendDistance > 10.0D)
 				ascendDistance = 10.0D;
 
-			setDergonY(targetEntity.getBoundingBox().b + ascendDistance);
+			targetY = targetEntity.getBoundingBox().b + ascendDistance;
 		}
 		else
 		{
-			setDergonX(getDergonX() + random.nextGaussian() * 2.0D);
-			setDergonZ(getDergonZ() + random.nextGaussian() * 2.0D);
+			targetX += random.nextGaussian() * 2.0D;
+			targetZ += random.nextGaussian() * 2.0D;
 		}
 
 		if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
@@ -285,9 +245,9 @@ public class Dergon extends EntityEnderDragon
 			targetHeadingDifference = -50.0D;
 
 		Vec3D vec3d = new Vec3D(
-			getDergonX() - locX,
-			getDergonY() - locY,
-			getDergonZ() - locZ
+			targetX - locX,
+			targetY - locY,
+			targetZ - locZ
 		).a();// .a() -> Normalize values
 		Vec3D vec3d1 = new Vec3D(
 			sin(toRadians(yaw)),
@@ -427,9 +387,9 @@ public class Dergon extends EntityEnderDragon
 		double yawRadian = toRadians(yaw);
 		double xDirection = sin(yawRadian);
 		double zDirection = cos(yawRadian);
-		setDergonX(locX + ((random.nextDouble() - 0.5) * 2) + (xDirection * 5));
-		setDergonY(locY + (random.nextDouble() * 3) + 1);
-		setDergonZ(locZ + ((random.nextDouble() - 0.5) * 2) - (zDirection * 5));
+		targetX = locX + ((random.nextDouble() - 0.5) * 2) + (xDirection * 5);
+		targetY = locY + (random.nextDouble() * 3) + 1;
+		targetZ = locZ + ((random.nextDouble() - 0.5) * 2) - (zDirection * 5);
 		target = null;
 
 		// Only apply damage if the source is a player or an explosion.
@@ -627,6 +587,11 @@ public class Dergon extends EntityEnderDragon
 	{
 		return dergonID;
 	}
+
+	// Target coordinates to fly to.
+	private double targetX = 0;
+	private double targetY = 100;
+	private double targetZ = 0;
 
 	private int deathTicks = 0;
 	private Entity targetEntity;
