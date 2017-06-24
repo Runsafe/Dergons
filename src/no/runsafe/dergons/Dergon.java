@@ -20,8 +20,6 @@ import static java.lang.Math.*;
  *
  * Variables in EntityEnderDragon:
  * Type			v1_7_R3		v1_8_R3		v1_9_R2
- * public double[][]		bn			bk			b		Buffer array for the last 64 Y-positions and yaw rotations.
- * public int			bo			bl			c		Ring buffer index
  * public boolean		bz			bw			?		Currently has a selected target?
  *
  * Entity.class:
@@ -182,20 +180,20 @@ public class Dergon extends EntityEnderDragon
 		}
 
 		yaw = (float) trimDegrees(yaw);
-		if (bl < 0)
+		if (positionBufferIndex < 0)
 		{
-			for (int i = 0; i < bk.length; ++i)
+			for (int i = 0; i < positionBuffer.length; ++i)
 			{
-				bk[i][0] = (double) yaw;
-				bk[i][1] = locY;
+				positionBuffer[i][0] = (double) yaw;
+				positionBuffer[i][1] = locY;
 			}
 		}
 
-		if (++bl == bk.length)
-			bl = 0;
+		if (++positionBufferIndex == positionBuffer.length)
+			positionBufferIndex = 0;
 
-		bk[bl][0] = (double) yaw;
-		bk[bl][1] = locY;
+		positionBuffer[positionBufferIndex][0] = (double) yaw;
+		positionBuffer[positionBufferIndex][1] = locY;
 
 		// Get target position relative to Dergon
 		double targetPosX = targetX - locX;
@@ -472,12 +470,12 @@ public class Dergon extends EntityEnderDragon
 	 */
 	private double[] getMovementOffset(int bufferIndexOffset)
 	{
-		int j = bl - bufferIndexOffset & 63;
+		int j = positionBufferIndex - bufferIndexOffset & 63;
 		double[] movementOffset = new double[2];
 		//Set yaw offset
-		movementOffset[0] = bk[j][0];
+		movementOffset[0] = positionBuffer[j][0];
 		//set y offset.
-		movementOffset[1] = bk[j][1];
+		movementOffset[1] = positionBuffer[j][1];
 
 		return movementOffset;
 	}
@@ -592,6 +590,10 @@ public class Dergon extends EntityEnderDragon
 	private double targetX = 0;
 	private double targetY = 100;
 	private double targetZ = 0;
+
+	// Store the dergon's last 64 vertical and yaw positions.
+	private double[][] positionBuffer = new double[64][2];
+	private int positionBufferIndex = -1;
 
 	private int deathTicks = 0;
 	private Entity targetEntity;
