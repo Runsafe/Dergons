@@ -8,7 +8,6 @@ import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
-import org.bukkit.GameMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -674,8 +673,7 @@ public class Dergon extends EntityEnderDragon
 	{
 		return !player.isVanished()
 			&& !player.isDead()
-			&& player.getGameMode() != GameMode.CREATIVE
-			&& player.getGameMode() != GameMode.SPECTATOR;
+			&& player.isSurvivalist();
 	}
 
 	private boolean isRidingPlayer(String playerName)
