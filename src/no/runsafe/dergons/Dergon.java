@@ -40,27 +40,6 @@ public class Dergon extends EntityEnderDragon
 		this.dergonID = dergonID;
 	}
 
-	/*
-	 * Dergon bodily appendages.
-	 * Only their hitboxes.
-	 * Names in various spigot versions:
-	 * v1_8_R3    v1_9_R2    v1_10_R1   v1_11_R1
-	 * bn         bv         bw         bv        Head
-	 * bo         bx         by         bx        Body
-	 * bs         bB         bC         bB        Right Wing
-	 * bt         bC         bD         bC        Left Wing
-	 * bp         by         bz         by        Tail section closest to body
-	 * bq         bz         bA         bz        Middle tail section
-	 * br         bA         bB         bA        Last tail section
-	 */
-	private EntityComplexPart dergonHead = bn;
-	private EntityComplexPart dergonBody = bo;
-	private EntityComplexPart dergonWingRight = bs;
-	private EntityComplexPart dergonWingLeft = bt;
-	private EntityComplexPart dergonTailSection0 = bp;
-	private EntityComplexPart dergonTailSection1 = bq;
-	private EntityComplexPart dergonTailSection2 = br;
-
 	/**
 	 * Selects new player target.
 	 */
@@ -584,6 +563,27 @@ public class Dergon extends EntityEnderDragon
 	{
 		return dergonID;
 	}
+
+	/*
+	 * Dergon bodily appendages.
+	 * Only their hitboxes.
+	 * Names in various spigot versions:
+	 * v1_8_R3    v1_9_R2    v1_10_R1   v1_11_R1
+	 * bn         bv         bw         bv        Head
+	 * bo         bx         by         bx        Body
+	 * bs         bB         bC         bB        Right Wing
+	 * bt         bC         bD         bC        Left Wing
+	 * bp         by         bz         by        Tail section closest to body
+	 * bq         bz         bA         bz        Middle tail section
+	 * br         bA         bB         bA        Last tail section
+	 */
+	private EntityComplexPart dergonHead = bn;
+	private EntityComplexPart dergonBody = bo;
+	private EntityComplexPart dergonWingRight = bs;
+	private EntityComplexPart dergonWingLeft = bt;
+	private EntityComplexPart dergonTailSection0 = bp;
+	private EntityComplexPart dergonTailSection1 = bq;
+	private EntityComplexPart dergonTailSection2 = br;
 
 	// Target coordinates to fly to.
 	private double targetX = 0;
