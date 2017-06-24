@@ -472,6 +472,40 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	/**
+	 * Damages the dergon based on a specific body part.
+	 * Also recalculates the dergon's target location.
+	 * Names of this function in various spigot versions:
+	 * v1_8_R3/v1_9_R2/v1_10_R1/v1_11_R1: a
+	 * @param bodyPart Part of the dergon hit.
+	 * @param damager Source of the damage.
+	 * @param damageValue Amount of damage.
+	 * @return true
+	 */
+	@Override
+	public boolean a(EntityComplexPart bodyPart, DamageSource damager, float damageValue)
+	{
+		// Recalculate target location
+		double yawRadian = Math.toRadians(yaw);
+		double xDirection = Math.sin(yawRadian);
+		double zDirection = Math.cos(yawRadian);
+		setDergonX(locX + ((random.nextDouble() - 0.5) * 2) + (xDirection * 5));
+		setDergonY(locY + (random.nextDouble() * 3) + 1);
+		setDergonZ(locZ + ((random.nextDouble() - 0.5) * 2) - (zDirection * 5));
+		target = null;
+
+		// Only apply damage if the source is a player or an explosion.
+		if (damager.getEntity() instanceof EntityHuman || damager.isExplosion())
+		{
+			// Do more damage for head shots
+			if(bodyPart != dergonHead)
+				damageValue = (damageValue / 4) + 1;
+			dealDamage(damager, damageValue);
+		}
+
+		return true;
+	}
+
+	/**
 	 * Launches entities a short distance.
 	 * @param list Entities to launch
 	 */
