@@ -50,8 +50,8 @@ public class Dergon extends EntityEnderDragon
 	 * v1_7_R3		v1_8_R3		v1_9_R2
 	 * bq			bn			bv		Head
 	 * br			bo			bx		Body
-	 * bv			bs			bB		Wing
-	 * bw			bt			bC		Wing
+	 * bv			bs			bB		Right wing
+	 * bw			bt			bC		Left Wing
 	 * bs			bp			by		Tail section closest to body
 	 * bt			bq			bz		Middle tail section
 	 * bu			br			bA		Last tail section
@@ -59,8 +59,8 @@ public class Dergon extends EntityEnderDragon
 	 */
 	private EntityComplexPart dergonHead = bn;
 	private EntityComplexPart dergonBody = bo;
-	private EntityComplexPart dergonWing0 = bs;
-	private EntityComplexPart dergonWing1 = bt;
+	private EntityComplexPart dergonWingRight = bs;
+	private EntityComplexPart dergonWingLeft = bt;
 	private EntityComplexPart dergonTailSection0 = bp;
 	private EntityComplexPart dergonTailSection1 = bq;
 	private EntityComplexPart dergonTailSection2 = br;
@@ -288,8 +288,8 @@ public class Dergon extends EntityEnderDragon
 		dergonTailSection2.width = dergonTailSection2.length = 2.0F;
 		dergonBody.length = 3.0F;
 		dergonBody.width = 5.0F;
-		dergonWing0.length = dergonWing1.length = 2.0F;
-		dergonWing0.width = dergonWing1.width = 4.0F;
+		dergonWingRight.length = dergonWingLeft.length = 2.0F;
+		dergonWingRight.width = dergonWingLeft.width = 4.0F;
 
 		float f1 = (float) toRadians((
 			getMovementOffset(5)[1]
@@ -309,14 +309,14 @@ public class Dergon extends EntityEnderDragon
 		);
 
 		incrementHitboxLocation(
-			dergonWing0,
+			dergonWingRight,
 			(cosYaw * 4.5),
 			1,
 			(sinYaw * 4.5)
 		);
 
 		incrementHitboxLocation(
-			dergonWing1,
+			dergonWingLeft,
 			-(cosYaw * 4.5),
 			1,
 			-(sinYaw * 4.5)
@@ -324,8 +324,8 @@ public class Dergon extends EntityEnderDragon
 
 		if (hurtTicks == 0)
 		{
-			launchEntities(world.getEntities(this, dergonWing0.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
-			launchEntities(world.getEntities(this, dergonWing1.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+			launchEntities(world.getEntities(this, dergonWingRight.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+			launchEntities(world.getEntities(this, dergonWingLeft.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
 			hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 		}
 
