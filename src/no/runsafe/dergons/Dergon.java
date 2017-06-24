@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.*;
+
 /*
  * Names of obfuscated variables in various spigot versions:
  *
@@ -207,7 +209,7 @@ public class Dergon extends EntityEnderDragon
 		}
 
 		// Update the health bar to show the percentage of the dergon
-		long pct = Math.round((getHealth() / getMaxHealth()) * 100);
+		long pct = round((getHealth() / getMaxHealth()) * 100);
 		setCustomName("Dergon (" + pct + "%)");
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
@@ -216,8 +218,8 @@ public class Dergon extends EntityEnderDragon
 
 		if (world.isClientSide)
 		{
-			float animationPoint = (float) Math.cos(bv * Math.PI * 2.0F);
-			float previousAnimationPoint = (float) Math.cos(bu * Math.PI * 2.0F);
+			float animationPoint = (float) cos(bv * PI * 2.0F);
+			float previousAnimationPoint = (float) cos(bu * PI * 2.0F);
 			if (previousAnimationPoint <= -0.3F && animationPoint >= -0.3F)
 				world.a(locX, locY, locZ, "mob.enderdragon.wings", 5.0F, 0.8F + random.nextFloat() * 0.3F, false);
 		}
@@ -239,8 +241,8 @@ public class Dergon extends EntityEnderDragon
 		}
 		else
 		{
-			float f = 0.2F / ((float) Math.sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
-			f *= (float) Math.pow(2.0D, motY);
+			float f = 0.2F / ((float) sqrt(motX * motX + motZ * motZ) * 10.0F + 1.0F);
+			f *= (float) pow(2.0D, motY);
 			bv += (bx ? f * 0.5F : f);
 
 			yaw = (float) trimDegrees(yaw);
@@ -287,7 +289,7 @@ public class Dergon extends EntityEnderDragon
 					setDergonZ(targetEntity.locZ);
 					double xDistanceToTarget = getDergonX() - locX;
 					double yDistanceToTarget = getDergonZ() - locZ;
-					double distanceToTarget = Math.sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
+					double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
 					double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
 
 					if (ascendDistance > 10.0D)
@@ -304,7 +306,7 @@ public class Dergon extends EntityEnderDragon
 				if (bw || targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
 					updateCurrentTarget();
 
-				targetPosY /= Math.sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
+				targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
 				final float Y_LIMIT = 0.6F;
 				if (targetPosY < (double) (-Y_LIMIT))
 					targetPosY = (double) (-Y_LIMIT);
@@ -314,7 +316,7 @@ public class Dergon extends EntityEnderDragon
 
 				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
-				double targetDirection = 180.0D - Math.atan2(targetPosX, targetPosZ) * 180.0D / Math.PI;
+				double targetDirection = 180.0D - atan2(targetPosX, targetPosZ) * 180.0D / PI;
 				double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
 
 				if (targetHeadingDifference > 50.0D)
@@ -329,9 +331,9 @@ public class Dergon extends EntityEnderDragon
 					getDergonZ() - locZ
 				).a();// .a() -> Normalize values
 				Vec3D vec3d1 = new Vec3D(
-					Math.sin(yaw * (float) Math.PI / 180.0F),
+					sin(yaw * (float) PI / 180.0F),
 					motY,
-					(-Math.cos(yaw * (float) Math.PI / 180.0F))
+					(-cos(yaw * (float) PI / 180.0F))
 				).a();// .a() -> Normalize values
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
@@ -339,8 +341,8 @@ public class Dergon extends EntityEnderDragon
 					f4 = 0.0F;
 
 				bb *= 0.8F;
-				float f5 = (float) Math.sqrt(motX * motX + motZ * motZ) + 1.0F;
-				double d10 = Math.sqrt(motX * motX + motZ * motZ) + 1.0D;
+				float f5 = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
+				double d10 = sqrt(motX * motX + motZ * motZ) + 1.0D;
 
 				if (d10 > 40.0D)
 					d10 = 40.0D;
@@ -378,12 +380,12 @@ public class Dergon extends EntityEnderDragon
 			dergonWing0.length = dergonWing1.length = 2.0F;
 			dergonWing0.width = dergonWing1.width = 4.0F;
 			//b(int, float) gets movement offsets.
-			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * (float) Math.PI;
-			float cosF1 = (float) Math.cos(f1);
-			float sinF1 = (float) -Math.sin(f1);
-			float yawRad = yaw * (float) Math.PI / 180.0F;
-			float sinYaw = (float) Math.sin(yawRad);
-			float cosYaw = (float) Math.cos(yawRad);
+			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * (float) PI;
+			float cosF1 = (float) cos(f1);
+			float sinF1 = (float) -sin(f1);
+			float yawRad = yaw * (float) PI / 180.0F;
+			float sinYaw = (float) sin(yawRad);
+			float cosYaw = (float) cos(yawRad);
 
 			//t_() means on update.
 			dergonBody.t_();
@@ -423,8 +425,8 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			float f3 = (float) Math.sin(yaw * (float) Math.PI / 180.0F - bc * 0.01F);
-			float f13 = (float) Math.cos(yaw * (float) Math.PI / 180.0F - bc * 0.01F);
+			float f3 = (float) sin(yaw * (float) PI / 180.0F - bc * 0.01F);
+			float f13 = (float) cos(yaw * (float) PI / 180.0F - bc * 0.01F);
 
 			dergonHead.t_();
 			dergonHead.setPositionRotation(
@@ -448,9 +450,9 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
-				float f14 = yaw * (float) Math.PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * (float) Math.PI / 180.0F;
-				float sinF14 = (float) Math.sin(f14);
-				float cosF14 = (float) Math.cos(f14);
+				float f14 = yaw * (float) PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * (float) PI / 180.0F;
+				float sinF14 = (float) sin(f14);
+				float cosF14 = (float) cos(f14);
 				final float ONE_POINT_FIVE = 1.5F;
 				float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
 
@@ -483,9 +485,9 @@ public class Dergon extends EntityEnderDragon
 	public boolean a(EntityComplexPart bodyPart, DamageSource damager, float damageValue)
 	{
 		// Recalculate target location
-		double yawRadian = Math.toRadians(yaw);
-		double xDirection = Math.sin(yawRadian);
-		double zDirection = Math.cos(yawRadian);
+		double yawRadian = toRadians(yaw);
+		double xDirection = sin(yawRadian);
+		double zDirection = cos(yawRadian);
 		setDergonX(locX + ((random.nextDouble() - 0.5) * 2) + (xDirection * 5));
 		setDergonY(locY + (random.nextDouble() * 3) + 1);
 		setDergonZ(locZ + ((random.nextDouble() - 0.5) * 2) - (zDirection * 5));
