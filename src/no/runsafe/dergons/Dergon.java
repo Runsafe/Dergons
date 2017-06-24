@@ -6,6 +6,7 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import org.bukkit.GameMode;
 
@@ -24,7 +25,6 @@ import java.util.Random;
  * public float		by			bv			bE		Animation time.
  * public boolean		bz			bw			?		Currently has a selected target?
  * public boolean		bA			bx			bF
- * public int			bB			by			bG		Death Ticks
  *
  * Entity.class:
  * public boolean		G			F			C
@@ -570,9 +570,34 @@ public class Dergon extends EntityEnderDragon
 	@Override
 	protected void aZ()
 	{
-		super.aZ();
-		if (this.by == 200)
+		if (dead)
+			return;
+
+		// Increment death ticks.
+		this.deathTicks++;
+
+		// Make explosion particles when the dergon is almost dead.
+		if (this.deathTicks >= 180 && this.deathTicks <= 200)
+			world.addParticle(
+				EnumParticle.EXPLOSION_HUGE,
+				locX + (random.nextFloat() - 0.5) * 8,
+				locY + (random.nextFloat() - 0.5) * 4 + 2,
+				locZ + (random.nextFloat() - 0.5) * 8,
+				0, 0, 0
+			);
+
+		// Play the death sound as the death animation starts.
+		if (this.deathTicks == 1)
+			targetWorld.getLocation(locX, locY, locZ).playSound(
+				Sound.Creature.EnderDragon.Death, 32.0F, 1.0F
+			);
+
+		// When animation is finished, slay the dergon.
+		if(this.deathTicks == 200)
+		{
+			die();
 			handler.handleDergonDeath(this);
+		}
 	}
 
 	/**
@@ -608,6 +633,7 @@ public class Dergon extends EntityEnderDragon
 		return dergonID;
 	}
 
+	private int deathTicks = 0;
 	private Entity targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
