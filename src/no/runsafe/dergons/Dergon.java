@@ -389,32 +389,25 @@ public class Dergon extends EntityEnderDragon
 			float sinYaw = (float) sin(yawRad);
 			float cosYaw = (float) cos(yawRad);
 
-			//t_() means on update.
-			dergonBody.t_();
-			dergonBody.setPositionRotation(
-				locX + (double) (sinYaw * 0.5F),
-				locY,
-				locZ - (double) (cosYaw * 0.5F),
-				0.0F,
-				0.0F
+			incrementHitboxLocation(
+				dergonBody,
+				(sinYaw / 2),
+				0,
+				-(cosYaw / 2)
 			);
 
-			dergonWing0.t_();
-			dergonWing0.setPositionRotation(
-				locX + (double) (cosYaw * 4.5F),
-				locY + 2.0D,
-				locZ + (double) (sinYaw * 4.5F),
-				0.0F,
-				0.0F
+			incrementHitboxLocation(
+				dergonWing0,
+				(cosYaw * 4.5),
+				1,
+				(sinYaw * 4.5)
 			);
 
-			dergonWing1.t_();
-			dergonWing1.setPositionRotation(
-				locX - (double) (cosYaw * 4.5F),
-				locY + 2.0D,
-				locZ - (double) (sinYaw * 4.5F),
-				0.0F,
-				0.0F
+			incrementHitboxLocation(
+				dergonWing1,
+				-(cosYaw * 4.5),
+				1,
+				-(sinYaw * 4.5)
 			);
 
 			if (!world.isClientSide && hurtTicks == 0)
@@ -430,13 +423,11 @@ public class Dergon extends EntityEnderDragon
 			float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
 			float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
 
-			dergonHead.t_();
-			dergonHead.setPositionRotation(
-				locX + (double) (f3 * 5.5F * cosF1),
-				locY + (adouble1[1] - adouble[1]) + (double) (sinF1 * 5.5F),
-				locZ - (double) (f13 * 5.5F * cosF1),
-				0.0F,
-				0.0F
+			incrementHitboxLocation(
+				dergonHead,
+				(f3 * 5.5 * cosF1),
+				(adouble1[1] - adouble[1]) + (sinF1 * 5.5),
+				-(f13 * 5.5 * cosF1)
 			);
 
 			//Move the tail
@@ -458,13 +449,11 @@ public class Dergon extends EntityEnderDragon
 				final float ONE_POINT_FIVE = 1.5F;
 				float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
 
-				tailSection.t_();
-				tailSection.setPositionRotation(
-					locX - (double) ((sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1),
-					locY + (adouble2[1] - adouble[1]) - (double) ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
-					locZ + (double) ((cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1),
-					0.0F,
-					0.0F
+				incrementHitboxLocation(
+					tailSection,
+					-(sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1,
+					(adouble2[1] - adouble[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
+					(cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1
 				);
 			}
 
@@ -661,6 +650,21 @@ public class Dergon extends EntityEnderDragon
 	public IWorld getDergonWorld()
 	{
 		return targetWorld;
+	}
+
+	/**
+	 * Increments the hitbox location of a dergon's body part.
+	 * @param bodyPart Part to change the location of.
+	 * @param xIncrement How far to move in the X direction.
+	 * @param yIncrement How far to move in the Y direction.
+	 * @param zIncrement How far to move in the Z direction.
+	 */
+	private void incrementHitboxLocation(EntityComplexPart bodyPart, double xIncrement, double yIncrement, double zIncrement)
+	{
+		bodyPart.t_(); //t_() means on update.
+		bodyPart.setPositionRotation(
+			locX + xIncrement, locY + yIncrement, locZ + zIncrement, 0, 0
+		);
 	}
 
 	/**
