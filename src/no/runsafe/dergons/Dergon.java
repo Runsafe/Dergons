@@ -134,7 +134,7 @@ public class Dergon extends EntityEnderDragon
 					if (rawChum != null)
 					{
 						rawChum.mount(this);
-						ridingPlayer = rawChum;
+						ridingPlayer = unluckyChum;
 						handler.handleDergonMount(ridingPlayer.getName());
 					}
 				}
@@ -194,7 +194,7 @@ public class Dergon extends EntityEnderDragon
 		// Throw a player off it's back if we're high up.
 		if (ridingPlayer != null && locY >= 90)
 		{
-			ridingPlayer.mount(null);
+			ridingPlayer.leaveVehicle();
 			ridingPlayer = null;
 		}
 
@@ -635,6 +635,6 @@ public class Dergon extends EntityEnderDragon
 	private ILocation flyOffLocation;
 	private final IWorld targetWorld;
 	private final Random random = new Random();
-	private EntityHuman ridingPlayer = null;
+	private IPlayer ridingPlayer = null;
 	private final int dergonID;
 }
