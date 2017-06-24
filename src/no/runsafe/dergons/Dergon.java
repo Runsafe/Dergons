@@ -17,17 +17,16 @@ import static java.lang.Math.*;
 
 /*
  * Names of obfuscated variables in various spigot versions:
- *
- * Variables in EntityEnderDragon:
- * Type			v1_7_R3		v1_8_R3		v1_9_R2
- * public boolean		bz			bw			?		Currently has a selected target?
+ * Type                 v1_8_R3  v1_9_R2  v1_10_R1 v1_11_R1
+ * EntityEnderDragon:
+ * public boolean       bz       bw       ?        ?           Forces selection of a new flight target when true.
  *
  * Entity.class:
- * public boolean		G			F			C
+ * public boolean       F        C        C        C           Checks if entity is collided with a vertical block.
  *
  * EntityLiving.Class:
- * protected int		bg			bc			bh		Position rotation increment
- * protected float		bf			bb			Either be, bf, or bg.
+ * protected int        bc       bh       bi       bh          Position rotation increment.
+ * protected float      bb       bg       bh       bg          Random Yaw Velocity.
  */
 
 public class Dergon extends EntityEnderDragon
@@ -45,15 +44,14 @@ public class Dergon extends EntityEnderDragon
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
 	 * Names in various spigot versions:
-	 * v1_7_R3		v1_8_R3		v1_9_R2
-	 * bq			bn			bv		Head
-	 * br			bo			bx		Body
-	 * bv			bs			bB		Right wing
-	 * bw			bt			bC		Left Wing
-	 * bs			bp			by		Tail section closest to body
-	 * bt			bq			bz		Middle tail section
-	 * bu			br			bA		Last tail section
-	 * N/A			N/A			bw		Neck (Only in 1.9+)
+	 * v1_8_R3    v1_9_R2    v1_10_R1   v1_11_R1
+	 * bn         bv         bw         bv        Head
+	 * bo         bx         by         bx        Body
+	 * bs         bB         bC         bB        Right Wing
+	 * bt         bC         bD         bC        Left Wing
+	 * bp         by         bz         by        Tail section closest to body
+	 * bq         bz         bA         bz        Middle tail section
+	 * br         bA         bB         bA        Last tail section
 	 */
 	private EntityComplexPart dergonHead = bn;
 	private EntityComplexPart dergonBody = bo;
@@ -142,14 +140,13 @@ public class Dergon extends EntityEnderDragon
 	/**
 	 * Update method for Dergons.
 	 * Names of this function in various spigot versions:
-	 * v1_7_R3: e
 	 * v1_8_R3: m
-	 * v1_9_R2: n
+	 * v1_9_R2/v1_10_R1/v1_11_R1: n
 	 */
 	@Override
 	public void m()
 	{
-		// Throw a player off it's back if we're high up.
+		// Throw a player off its back if we're high up.
 		if (ridingPlayer != null && locY >= 90)
 		{
 			ridingPlayer.leaveVehicle();
@@ -166,7 +163,7 @@ public class Dergon extends EntityEnderDragon
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 		{
-			// If we're dead, play a random explosion effect at a random offset to it's corpse.
+			// If we're dead, play a random explosion effect at a random offset to its corpse.
 			world.addParticle(
 				EnumParticle.EXPLOSION_LARGE,
 				locX + (double) (random.nextFloat() - 0.5F) * 8.0F,
@@ -472,9 +469,9 @@ public class Dergon extends EntityEnderDragon
 	{
 		int j = positionBufferIndex - bufferIndexOffset & 63;
 		double[] movementOffset = new double[2];
-		//Set yaw offset
+		// Set yaw offset
 		movementOffset[0] = positionBuffer[j][0];
-		//set y offset.
+		// Set y offset.
 		movementOffset[1] = positionBuffer[j][1];
 
 		return movementOffset;
@@ -484,11 +481,10 @@ public class Dergon extends EntityEnderDragon
 	 * Damage the dergon.
 	 * Overrides method in EntityLiving.class
 	 * Names of this function in various spigot versions:
-	 * v1_7_R3: d, returns void
-	 * v1_8_R3: d, returns boolean and is in EntityLiving
-	 * v1_9_R2: damageEntity0
+	 * v1_8_R3: d
+	 * v1_9_R2/v1_10_R1/v1_11_R1: damageEntity0
 	 * @param source damage source
-	 * @param f Damage amount
+	 * @param f Amount of damage
 	 * @return True if damaged, false if not damaged.
 	 */
 	@Override
@@ -501,10 +497,13 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	/**
-	 * Handle dergon death.
+	 * Handles dergon death ticks.
+	 * Overrides method in EntityEnderDragon which overrides method in EntityLiving
 	 * Names of this function in various spigot versions:
-	 * v1_7_R3: aE
 	 * v1_8_R3: aZ
+	 * v1_9_R2: bD
+	 * v_10_R1: bF
+	 * v_11_R1: bG
 	 */
 	@Override
 	protected void aZ()
