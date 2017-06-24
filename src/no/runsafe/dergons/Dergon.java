@@ -375,10 +375,8 @@ public class Dergon extends EntityEnderDragon
 			dergonTailSection2.width = dergonTailSection2.length = 2.0F;
 			dergonBody.length = 3.0F;
 			dergonBody.width = 5.0F;
-			dergonWing0.length = 2.0F;
-			dergonWing0.width = 4.0F;
-			dergonWing1.length = 3.0F;
-			dergonWing1.width = 4.0F;
+			dergonWing0.length = dergonWing1.length = 2.0F;
+			dergonWing0.width = dergonWing1.width = 4.0F;
 			//b(int, float) gets movement offsets.
 			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * (float) Math.PI;
 			float cosF1 = (float) Math.cos(f1);
