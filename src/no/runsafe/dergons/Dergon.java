@@ -316,7 +316,7 @@ public class Dergon extends EntityEnderDragon
 
 				motY += targetPosY * 0.10000000149011612D;
 				yaw = (float) trimDegrees(yaw);
-				double targetDirection = 180.0D - atan2(targetPosX, targetPosZ) * 180.0D / PI;
+				double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
 				double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
 
 				if (targetHeadingDifference > 50.0D)
@@ -331,9 +331,9 @@ public class Dergon extends EntityEnderDragon
 					getDergonZ() - locZ
 				).a();// .a() -> Normalize values
 				Vec3D vec3d1 = new Vec3D(
-					sin(yaw * (float) PI / 180.0F),
+					sin(toRadians(yaw)),
 					motY,
-					(-cos(yaw * (float) PI / 180.0F))
+					(-cos(toRadians(yaw)))
 				).a();// .a() -> Normalize values
 				float f4 = (float) (vec3d1.b(vec3d) + 0.5D) / 1.5F;
 
@@ -380,10 +380,10 @@ public class Dergon extends EntityEnderDragon
 			dergonWing0.length = dergonWing1.length = 2.0F;
 			dergonWing0.width = dergonWing1.width = 4.0F;
 			//b(int, float) gets movement offsets.
-			float f1 = (float) (b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F / 180.0F * (float) PI;
+			float f1 = (float) toRadians((b(5, 1.0F)[1] - b(10, 1.0F)[1]) * 10.0F);
 			float cosF1 = (float) cos(f1);
 			float sinF1 = (float) -sin(f1);
-			float yawRad = yaw * (float) PI / 180.0F;
+			float yawRad = (float) toRadians(yaw);
 			float sinYaw = (float) sin(yawRad);
 			float cosYaw = (float) cos(yawRad);
 
@@ -425,8 +425,8 @@ public class Dergon extends EntityEnderDragon
 			double[] adouble = b(5, 1.0F);
 			double[] adouble1 = b(0, 1.0F);
 
-			float f3 = (float) sin(yaw * (float) PI / 180.0F - bc * 0.01F);
-			float f13 = (float) cos(yaw * (float) PI / 180.0F - bc * 0.01F);
+			float f3 = (float) sin(toRadians(yaw) - bc * 0.01F);
+			float f13 = (float) cos(toRadians(yaw) - bc * 0.01F);
 
 			dergonHead.t_();
 			dergonHead.setPositionRotation(
@@ -450,7 +450,7 @@ public class Dergon extends EntityEnderDragon
 				}
 
 				double[] adouble2 = b(12 + tailNumber * 2, 1.0F);
-				float f14 = yaw * (float) PI / 180.0F + (float) trimDegrees(adouble2[0] - adouble[0]) * (float) PI / 180.0F;
+				float f14 = (float) toRadians(yaw + trimDegrees(adouble2[0] - adouble[0]));
 				float sinF14 = (float) sin(f14);
 				float cosF14 = (float) cos(f14);
 				final float ONE_POINT_FIVE = 1.5F;
