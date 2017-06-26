@@ -372,7 +372,7 @@ public class Dergon extends EntityEnderDragon
 			// Do more damage for head shots
 			if(bodyPart != dergonHead)
 				damageValue = (damageValue / 4) + 1;
-			dealDamage(damager, damageValue);
+			damageEntity(damager, damageValue);
 		}
 
 		return true;
