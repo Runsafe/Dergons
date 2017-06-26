@@ -19,7 +19,7 @@ import static java.lang.Math.*;
  * Names of obfuscated variables in various spigot versions:
  * Type                 v1_8_R3  v1_9_R2  v1_10_R1 v1_11_R1
  * EntityEnderDragon:
- * public boolean       bz       bw       ?        ?           Forces selection of a new flight target when true.
+ * public boolean       bw       ?        ?        ?           Forces selection of a new flight target when true.
  *
  * Entity.class:
  * public boolean       F        C        C        C           Checks if entity is collided with a vertical block.
