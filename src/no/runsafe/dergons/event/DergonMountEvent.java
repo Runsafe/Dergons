@@ -1,13 +1,13 @@
-package no.runsafe.dergons;
+package no.runsafe.dergons.event;
 
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 
-public class DergonAssistEvent extends RunsafeCustomEvent
+public class DergonMountEvent extends RunsafeCustomEvent
 {
-	public DergonAssistEvent(IPlayer player)
+	public DergonMountEvent(IPlayer player)
 	{
-		super(player, "runsafe.dergon.kill");
+		super(player, "runsafe.dergon.mount");
 	}
 
 	@Override
