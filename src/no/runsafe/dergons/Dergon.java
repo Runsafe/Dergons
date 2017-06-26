@@ -364,7 +364,7 @@ public class Dergon extends EntityEnderDragon
 		targetX = locX + ((random.nextDouble() - 0.5) * 2) + (xDirection * 5);
 		targetY = locY + (random.nextDouble() * 3) + 1;
 		targetZ = locZ + ((random.nextDouble() - 0.5) * 2) - (zDirection * 5);
-		target = null;
+		targetEntity = null;
 
 		// Only apply damage if the source is a player or an explosion.
 		if (damager.getEntity() instanceof EntityHuman || damager.isExplosion())
