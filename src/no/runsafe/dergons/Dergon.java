@@ -513,6 +513,68 @@ public class Dergon extends EntityEnderDragon
 	}
 
 	/**
+	 * Gets all hitboxes.
+	 * Overrides method in Entity.class.
+	 * Names of this method in various spigot versions:
+	 * v1_8_R3: aB
+	 * v1_9_R2: aR
+	 * v_10_R1/v_11_R1: aT
+	 * v_12_R1: aZ
+	 * @return All hitboxes.
+	 */
+	@Override
+	public Entity[] aB()
+	{
+		return this.children;
+	}
+
+	/**
+	 * Gets the current world.
+	 * Required by the IComplex interface.
+	 * Method name stays the same up to v1_12_R1.
+	 * @return The current world.
+	 */
+	@Override
+	public World a()
+	{
+		return this.world;
+	}
+
+	/**
+	 * Plays the idle sound.
+	 * Names of this method in different spigot versions:
+	 * v1_8_R3: z
+	 * v1_9_R2/v1_10_R1/v1_11_R1: G, returns SoundEffect
+	 * v1_12_R1: F
+	 * @return null
+	 */
+	@Override
+	protected String z()
+	{
+		targetWorld.getLocation(locX, locY, locZ).playSound(
+			Sound.Creature.EnderDragon.Growl, 5, 1
+		);
+		return null;
+	}
+
+	/**
+	 * Plays the hurt sound.
+	 * Names of this method in various spigot versions:
+	 * v1_8_R3: bo
+	 * v1_9_R2: bS, returns SoundEffect
+	 * v1_10_R1: bV, returns SoundEffect
+	 * @return null
+	 */
+	@Override
+	protected String bo()
+	{
+		targetWorld.getLocation(locX, locY, locZ).playSound(
+			Sound.Creature.EnderDragon.Hit, 5, 1
+		);
+		return null;
+	}
+
+	/**
 	 * Gets the world the dergon is in.
 	 * @return World the dergon is in.
 	 */
@@ -572,6 +634,7 @@ public class Dergon extends EntityEnderDragon
 	 * bq         bz         bA         bz        Middle tail section
 	 * br         bA         bB         bA        Last tail section
 	 */
+	private EntityComplexPart[] children = super.children;
 	private EntityComplexPart dergonHead = bn;
 	private EntityComplexPart dergonBody = bo;
 	private EntityComplexPart dergonWingRight = bs;
