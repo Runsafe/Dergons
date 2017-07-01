@@ -26,11 +26,28 @@ import static java.lang.Math.*;
  * protected float      bb       bg       bh       bg          Random Yaw Velocity.
  */
 
-public class Dergon extends EntityEnderDragon
+public class Dergon extends EntityInsentient implements IComplex, IMonster
 {
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
+
+		this.children = new EntityComplexPart[]
+		{
+			this.dergonHead = new EntityComplexPart(this, "head", 6.0F, 6.0F),
+			this.dergonBody = new EntityComplexPart(this, "body", 8.0F, 8.0F),
+			this.dergonTailSection0 = new EntityComplexPart(this, "tail", 4.0F, 4.0F),
+			this.dergonTailSection1 = new EntityComplexPart(this, "tail", 4.0F, 4.0F),
+			this.dergonTailSection2 = new EntityComplexPart(this, "tail", 4.0F, 4.0F),
+			this.dergonWingLeft = new EntityComplexPart(this, "wing", 4.0F, 4.0F),
+			this.dergonWingRight = new EntityComplexPart(this, "wing", 4.0F, 4.0F)
+		};
+		this.setHealth(this.getMaxHealth());
+		this.setSize(16, 8);
+		this.noclip = true;
+		this.fireProof = true;
+		this.persistent = true;
+
 		this.handler = handler;
 		this.targetLocation = targetLocation;
 		this.targetWorld = targetLocation.getWorld();
@@ -624,24 +641,15 @@ public class Dergon extends EntityEnderDragon
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
-	 * Names in various spigot versions:
-	 * v1_8_R3    v1_9_R2    v1_10_R1   v1_11_R1
-	 * bn         bv         bw         bv        Head
-	 * bo         bx         by         bx        Body
-	 * bs         bB         bC         bB        Right Wing
-	 * bt         bC         bD         bC        Left Wing
-	 * bp         by         bz         by        Tail section closest to body
-	 * bq         bz         bA         bz        Middle tail section
-	 * br         bA         bB         bA        Last tail section
 	 */
-	private EntityComplexPart[] children = super.children;
-	private EntityComplexPart dergonHead = bn;
-	private EntityComplexPart dergonBody = bo;
-	private EntityComplexPart dergonWingRight = bs;
-	private EntityComplexPart dergonWingLeft = bt;
-	private EntityComplexPart dergonTailSection0 = bp;
-	private EntityComplexPart dergonTailSection1 = bq;
-	private EntityComplexPart dergonTailSection2 = br;
+	private EntityComplexPart[] children;
+	private EntityComplexPart dergonHead;
+	private EntityComplexPart dergonBody;
+	private EntityComplexPart dergonWingRight;
+	private EntityComplexPart dergonWingLeft;
+	private EntityComplexPart dergonTailSection0;
+	private EntityComplexPart dergonTailSection1;
+	private EntityComplexPart dergonTailSection2;
 
 	// Target coordinates to fly to.
 	private double targetX = 0;
