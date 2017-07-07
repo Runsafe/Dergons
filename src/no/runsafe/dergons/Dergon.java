@@ -115,7 +115,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			if (!targets.isEmpty())
 			{
 				// Target a random player in 200 blocks.
-				targetEntity = ObjectUnwrapper.getMinecraft(players.get(random.nextInt(players.size())));
+				targetEntity = players.get(random.nextInt(players.size()));
 				return;
 			}
 		}
@@ -190,8 +190,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
 		if (targetEntity != null)
 		{
-			targetX = targetEntity.locX;
-			targetZ = targetEntity.locZ;
+			ILocation targetPlayerLocation = targetEntity.getLocation();
+			targetX = targetPlayerLocation.getX();
+			targetZ = targetPlayerLocation.getZ();
 			double xDistanceToTarget = targetX - locX;
 			double yDistanceToTarget = targetZ - locZ;
 			double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
@@ -200,7 +201,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			if (ascendDistance > 10.0D)
 				ascendDistance = 10.0D;
 
-			targetY = targetEntity.getBoundingBox().b + ascendDistance;
+			targetY = targetPlayerLocation.getY() + ascendDistance;
 		}
 		else
 		{
@@ -656,7 +657,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private int positionBufferIndex = -1;
 
 	private int deathTicks = 0;
-	private Entity targetEntity;
+	private IPlayer targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
 	private ILocation flyOffLocation;
