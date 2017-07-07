@@ -394,14 +394,13 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Launches entities a short distance.
 	 * @param list Entities to launch
 	 */
-	private void launchEntities(List list)
+	private void launchEntities(List<Entity> list)
 	{
 		double bodyBoundingBoxValue0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
 		double bodyBoundingBoxValue1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
 
-		for (Object rawEntity : list)
+		for (Entity entity : list)
 		{
-			Entity entity = (Entity) rawEntity;
 			if (!(entity instanceof EntityLiving))
 				continue;
 
@@ -421,15 +420,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Attack list of EntityLiving with 20.0F damage.
 	 * @param list Entities to hit
 	 */
-	private void hitEntities(List list)
+	private void hitEntities(List<Entity> list)
 	{
-		for (Object rawEntity : list)
-		{
-			Entity entity = (Entity) rawEntity;
-
+		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
 				entity.damageEntity(DamageSource.mobAttack(this), 20.0F);
-		}
 	}
 
 	/**
