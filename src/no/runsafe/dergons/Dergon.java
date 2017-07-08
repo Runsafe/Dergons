@@ -153,19 +153,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
-		{
-			// If we're dead, play a random explosion effect at a random offset to its corpse.
-			world.addParticle(
-				EnumParticle.EXPLOSION_LARGE,
-				locX + (random.nextFloat() - 0.5F) * 8.0F,
-				locY + (random.nextFloat() - 0.5F) * 4.0F + 2.0D,
-				locZ + (random.nextFloat() - 0.5F) * 8.0F,
-				0.0D,
-				0.0D,
-				0.0D
-			);
 			return;
-		}
 
 		yaw = (float) trimDegrees(yaw);
 		if (positionBufferIndex < 0)
@@ -500,6 +488,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Increment death ticks.
 		this.deathTicks++;
+
+		// Make explosion particles for every step of the death animation.
+		world.addParticle(
+			EnumParticle.EXPLOSION_HUGE,
+			locX + (random.nextFloat() - 0.5) * 8,
+			locY + (random.nextFloat() - 0.5) * 4 + 2,
+			locZ + (random.nextFloat() - 0.5) * 8,
+			0, 0, 0
+		);
 
 		// Make explosion particles when the dergon is almost dead.
 		if (this.deathTicks >= 180 && this.deathTicks <= 200)
