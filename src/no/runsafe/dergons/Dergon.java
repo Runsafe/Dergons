@@ -157,9 +157,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			// If we're dead, play a random explosion effect at a random offset to its corpse.
 			world.addParticle(
 				EnumParticle.EXPLOSION_LARGE,
-				locX + (double) (random.nextFloat() - 0.5F) * 8.0F,
-				locY + (double) (random.nextFloat() - 0.5F) * 4.0F + 2.0D,
-				locZ + (double) (random.nextFloat() - 0.5F) * 8.0F,
+				locX + (random.nextFloat() - 0.5F) * 8.0F,
+				locY + (random.nextFloat() - 0.5F) * 4.0F + 2.0D,
+				locZ + (random.nextFloat() - 0.5F) * 8.0F,
 				0.0D,
 				0.0D,
 				0.0D
@@ -172,7 +172,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		{
 			for (int i = 0; i < positionBuffer.length; ++i)
 			{
-				positionBuffer[i][0] = (double) yaw;
+				positionBuffer[i][0] = yaw;
 				positionBuffer[i][1] = locY;
 			}
 		}
@@ -180,7 +180,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (++positionBufferIndex == positionBuffer.length)
 			positionBufferIndex = 0;
 
-		positionBuffer[positionBufferIndex][0] = (double) yaw;
+		positionBuffer[positionBufferIndex][0] = yaw;
 		positionBuffer[positionBufferIndex][1] = locY;
 
 		// Get target position relative to Dergon
@@ -214,16 +214,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
 		final float Y_LIMIT = 0.6F;
-		if (targetPosY < (double) (-Y_LIMIT))
-			targetPosY = (double) (-Y_LIMIT);
+		if (targetPosY < (-Y_LIMIT))
+			targetPosY = (-Y_LIMIT);
 
-		if (targetPosY > (double) Y_LIMIT)
-			targetPosY = (double) Y_LIMIT;
+		if (targetPosY > Y_LIMIT)
+			targetPosY = Y_LIMIT;
 
 		motY += targetPosY * 0.10000000149011612D;
 		yaw = (float) trimDegrees(yaw);
 		double targetDirection = 180.0D - toDegrees(atan2(targetPosX, targetPosZ));
-		double targetHeadingDifference = trimDegrees(targetDirection - (double) yaw);
+		double targetHeadingDifference = trimDegrees(targetDirection - yaw);
 
 		if (targetHeadingDifference > 50.0D)
 			targetHeadingDifference = 50.0D;
@@ -253,7 +253,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (movementSpeedTrimmed > 40.0D)
 			movementSpeedTrimmed = 40.0D;
 
-		bb = (float) ((double) bb + targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
+		bb += targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart);
 		yaw += bb * 0.1F;
 		float f6 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float f7 = 0.06F;
@@ -265,8 +265,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		float f8 = (float) (movementVector.b(vec3d1) + 1.0D) / 2.0F;
 
 		f8 = 0.8F + 0.15F * f8;
-		motX *= (double) f8;
-		motZ *= (double) f8;
+		motX *= f8;
+		motZ *= f8;
 		motY *= 0.9100000262260437D;
 
 		dergonHead.width = dergonHead.length = 3.0F;
