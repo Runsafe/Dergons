@@ -156,7 +156,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			return;
 
 		yaw = (float) trimDegrees(yaw);
-		if (positionBufferIndex < 0)
+		if (positionBufferIndex < 0) // Load up the position buffer if and only if the dergon was just spawned.
 		{
 			for (int i = 0; i < positionBuffer.length; ++i)
 			{
@@ -175,15 +175,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		double targetPosX = targetX - locX;
 		double targetPosY = targetY - locY;
 		double targetPosZ = targetZ - locZ;
-		double targetDistance = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
+		double targetDistanceSquared = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
 		if (targetEntity != null)
 		{
 			ILocation targetPlayerLocation = targetEntity.getLocation();
 			targetX = targetPlayerLocation.getX();
 			targetZ = targetPlayerLocation.getZ();
 			double xDistanceToTarget = targetX - locX;
-			double yDistanceToTarget = targetZ - locZ;
-			double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + yDistanceToTarget * yDistanceToTarget);
+			double zDistanceToTarget = targetZ - locZ;
+			double distanceToTarget = sqrt(xDistanceToTarget * xDistanceToTarget + zDistanceToTarget * zDistanceToTarget);
 			double ascendDistance = 0.4000000059604645D + distanceToTarget / 80.0D - 1.0D;
 
 			if (ascendDistance > 10.0D)
@@ -197,7 +197,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			targetZ += random.nextGaussian() * 2.0D;
 		}
 
-		if (targetDistance < 100.0D || targetDistance > 22500.0D || positionChanged || F)
+		if (targetDistanceSquared < 100.0D || targetDistanceSquared > 22500.0D || positionChanged || F)
 			updateCurrentTarget();
 
 		targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
@@ -224,15 +224,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			targetY - locY,
 			targetZ - locZ
 		).a();// .a() -> Normalize values
-		Vec3D vec3d1 = new Vec3D(
+		Vec3D direction = new Vec3D(
 			sin(toRadians(yaw)),
 			motY,
 			(-cos(toRadians(yaw)))
 		).a();// .a() -> Normalize values
-		float f4 = (float) (vec3d1.b(relativeTargetCoordinates) + 0.5D) / 1.5F;
+		float f3 = (float) (direction.b(relativeTargetCoordinates) + 0.5D) / 1.5F;
 
-		if (f4 < 0.0F)
-			f4 = 0.0F;
+		if (f3 < 0.0F)
+			f3 = 0.0F;
 
 		bb *= 0.8F;
 		float movementSpeedStart = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
@@ -243,18 +243,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		bb += targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart);
 		yaw += bb * 0.1F;
-		float f6 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
-		float f7 = 0.06F;
+		float f2 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
+		float frictionDampener = 0.06F;
 
-		a(0.0F, -1.0F, f7 * (f4 * f6 + (1.0F - f6)));
+		// Move relative. (strafe, forward, friction)
+		a(0.0F, -1.0F, frictionDampener * (f3 * f2 + (1.0F - f2)));
 		move(motX, motY, motZ);
 
 		Vec3D movementVector = new Vec3D(motX, motY, motZ).a();
-		float f8 = (float) (movementVector.b(vec3d1) + 1.0D) / 2.0F;
+		float lateralVelocityModifier = (float) (movementVector.b(direction) + 1.0D) / 2.0F;
 
-		f8 = 0.8F + 0.15F * f8;
-		motX *= f8;
-		motZ *= f8;
+		lateralVelocityModifier = 0.8F + 0.15F * lateralVelocityModifier;
+		motX *= lateralVelocityModifier;
+		motZ *= lateralVelocityModifier;
 		motY *= 0.9100000262260437D;
 
 		dergonHead.width = dergonHead.length = 3.0F;
@@ -305,7 +306,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		double[] olderPosition = getMovementOffset(5);
-		double[] currentPosition = getMovementOffset(0);
+		double currentAltitude = getMovementOffset(0)[1];
 
 		float xHeadDirectionIncremented = (float) sin(toRadians(yaw) - bc * 0.01F);
 		float zHeadDirectionIncremented = (float) cos(toRadians(yaw) - bc * 0.01F);
@@ -313,7 +314,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		incrementHitboxLocation(
 			dergonHead,
 			(xHeadDirectionIncremented * 5.5 * cosF1),
-			(currentPosition[1] - olderPosition[1]) + (sinF1 * 5.5),
+			(currentAltitude - olderPosition[1]) + (sinF1 * 5.5),
 			-(zHeadDirectionIncremented * 5.5 * cosF1)
 		);
 
@@ -330,17 +331,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			}
 
 			double[] oldPosition = getMovementOffset(12 + tailNumber * 2);
-			float f14 = (float) toRadians(yaw + trimDegrees(oldPosition[0] - olderPosition[0]));
-			float sinF14 = (float) sin(f14);
-			float cosF14 = (float) cos(f14);
+			float tailDirection = (float) toRadians(yaw + trimDegrees(oldPosition[0] - olderPosition[0]));
 			final float ONE_POINT_FIVE = 1.5F;
 			float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
 
 			incrementHitboxLocation(
 				tailSection,
-				-(sinYaw * ONE_POINT_FIVE + sinF14 * movementMultiplier) * cosF1,
+				-(sinYaw * ONE_POINT_FIVE + sin(tailDirection) * movementMultiplier) * cosF1,
 				(oldPosition[1] - olderPosition[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
-				(cosYaw * ONE_POINT_FIVE + cosF14 * movementMultiplier) * cosF1
+				(cosYaw * ONE_POINT_FIVE + cos(tailDirection) * movementMultiplier) * cosF1
 			);
 		}
 	}
@@ -385,19 +384,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 */
 	private void launchEntities(List<Entity> list)
 	{
-		double bodyBoundingBoxValue0 = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
-		double bodyBoundingBoxValue1 = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
+		double bodyPosX = (dergonBody.getBoundingBox().a + dergonBody.getBoundingBox().d) / 2.0D;
+		double bodyPosZ = (dergonBody.getBoundingBox().c + dergonBody.getBoundingBox().f) / 2.0D;
 
 		for (Entity entity : list)
 		{
 			if (!(entity instanceof EntityLiving))
 				continue;
 
-			double xDistance = entity.locX - bodyBoundingBoxValue0;
-			double zDistance = entity.locZ - bodyBoundingBoxValue1;
+			double xDistance = entity.locX - bodyPosX;
+			double zDistance = entity.locZ - bodyPosZ;
 			double distanceSquared = xDistance * xDistance + zDistance * zDistance;
 
-			entity.g(
+			entity.g( // Add velocity
 				xDistance / distanceSquared * 4.0D,
 				0.20000000298023224D,
 				zDistance / distanceSquared * 4.0D
