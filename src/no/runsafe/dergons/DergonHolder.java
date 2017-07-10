@@ -75,14 +75,7 @@ public class DergonHolder
 			return;
 		}
 
-		scheduler.startSyncTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				processStep();
-			}
-		}, random.nextInt(maxStep) + minStep);
+		scheduler.startSyncTask(() -> processStep(), random.nextInt(maxStep) + minStep);
 		currentStep++;
 	}
 

@@ -67,14 +67,10 @@ public class DergonSpawner implements IConfigurationChanged
 			scheduler.cancelTask(timerID);
 
 		int spawnTimer = config.getConfigValueAsInt("spawnTimer");
-		timerID = scheduler.startSyncRepeatingTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				console.logInformation("Attempting to spawn a dergon: " + attemptSpawn());
-			}
-		}, spawnTimer, spawnTimer);
+		timerID = scheduler.startSyncRepeatingTask(() ->
+			console.logInformation("Attempting to spawn a dergon: " + attemptSpawn()),
+			spawnTimer, spawnTimer
+		);
 	}
 
 	private final IScheduler scheduler;

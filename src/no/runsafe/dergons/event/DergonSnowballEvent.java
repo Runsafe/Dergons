@@ -1,13 +1,13 @@
-package no.runsafe.dergons;
+package no.runsafe.dergons.event;
 
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.player.RunsafeCustomEvent;
 
-public class DergonMountEvent extends RunsafeCustomEvent
+public class DergonSnowballEvent extends RunsafeCustomEvent
 {
-	public DergonMountEvent(IPlayer player)
+	public DergonSnowballEvent(IPlayer player)
 	{
-		super(player, "runsafe.dergon.mount");
+		super(player, "runsafe.dergons.snowball");
 	}
 
 	@Override
