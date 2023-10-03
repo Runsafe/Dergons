@@ -300,8 +300,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		if (hurtTicks == 0)
 		{
-			launchEntities(world.getEntities(this, dergonWingRight.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
-			launchEntities(world.getEntities(this, dergonWingLeft.getBoundingBox().grow(4.0D, 2.0D, 4.0D).shrink(0.0D, -2.0D, 0.0D)));
+			launchEntities(world.getEntities(this, dergonWingRight.getBoundingBox().grow(4.0D, 4.0D, 4.0D)));
+			launchEntities(world.getEntities(this, dergonWingLeft.getBoundingBox().grow(4.0D, 4.0D, 4.0D)));
 			hitEntities(world.getEntities(this, dergonHead.getBoundingBox().grow(1.0D, 1.0D, 1.0D)));
 		}
 
