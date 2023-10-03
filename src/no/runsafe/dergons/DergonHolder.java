@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID)
+	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
@@ -24,6 +24,7 @@ public class DergonHolder
 		this.minStep = min;
 		this.maxStep = max;
 		this.stepCount = steps;
+		this.baseHealth = baseHealth;
 
 		this.minY = minY;
 
@@ -36,7 +37,7 @@ public class DergonHolder
 	private void spawn()
 	{
 		IPlayer idealPlayer = null;
-		float health = 200F;
+		float health = baseHealth;
 
 		for (IPlayer player : world.getPlayers())
 		{
@@ -46,7 +47,7 @@ public class DergonHolder
 				if (idealPlayer == null && playerLocation.getY() > minY)
 					idealPlayer = player;
 
-				health += 100F;
+				health += (baseHealth / 2);
 			}
 		}
 
@@ -87,6 +88,7 @@ public class DergonHolder
 	private final int maxStep;
 	private final int minY;
 	private final int stepCount;
+	private final float baseHealth;
 	private final Random random = new Random();
 	private final DergonHandler handler;
 	private final int dergonID;

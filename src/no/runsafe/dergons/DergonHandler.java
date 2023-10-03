@@ -27,7 +27,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			return;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
-		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID); // Construct the dergon.
+		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth); // Construct the dergon.
 		currentDergonID++;
 	}
 
@@ -39,6 +39,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
 		stepCount = config.getConfigValueAsInt("eventSteps");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
+		baseHealth = config.getConfigValueAsFloat("baseHealth");
 	}
 
 	@Override
@@ -119,6 +120,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
+	private float baseHealth;
 	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
 	private final IServer server;
 	private final Random random = new Random();
