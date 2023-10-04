@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID)
+	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
@@ -24,6 +24,7 @@ public class DergonHolder
 		this.minStep = min;
 		this.maxStep = max;
 		this.stepCount = steps;
+		this.baseHealth = baseHealth;
 
 		this.minY = minY;
 
@@ -36,7 +37,7 @@ public class DergonHolder
 	private void spawn()
 	{
 		IPlayer idealPlayer = null;
-		float health = 200F;
+		float health = baseHealth;
 
 		for (IPlayer player : world.getPlayers())
 		{
@@ -46,7 +47,7 @@ public class DergonHolder
 				if (idealPlayer == null && playerLocation.getY() > minY)
 					idealPlayer = player;
 
-				health += 100F;
+				health += (baseHealth / 2);
 			}
 		}
 
@@ -55,14 +56,20 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				Dergon dragon = new Dergon(world, handler, targetLocation, dergonID);
-				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
-				dragon.setCustomName("Dergon");
-				dragon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
-				dragon.setHealth(health);
-				rawWorld.addEntity(dragon);
+				heldDergon = new Dergon(world, handler, targetLocation, dergonID);
+				heldDergon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
+				heldDergon.setCustomName("Dergon");
+				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
+				heldDergon.setHealth(health);
+				rawWorld.addEntity(heldDergon);
 			}
 		}
+	}
+
+	public void kill()
+	{
+		if (heldDergon != null)
+			heldDergon.setHealth(0);
 	}
 
 	private void processStep()
@@ -79,6 +86,7 @@ public class DergonHolder
 		currentStep++;
 	}
 
+	private Dergon heldDergon;
 	private int currentStep = 0;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
@@ -87,6 +95,7 @@ public class DergonHolder
 	private final int maxStep;
 	private final int minY;
 	private final int stepCount;
+	private final float baseHealth;
 	private final Random random = new Random();
 	private final DergonHandler handler;
 	private final int dergonID;
