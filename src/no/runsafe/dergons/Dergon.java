@@ -17,13 +17,13 @@ import static java.lang.Math.*;
 
 /*
  * Names of obfuscated variables in various spigot versions:
- * Type                 v1_8_R3  v1_9_R2  v1_10_R1 v1_11_R1
+ * Type                 v1_8_R3  v1_12_R1
  * Entity.class:
- * public boolean       F        C        C        C           Checks if entity is collided with a vertical block.
+ * public boolean       F        C        Checks if entity is collided with a vertical block.
  *
  * EntityLiving.Class:
- * protected int        bc       bh       bi       bh          Position rotation increment.
- * protected float      bb       bg       bh       bg          Random Yaw Velocity.
+ * protected int        bc       bi       Position rotation increment.
+ * protected float      bb       bh       Random Yaw Velocity.
  */
 
 public class Dergon extends EntityInsentient implements IComplex, IMonster
@@ -132,7 +132,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Update method for Dergons.
 	 * Names of this function in various spigot versions:
 	 * v1_8_R3: m
-	 * v1_9_R2/v1_10_R1/v1_11_R1: n
+	 * v1_12_R1: n
 	 */
 	@Override
 	public void m()
@@ -348,7 +348,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Damages the dergon based on a specific body part.
 	 * Also recalculates the dergon's target location.
 	 * Names of this function in various spigot versions:
-	 * v1_8_R3/v1_9_R2/v1_10_R1/v1_11_R1: a
+	 * v1_8_R3 - v1_12_R1: a
 	 * @param bodyPart Part of the dergon hit.
 	 * @param damager Source of the damage.
 	 * @param damageValue Amount of damage.
@@ -396,7 +396,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			double zDistance = entity.locZ - bodyPosZ;
 			double distanceSquared = xDistance * xDistance + zDistance * zDistance;
 
-			entity.g( // Add velocity
+			entity.g( // Add velocity (g in 1.8, f in 1.12)
 				xDistance / distanceSquared * 4.0D,
 				0.20000000298023224D,
 				zDistance / distanceSquared * 4.0D
@@ -456,7 +456,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Overrides method in EntityLiving.class
 	 * Names of this function in various spigot versions:
 	 * v1_8_R3: d
-	 * v1_9_R2/v1_10_R1/v1_11_R1: damageEntity0
+	 * v1_12_R1: damageEntity0
 	 * @param source damage source
 	 * @param f Amount of damage
 	 * @return True if damaged, false if not damaged.
@@ -475,9 +475,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Overrides method in EntityEnderDragon which overrides method in EntityLiving
 	 * Names of this function in various spigot versions:
 	 * v1_8_R3: aZ
-	 * v1_9_R2: bD
-	 * v_10_R1: bF
-	 * v_11_R1: bG
+	 * v1_12_R1: bO
 	 */
 	@Override
 	protected void aZ()
@@ -526,9 +524,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Overrides method in Entity.class.
 	 * Names of this method in various spigot versions:
 	 * v1_8_R3: aB
-	 * v1_9_R2: aR
-	 * v_10_R1/v_11_R1: aT
-	 * v_12_R1: aZ
+	 * v_12_R1: bb
 	 * @return All hitboxes.
 	 */
 	@Override
@@ -570,8 +566,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Plays the hurt sound.
 	 * Names of this method in various spigot versions:
 	 * v1_8_R3: bo
-	 * v1_9_R2: bS, returns SoundEffect
-	 * v1_10_R1: bV, returns SoundEffect
+	 * v1_12_R1 d(DamageSource), returns SoundEffect
 	 * @return null
 	 */
 	@Override
@@ -601,7 +596,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 */
 	private void incrementHitboxLocation(EntityComplexPart bodyPart, double xIncrement, double yIncrement, double zIncrement)
 	{
-		bodyPart.t_(); //t_() means on update.
+		bodyPart.t_(); //t_() means on update. Behavior changes slightly in 1.12 (B_())
 		bodyPart.setPositionRotation(
 			locX + xIncrement, locY + yIncrement, locZ + zIncrement, 0, 0
 		);
