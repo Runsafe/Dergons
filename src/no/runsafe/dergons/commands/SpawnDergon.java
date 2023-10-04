@@ -20,8 +20,7 @@ public class SpawnDergon extends PlayerCommand
 		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer != null && targetPlayer.isOnline())
 		{
-			handler.spawnDergon(targetPlayer.getLocation());
-			return "&eDergon spawned.";
+			return "&eDergon spawned with ID:" + handler.spawnDergon(targetPlayer.getLocation());
 		}
 		return "&cInvalid player.";
 	}

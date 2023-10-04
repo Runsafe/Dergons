@@ -56,14 +56,20 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				Dergon dragon = new Dergon(world, handler, targetLocation, dergonID);
-				dragon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
-				dragon.setCustomName("Dergon");
-				dragon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
-				dragon.setHealth(health);
-				rawWorld.addEntity(dragon);
+				heldDergon = new Dergon(world, handler, targetLocation, dergonID);
+				heldDergon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
+				heldDergon.setCustomName("Dergon");
+				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
+				heldDergon.setHealth(health);
+				rawWorld.addEntity(heldDergon);
 			}
 		}
+	}
+
+	public void kill()
+	{
+		if (heldDergon != null)
+			heldDergon.setHealth(0);
 	}
 
 	private void processStep()
@@ -80,6 +86,7 @@ public class DergonHolder
 		currentStep++;
 	}
 
+	private Dergon heldDergon;
 	private int currentStep = 0;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;

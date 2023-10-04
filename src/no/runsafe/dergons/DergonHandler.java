@@ -20,15 +20,29 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		this.server = server;
 	}
 
-	public void spawnDergon(ILocation location)
+	public int spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
 		if (world == null)
-			return;
+			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
-		new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth); // Construct the dergon.
-		currentDergonID++;
+		activeDergons.put( // Construct the dergon.
+			currentDergonID,
+			new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+		);
+		return currentDergonID++;
+	}
+
+	public boolean killDergon(int ID)
+	{
+		DergonHolder victim = activeDergons.get(ID);
+
+		if (victim == null)
+			return false;
+
+		victim.kill();
+		return true;
 	}
 
 	@Override
@@ -110,6 +124,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			}
 			damageCounter.remove(dergonID); // Remove the tracking for this dergon.
 		}
+		activeDergons.remove(dergonID);
 
 		if (slayer != null)
 			new DergonSlayEvent(slayer).Fire();
@@ -129,6 +144,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private float baseDamage;
 	private float baseHealth;
 	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
+	private HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
 	private final IServer server;
 	private final Random random = new Random();
 	private int currentDergonID = 1;
