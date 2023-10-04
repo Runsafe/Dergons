@@ -39,6 +39,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
 		stepCount = config.getConfigValueAsInt("eventSteps");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
+		baseDamage = config.getConfigValueAsFloat("baseDamage");
 		baseHealth = config.getConfigValueAsFloat("baseHealth");
 	}
 
@@ -73,6 +74,11 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		}
 
 		return damage;
+	}
+
+	public float getDergonAttackingDamage()
+	{
+		return baseDamage;
 	}
 
 	public void handleDergonDeath(Dergon dergon)
@@ -120,6 +126,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int eventMaxTime;
 	private int stepCount;
 	private int minSpawnY;
+	private float baseDamage;
 	private float baseHealth;
 	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
 	private final IServer server;

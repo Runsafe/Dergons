@@ -7,4 +7,5 @@ spawnY: 100
 eventMinTime: 2
 eventMaxTime: 6
 eventSteps: 7
+baseDamage: 20.0
 baseHealth: 200.0

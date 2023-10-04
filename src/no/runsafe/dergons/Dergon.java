@@ -405,14 +405,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * Attack list of EntityLiving with 20.0F damage.
+	 * Attack list of EntityLiving.
 	 * @param list Entities to hit
 	 */
 	private void hitEntities(List<Entity> list)
 	{
 		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
-				entity.damageEntity(DamageSource.mobAttack(this), 20.0F);
+				entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
 	}
 
 	/**
