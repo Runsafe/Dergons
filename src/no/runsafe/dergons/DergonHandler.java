@@ -1,6 +1,6 @@
 package no.runsafe.dergons;
 
-import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_12_R1.*;
 import no.runsafe.dergons.event.*;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
