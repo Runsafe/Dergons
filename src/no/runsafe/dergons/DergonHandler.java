@@ -149,11 +149,12 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		for (Integer id : activeDergons.keySet())
 		{
 			DergonHolder dergon = activeDergons.get(id);
+			ILocation dergonLocation = dergon.getLocation();
 			IPlayer target = dergon.getCurrentTarget();
 			info.add(
-				"&cID:&r " + id +
-				", &cTarget:&r " + ((target == null) ? "N/A" : target.getPrettyName())   +
-				", &c" + dergon.getLocation().toString()
+				"&eID:&r " + id +
+				", &eTarget:&r " + ((target == null) ? "&cN/A&r" : target.getPrettyName())   +
+				", &eLocation:&r" + ((dergonLocation == null) ? "&cN/A&r" : dergonLocation.toString())
 			);
 		}
 		return info;
