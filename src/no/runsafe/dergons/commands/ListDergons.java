@@ -19,10 +19,9 @@ public class ListDergons extends ExecutableCommand
     @Override
     public String OnExecute(ICommandExecutor executor, IArgumentList parameters)
     {
-        if (handler.getAllDergonIDs().isEmpty())
-            return "&cNo dergons found.";
-
         List<String> dergonListInfo = handler.getAllDergonInfo();
+        if (dergonListInfo.isEmpty())
+            return "&cNo dergons found.";
 
         return String.format(
             "&a%d dergons located:&r\n %s", dergonListInfo.size(),
