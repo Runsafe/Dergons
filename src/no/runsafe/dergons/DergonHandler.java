@@ -32,15 +32,20 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return currentDergonID++;
 	}
 
-	public boolean killDergon(int ID)
+	public String killDergon(int ID)
 	{
 		DergonHolder victim = activeDergons.get(ID);
 
 		if (victim == null)
-			return false;
+			return "&cDergon could not be killed, invalid ID.";
 
-		victim.kill();
-		return true;
+		boolean success = victim.kill();
+		if (success)
+			return "&aDergon killed.";
+
+		damageCounter.remove(ID);
+		activeDergons.remove(ID);
+		return "&cDergon entity does not exist, removing from list.";
 	}
 
 	@Override

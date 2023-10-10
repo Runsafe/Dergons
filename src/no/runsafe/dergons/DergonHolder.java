@@ -66,10 +66,13 @@ public class DergonHolder
 		}
 	}
 
-	public void kill()
+	boolean kill()
 	{
-		if (heldDergon != null)
-			heldDergon.setHealth(0);
+		if (heldDergon == null)
+			return false;
+
+		heldDergon.setHealth(0);
+		return true;
 	}
 
 	public ILocation getLocation()
