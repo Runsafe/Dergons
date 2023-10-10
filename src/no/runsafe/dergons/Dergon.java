@@ -580,6 +580,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return targetWorld;
 	}
 
+	public IPlayer getCurrentTarget()
+	{
+		return targetEntity;
+	}
+
 	/**
 	 * Increments the hitbox location of a dergon's body part.
 	 * @param bodyPart Part to change the location of.

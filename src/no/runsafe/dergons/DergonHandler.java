@@ -8,9 +8,7 @@ import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
@@ -133,6 +131,26 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public void handleDergonMount(String playerName)
 	{
 		new DergonMountEvent(server.getPlayerExact(playerName)).Fire();
+	}
+
+	public Set<Integer> getAllDergonIDs()
+	{
+		return activeDergons.keySet();
+	}
+
+	public List<String> getAllDergonInfo()
+	{
+		List<String> info = new ArrayList<>();
+		for (Integer id : activeDergons.keySet())
+		{
+			DergonHolder dergon = activeDergons.get(id);
+			info.add(
+				"&cID:&r " + id +
+				", &cTarget:&r " + dergon.getCurrentTarget().getPrettyName() +
+				", &c" + dergon.getLocation().toString()
+			);
+		}
+		return info;
 	}
 
 	private final IScheduler scheduler;
