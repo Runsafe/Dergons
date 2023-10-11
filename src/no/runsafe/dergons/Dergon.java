@@ -650,14 +650,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
 	 */
-	private EntityComplexPart[] children;
-	private EntityComplexPart dergonHead;
-	private EntityComplexPart dergonBody;
-	private EntityComplexPart dergonWingRight;
-	private EntityComplexPart dergonWingLeft;
-	private EntityComplexPart dergonTailSection0;
-	private EntityComplexPart dergonTailSection1;
-	private EntityComplexPart dergonTailSection2;
+	private final EntityComplexPart[] children;
+	private final EntityComplexPart dergonHead;
+	private final EntityComplexPart dergonBody;
+	private final EntityComplexPart dergonWingRight;
+	private final EntityComplexPart dergonWingLeft;
+	private final EntityComplexPart dergonTailSection0;
+	private final EntityComplexPart dergonTailSection1;
+	private final EntityComplexPart dergonTailSection2;
 
 	// Target coordinates to fly to.
 	private double targetX = 0;
@@ -665,7 +665,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private double targetZ = 0;
 
 	// Store the dergon's last 64 vertical and yaw positions.
-	private double[][] positionBuffer = new double[64][2];
+	private final double[][] positionBuffer = new double[64][2];
 	private int positionBufferIndex = -1;
 
 	private int deathTicks = 0;

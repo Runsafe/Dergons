@@ -170,8 +170,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int minSpawnY;
 	private float baseDamage;
 	private float baseHealth;
-	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
-	private HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
+	private final HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
+	private final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
 	private final IConsole console;
 	private final IServer server;
 	private final Random random = new Random();
