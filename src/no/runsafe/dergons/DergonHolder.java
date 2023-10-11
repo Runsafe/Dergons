@@ -88,6 +88,11 @@ public class DergonHolder
 		return heldDergon.getCurrentTarget();
 	}
 
+	public ILocation getTargetFlyToLocation()
+	{
+		return heldDergon.getTargetFlyToLocation();
+	}
+
 	private void processStep()
 	{
 		targetLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);

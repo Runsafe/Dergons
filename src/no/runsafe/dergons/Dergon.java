@@ -608,6 +608,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return targetEntity;
 	}
 
+	public ILocation getTargetFlyToLocation()
+	{
+		return targetWorld.getLocation(targetX, targetY, targetZ);
+	}
+
 	/**
 	 * Increments the hitbox location of a dergon's body part.
 	 * @param bodyPart Part to change the location of.
