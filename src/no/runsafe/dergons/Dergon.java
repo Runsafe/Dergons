@@ -436,11 +436,13 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		else
 			bossBar.setTitle("RogueDergon (" + pct + "%)");
 
+		bossBar.setProgress(pct);
+
 		// Handle which players can see the boss bar
 
 		if (targetWorld == null) return;
 
-		List<IPlayer> playersInRange = targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(400);
+		List<IPlayer> playersInRange = targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150);
 		List<IPlayer> bossBarPlayers = bossBar.getPlayers();
 
 		// Remove players who are too far away
@@ -543,11 +545,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected void bO()
 	{
+		bossBar.removeAllPlayers();
 		if (dead)
-		{
-			bossBar.removeAllPlayers();
 			return;
-		}
 
 		// Increment death ticks.
 		this.deathTicks++;
@@ -580,7 +580,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// When animation is finished, slay the dergon.
 		if(this.deathTicks == 200)
 		{
-			bossBar.removeAllPlayers();
 			die();
 			if (handler != null)
 				handler.handleDergonDeath(this);
