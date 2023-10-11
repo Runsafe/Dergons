@@ -5,6 +5,7 @@ import net.minecraft.server.v1_12_R1.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
@@ -13,8 +14,9 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
+	public DergonHolder(IConsole console, IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
+		this.console = console;
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
 		this.handler = handler;
@@ -61,15 +63,19 @@ public class DergonHolder
 				heldDergon.setCustomName("Dergon");
 				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
 				heldDergon.setHealth(health);
-				rawWorld.addEntity(heldDergon);
+				if (!rawWorld.addEntity(heldDergon))
+					console.logWarning("Dergon with ID:%d could not be added to the world.", dergonID);
 			}
 		}
 	}
 
-	public void kill()
+	boolean kill()
 	{
-		if (heldDergon != null)
-			heldDergon.setHealth(0);
+		if (heldDergon == null)
+			return false;
+
+		heldDergon.setHealth(0);
+		return true;
 	}
 
 	public ILocation getLocation()
@@ -80,6 +86,11 @@ public class DergonHolder
 	public IPlayer getCurrentTarget()
 	{
 		return heldDergon.getCurrentTarget();
+	}
+
+	public ILocation getTargetFlyToLocation()
+	{
+		return heldDergon.getTargetFlyToLocation();
 	}
 
 	private void processStep()
@@ -99,6 +110,7 @@ public class DergonHolder
 	private Dergon heldDergon;
 	private int currentStep = 0;
 	private final IScheduler scheduler;
+	private final IConsole console;
 	private final ILocation targetLocation;
 	private final IWorld world;
 	private final int minStep;

@@ -5,6 +5,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
@@ -55,6 +56,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
+	 * This constructor is needed to prevent issues with unloading and loading again.
+	 */
+	public Dergon(World bukkitWorld)
+	{
+		this(
+			ObjectWrapper.convert(bukkitWorld.getWorld()),
+			null,
+			ObjectWrapper.convert(bukkitWorld.getWorld()).getLocation(0D,100D,0D),
+			-1
+		);
+	}
+
+	/**
 	 * Selects new player target.
 	 */
 	private void updateCurrentTarget()
@@ -67,7 +81,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			flyOffLocation = null;
 
 		// Check if we have any close players, if we do, fly away.
-		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
+		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty() && handler != null)
 		{
 			if (ridingPlayer == null && random.nextFloat() < 0.5F)
 			{
@@ -411,7 +425,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	{
 		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
-				entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
+			{
+				if (handler != null)
+					entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
+				else
+					entity.damageEntity(DamageSource.mobAttack(this), 20.0F);
+			}
 	}
 
 	/**
@@ -462,6 +481,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
+		if (handler == null)
+			return super.damageEntity0(source, damageValue);
+
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
 			return super.damageEntity0(source, handler.handleDergonDamage(this, source, damageValue));
 
@@ -512,7 +534,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if(this.deathTicks == 200)
 		{
 			die();
-			handler.handleDergonDeath(this);
+			if (handler != null)
+				handler.handleDergonDeath(this);
 		}
 	}
 
@@ -585,6 +608,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return targetEntity;
 	}
 
+	public ILocation getTargetFlyToLocation()
+	{
+		return targetWorld.getLocation(targetX, targetY, targetZ);
+	}
+
 	/**
 	 * Increments the hitbox location of a dergon's body part.
 	 * @param bodyPart Part to change the location of.
@@ -627,14 +655,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
 	 */
-	private EntityComplexPart[] children;
-	private EntityComplexPart dergonHead;
-	private EntityComplexPart dergonBody;
-	private EntityComplexPart dergonWingRight;
-	private EntityComplexPart dergonWingLeft;
-	private EntityComplexPart dergonTailSection0;
-	private EntityComplexPart dergonTailSection1;
-	private EntityComplexPart dergonTailSection2;
+	private final EntityComplexPart[] children;
+	private final EntityComplexPart dergonHead;
+	private final EntityComplexPart dergonBody;
+	private final EntityComplexPart dergonWingRight;
+	private final EntityComplexPart dergonWingLeft;
+	private final EntityComplexPart dergonTailSection0;
+	private final EntityComplexPart dergonTailSection1;
+	private final EntityComplexPart dergonTailSection2;
 
 	// Target coordinates to fly to.
 	private double targetX = 0;
@@ -642,7 +670,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private double targetZ = 0;
 
 	// Store the dergon's last 64 vertical and yaw positions.
-	private double[][] positionBuffer = new double[64][2];
+	private final double[][] positionBuffer = new double[64][2];
 	private int positionBufferIndex = -1;
 
 	private int deathTicks = 0;

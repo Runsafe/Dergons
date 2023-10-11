@@ -21,7 +21,7 @@ public class KillDergon extends ExecutableCommand
     public String OnExecute(ICommandExecutor executor, IArgumentList parameters)
     {
         int dergonID = parameters.getRequired("DergonID");
-        return handler.killDergon(dergonID) ? "&aDergon killed." : "&cDergon could not be killed.";
+        return handler.killDergon(dergonID);
     }
 
     private final DergonHandler handler;

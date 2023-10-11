@@ -5,6 +5,7 @@ import no.runsafe.dergons.event.*;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
+import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
@@ -12,9 +13,10 @@ import java.util.*;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler, IServer server)
+	public DergonHandler(IScheduler scheduler, IConsole console, IServer server)
 	{
 		this.scheduler = scheduler;
+		this.console = console;
 		this.server = server;
 	}
 
@@ -27,20 +29,25 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
 		activeDergons.put( // Construct the dergon.
 			currentDergonID,
-			new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+			new DergonHolder(console, scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
 		);
 		return currentDergonID++;
 	}
 
-	public boolean killDergon(int ID)
+	public String killDergon(int ID)
 	{
 		DergonHolder victim = activeDergons.get(ID);
 
 		if (victim == null)
-			return false;
+			return "&cDergon could not be killed, invalid ID.";
 
-		victim.kill();
-		return true;
+		boolean success = victim.kill();
+		if (success)
+			return "&aDergon killed.";
+
+		damageCounter.remove(ID);
+		activeDergons.remove(ID);
+		return "&cDergon entity does not exist, removing from list.";
 	}
 
 	@Override
@@ -144,10 +151,14 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		for (Integer id : activeDergons.keySet())
 		{
 			DergonHolder dergon = activeDergons.get(id);
+			ILocation dergonLocation = dergon.getLocation();
+			ILocation targetDestination = dergon.getTargetFlyToLocation();
+			IPlayer target = dergon.getCurrentTarget();
 			info.add(
-				"&cID:&r " + id +
-				", &cTarget:&r " + dergon.getCurrentTarget().getPrettyName() +
-				", &c" + dergon.getLocation().toString()
+				"&eID: &r " + id +
+				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
+				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : dergonLocation.toString()) +
+				", &eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : targetDestination.toString())
 			);
 		}
 		return info;
@@ -161,8 +172,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private int minSpawnY;
 	private float baseDamage;
 	private float baseHealth;
-	private HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
-	private HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
+	private final HashMap<Integer, HashMap<String, Float>> damageCounter = new HashMap<Integer, HashMap<String, Float>>(0);
+	private final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
+	private final IConsole console;
 	private final IServer server;
 	private final Random random = new Random();
 	private int currentDergonID = 1;
