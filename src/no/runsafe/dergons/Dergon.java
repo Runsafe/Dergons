@@ -5,6 +5,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
@@ -55,6 +56,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
+	 * This constructor is needed to prevent issues with unloading and loading again.
+	 */
+	public Dergon(World bukkitWorld)
+	{
+		this(
+			ObjectWrapper.convert(bukkitWorld.getWorld()),
+			null,
+			ObjectWrapper.convert(bukkitWorld.getWorld()).getLocation(0D,100D,0D),
+			-1
+		);
+	}
+
+	/**
 	 * Selects new player target.
 	 */
 	private void updateCurrentTarget()
@@ -67,7 +81,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			flyOffLocation = null;
 
 		// Check if we have any close players, if we do, fly away.
-		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
+		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty() && handler != null)
 		{
 			if (ridingPlayer == null && random.nextFloat() < 0.5F)
 			{
@@ -411,7 +425,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	{
 		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
-				entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
+			{
+				if (handler != null)
+					entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
+				else
+					entity.damageEntity(DamageSource.mobAttack(this), 20.0F);
+			}
 	}
 
 	/**
@@ -462,6 +481,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
+		if (handler == null)
+			return super.damageEntity0(source, damageValue);
+
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
 			return super.damageEntity0(source, handler.handleDergonDamage(this, source, damageValue));
 
@@ -512,7 +534,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if(this.deathTicks == 200)
 		{
 			die();
-			handler.handleDergonDeath(this);
+			if (handler != null)
+				handler.handleDergonDeath(this);
 		}
 	}
 
