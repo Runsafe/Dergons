@@ -80,16 +80,22 @@ public class DergonHolder
 
 	public ILocation getLocation()
 	{
+		if (heldDergon == null)
+			return null;
 		return world.getLocation(heldDergon.locX, heldDergon.locY, heldDergon.locZ);
 	}
 
 	public IPlayer getCurrentTarget()
 	{
+		if (heldDergon == null)
+			return null;
 		return heldDergon.getCurrentTarget();
 	}
 
 	public ILocation getTargetFlyToLocation()
 	{
+		if (heldDergon == null)
+			return null;
 		return heldDergon.getTargetFlyToLocation();
 	}
 
