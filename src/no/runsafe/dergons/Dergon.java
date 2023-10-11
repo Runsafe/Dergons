@@ -259,8 +259,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		float f2 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float frictionDampener = 0.06F;
 
-		// Move relative. (strafe, forward, friction)
-		a(0.0F, -1.0F, frictionDampener * (f3 * f2 + (1.0F - f2)));
+		// Move relative. (strafe, up, forward, friction) From Entity.class
+		b(0.0F, 0.0F, -1.0F, frictionDampener * (f3 * f2 + (1.0F - f2)));
 		move(EnumMoveType.SELF, motX, motY, motZ);
 
 		Vec3D movementVector = new Vec3D(motX, motY, motZ).a();
