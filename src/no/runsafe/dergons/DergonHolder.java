@@ -14,9 +14,8 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IConsole console, IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
+	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
-		this.console = console;
 		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
 		this.handler = handler;
@@ -63,8 +62,7 @@ public class DergonHolder
 				heldDergon.setCustomName("Dergon");
 				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
 				heldDergon.setHealth(health);
-				if (!rawWorld.addEntity(heldDergon))
-					console.logWarning("Dergon with ID:%d could not be added to the world.", dergonID);
+				rawWorld.addEntity(heldDergon);
 			}
 		}
 	}
@@ -116,7 +114,6 @@ public class DergonHolder
 	private Dergon heldDergon;
 	private int currentStep = 0;
 	private final IScheduler scheduler;
-	private final IConsole console;
 	private final ILocation targetLocation;
 	private final IWorld world;
 	private final int minStep;

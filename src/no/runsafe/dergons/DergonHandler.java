@@ -5,7 +5,6 @@ import no.runsafe.dergons.event.*;
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.tools.nms.EntityRegister;
@@ -14,27 +13,26 @@ import java.util.*;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler, IConsole console)
+	public DergonHandler(IScheduler scheduler)
 	{
 		this.scheduler = scheduler;
-		this.console = console;
 	}
 
 	public DergonHandler()
 	{
-		this(null,null);
+		this(null);
 	}
 
 	public int spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
-		if (world == null || scheduler == null || console == null)
+		if (world == null || scheduler == null)
 			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
 		activeDergons.put( // Construct the dergon.
 			currentDergonID,
-			new DergonHolder(console, scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+			new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
 		);
 		return currentDergonID++;
 	}
@@ -182,7 +180,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private static float baseHealth;
 	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
 	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
-	private final IConsole console;
 	private static final Random random = new Random();
 	private static int currentDergonID = 1;
 }
