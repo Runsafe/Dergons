@@ -7,9 +7,12 @@ import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectWrapper;
+import no.runsafe.framework.minecraft.bossBar.*;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
 import java.util.*;
+
+import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
@@ -136,6 +139,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			damageCounter.remove(dergonID); // Remove the tracking for this dergon.
 		}
 		activeDergons.remove(dergonID);
+		removeBossBar(dergonID);
 
 		if (slayer != null)
 			new DergonSlayEvent(slayer).Fire();
@@ -170,6 +174,34 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return info;
 	}
 
+	public void createBossBar(int dergonID)
+	{
+		if (dergonID < 0) return;
+
+		dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
+	}
+
+	public void updateBossBar(int dergonID, float currentHealth, float maxHealth, List<IPlayer> newBarPlayers)
+	{
+		if (dergonID < 0) return;
+
+		// Update the health bar to show the percentage of the dergon
+		long pct = round((currentHealth / maxHealth));
+		dergonBossBars.get(dergonID).setTitle("Dergon (" + (pct * 100) + "%)");
+		dergonBossBars.get(dergonID).setProgress(pct);
+
+		// Handle which players can see the boss bar
+		dergonBossBars.get(dergonID).setActivePlayers(newBarPlayers);
+	}
+
+	public void removeBossBar(int dergonID)
+	{
+		if (dergonID < 0) return;
+
+		dergonBossBars.get(dergonID).removeAllPlayers();
+		dergonBossBars.remove(dergonID);
+	}
+
 	private final IScheduler scheduler;
 	private static int spawnY;
 	private static int eventMinTime;
@@ -180,6 +212,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private static float baseHealth;
 	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
 	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
+	private static final HashMap<Integer, IBossBar> dergonBossBars = new HashMap<>(0);
 	private static final Random random = new Random();
 	private static int currentDergonID = 1;
 }
