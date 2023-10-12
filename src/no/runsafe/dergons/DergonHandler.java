@@ -81,7 +81,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			damage = 6.0F;
 
 		Entity attackingEntity = source.getEntity();
-		if (attackingEntity instanceof EntityPlayer)
+		if (attackingEntity instanceof EntityPlayer && server != null)
 		{
 			IPlayer attackingPlayer = server.getPlayer(attackingEntity.getUniqueID());
 
