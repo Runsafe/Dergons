@@ -105,7 +105,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 					{
 						rawChum.startRiding(this);
 						ridingPlayer = unluckyChum;
-						handler.handleDergonMount(ridingPlayer.getName());
+						handler.handleDergonMount(ridingPlayer);
 					}
 				}
 			}
