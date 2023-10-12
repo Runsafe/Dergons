@@ -20,10 +20,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		this.console = console;
 	}
 
+	public DergonHandler()
+	{
+		this(null,null);
+	}
+
 	public int spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
-		if (world == null)
+		if (world == null || scheduler == null || console == null)
 			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
@@ -82,6 +87,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				new DergonSnowballEvent(attackingPlayer).Fire();
 
 			int dergonID = dergon.getDergonID();
+
+			if (dergonID < 0)
+				return damage;
 
 			if (!damageCounter.containsKey(dergonID))
 				damageCounter.put(dergonID, new HashMap<>(0));
@@ -165,16 +173,16 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	}
 
 	private final IScheduler scheduler;
-	private int spawnY;
-	private int eventMinTime;
-	private int eventMaxTime;
-	private int stepCount;
-	private int minSpawnY;
-	private float baseDamage;
-	private float baseHealth;
-	private final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
-	private final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
+	private static int spawnY;
+	private static int eventMinTime;
+	private static int eventMaxTime;
+	private static int stepCount;
+	private static int minSpawnY;
+	private static float baseDamage;
+	private static float baseHealth;
+	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
+	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
 	private final IConsole console;
-	private final Random random = new Random();
-	private int currentDergonID = 1;
+	private static final Random random = new Random();
+	private static int currentDergonID = 1;
 }
