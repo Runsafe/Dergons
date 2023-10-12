@@ -6,7 +6,6 @@ import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.bossBar.*;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
@@ -16,14 +15,16 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler)
+	public DergonHandler(IScheduler scheduler, IServer server)
 	{
 		this.scheduler = scheduler;
+		if(this.server != null)
+			this.server = server;
 	}
 
 	public DergonHandler()
 	{
-		this(null);
+		this(null, null);
 	}
 
 	public int spawnDergon(ILocation location)
@@ -82,7 +83,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		Entity attackingEntity = source.getEntity();
 		if (attackingEntity instanceof EntityPlayer)
 		{
-			IPlayer attackingPlayer = ObjectWrapper.convert((EntityPlayer) attackingEntity);
+			IPlayer attackingPlayer = server.getPlayer(attackingEntity.getUniqueID());
 
 			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
 				new DergonSnowballEvent(attackingPlayer).Fire();
@@ -207,6 +208,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	}
 
 	private final IScheduler scheduler;
+	private static IServer server;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
