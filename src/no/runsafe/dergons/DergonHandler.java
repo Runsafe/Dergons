@@ -185,13 +185,17 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	{
 		if (dergonID < 0) return;
 
+		IBossBar bossBar = dergonBossBars.get(dergonID);
+
+		if (bossBar == null) return;
+
 		// Update the health bar to show the percentage of the dergon
 		long pct = round((currentHealth / maxHealth));
-		dergonBossBars.get(dergonID).setTitle("Dergon (" + (pct * 100) + "%)");
-		dergonBossBars.get(dergonID).setProgress(pct);
+		bossBar.setTitle("Dergon (" + (pct * 100) + "%)");
+		bossBar.setProgress(pct);
 
 		// Handle which players can see the boss bar
-		dergonBossBars.get(dergonID).setActivePlayers(newBarPlayers);
+		bossBar.setActivePlayers(newBarPlayers);
 	}
 
 	public void removeBossBar(int dergonID)
