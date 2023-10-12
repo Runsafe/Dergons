@@ -201,7 +201,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public void removeBossBar(int dergonID)
 	{
-		if (dergonID < 0) return;
+		if (dergonID < 0 || dergonBossBars.get(dergonID) == null) return;
 
 		dergonBossBars.get(dergonID).removeAllPlayers();
 		dergonBossBars.remove(dergonID);
