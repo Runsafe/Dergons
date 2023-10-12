@@ -1,7 +1,6 @@
 package no.runsafe.dergons;
 
 import net.minecraft.server.v1_12_R1.*;
-import no.runsafe.framework.api.IBossBar;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
@@ -9,7 +8,6 @@ import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
-import no.runsafe.framework.minecraft.bossBar.*;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 
 import java.util.ArrayList;
@@ -51,16 +49,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.fireProof = true;
 		this.persistent = true;
 
-		this.handler = handler;
+		if (handler != null)
+			this.handler = handler;
+		else
+			this.handler = new DergonHandler();
+
 		this.targetLocation = targetLocation;
 		this.targetWorld = targetLocation.getWorld();
 		this.dergonID = dergonID;
 
-		if (handler != null)
-			this.bossBar = new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID);
-		else
-			this.bossBar = new RunsafeBossBar("RogueDergon", BarColour.RED, BarStyle.SOLID);
-
+		this.handler.createBossBar(this.dergonID);
 		setCustomName("Dergon");
 	}
 
@@ -90,7 +88,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			flyOffLocation = null;
 
 		// Check if we have any close players, if we do, fly away.
-		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty() && handler != null)
+		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
 			if (ridingPlayer == null && random.nextFloat() < 0.5F)
 			{
@@ -105,7 +103,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 					{
 						rawChum.startRiding(this);
 						ridingPlayer = unluckyChum;
-						handler.handleDergonMount(ridingPlayer.getName());
+						handler.handleDergonMount(ridingPlayer);
 					}
 				}
 			}
@@ -166,7 +164,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			ridingPlayer = null;
 		}
 
-		updateBossBar();
+		handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
@@ -425,43 +423,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * Updates dergon's boss bar.
-	 */
-	private void updateBossBar()
-	{
-		// Update the health bar to show the percentage of the dergon
-		long pct = round((getHealth() / getMaxHealth()) * 100);
-		if (handler != null)
-			bossBar.setTitle("Dergon (" + pct + "%)");
-		else
-			bossBar.setTitle("RogueDergon (" + pct + "%)");
-
-		// Handle which players can see the boss bar
-
-		if (targetWorld == null) return;
-
-		List<IPlayer> playersInRange = targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(400);
-		List<IPlayer> bossBarPlayers = bossBar.getPlayers();
-
-		// Remove players who are too far away
-		for (IPlayer bossBarPlayer : bossBarPlayers)
-		{
-			if (!playersInRange.contains(bossBarPlayer))
-			{
-				bossBar.removePlayer(bossBarPlayer);
-				bossBarPlayers.remove(bossBarPlayer);
-			}
-		}
-
-		// Add players who get close to the dergon
-		for (IPlayer closePlayer : playersInRange)
-		{
-			if (!bossBarPlayers.contains(closePlayer))
-				bossBar.addPlayer(closePlayer);
-		}
-	}
-
-	/**
 	 * Attack list of EntityLiving.
 	 * @param list Entities to hit
 	 */
@@ -469,12 +430,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	{
 		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
-			{
-				if (handler != null)
 					entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
-				else
-					entity.damageEntity(DamageSource.mobAttack(this), 20.0F);
-			}
 	}
 
 	/**
@@ -525,9 +481,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
-		if (handler == null)
-			return super.damageEntity0(source, damageValue);
-
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
 			return super.damageEntity0(source, handler.handleDergonDamage(this, source, damageValue));
 
@@ -543,11 +496,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected void bO()
 	{
+		handler.removeBossBar(dergonID);
 		if (dead)
-		{
-			bossBar.removeAllPlayers();
 			return;
-		}
 
 		// Increment death ticks.
 		this.deathTicks++;
@@ -580,10 +531,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// When animation is finished, slay the dergon.
 		if(this.deathTicks == 200)
 		{
-			bossBar.removeAllPlayers();
 			die();
-			if (handler != null)
-				handler.handleDergonDeath(this);
+			handler.handleDergonDeath(this);
 		}
 	}
 
@@ -723,7 +672,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 	private int deathTicks = 0;
 	private IPlayer targetEntity;
-	private final IBossBar bossBar;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;
 	private ILocation flyOffLocation;
