@@ -163,8 +163,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			ridingPlayer.leaveVehicle();
 			ridingPlayer = null;
 		}
-
-		handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
+		if (targetWorld != null)
+			handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
 
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)

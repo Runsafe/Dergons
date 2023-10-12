@@ -6,7 +6,6 @@ import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.bossBar.*;
 import no.runsafe.framework.tools.nms.EntityRegister;
 
@@ -16,14 +15,16 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler)
+	public DergonHandler(IScheduler scheduler, IServer server)
 	{
 		this.scheduler = scheduler;
+		if(this.server != null)
+			this.server = server;
 	}
 
 	public DergonHandler()
 	{
-		this(null);
+		this(null, null);
 	}
 
 	public int spawnDergon(ILocation location)
@@ -80,9 +81,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			damage = 6.0F;
 
 		Entity attackingEntity = source.getEntity();
-		if (attackingEntity instanceof EntityPlayer)
+		if (attackingEntity instanceof EntityPlayer && server != null)
 		{
-			IPlayer attackingPlayer = ObjectWrapper.convert((EntityPlayer) attackingEntity);
+			IPlayer attackingPlayer = server.getPlayer(attackingEntity.getUniqueID());
 
 			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
 				new DergonSnowballEvent(attackingPlayer).Fire();
@@ -185,24 +186,29 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	{
 		if (dergonID < 0) return;
 
+		IBossBar bossBar = dergonBossBars.get(dergonID);
+
+		if (bossBar == null) return;
+
 		// Update the health bar to show the percentage of the dergon
 		long pct = round((currentHealth / maxHealth));
-		dergonBossBars.get(dergonID).setTitle("Dergon (" + (pct * 100) + "%)");
-		dergonBossBars.get(dergonID).setProgress(pct);
+		bossBar.setTitle("Dergon (" + (pct * 100) + "%)");
+		bossBar.setProgress(pct);
 
 		// Handle which players can see the boss bar
-		dergonBossBars.get(dergonID).setActivePlayers(newBarPlayers);
+		bossBar.setActivePlayers(newBarPlayers);
 	}
 
 	public void removeBossBar(int dergonID)
 	{
-		if (dergonID < 0) return;
+		if (dergonID < 0 || dergonBossBars.get(dergonID) == null) return;
 
 		dergonBossBars.get(dergonID).removeAllPlayers();
 		dergonBossBars.remove(dergonID);
 	}
 
 	private final IScheduler scheduler;
+	private static IServer server;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
