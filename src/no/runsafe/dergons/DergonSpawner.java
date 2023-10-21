@@ -2,7 +2,6 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 
 import java.util.ArrayList;
@@ -11,11 +10,8 @@ import java.util.Random;
 
 public class DergonSpawner implements IConfigurationChanged
 {
-	public DergonSpawner(IScheduler scheduler, IConsole console, IServer server, DergonHandler handler)
+	public DergonSpawner(DergonHandler handler)
 	{
-		this.scheduler = scheduler;
-		this.console = console;
-		this.server = server;
 		this.handler = handler;
 	}
 
@@ -25,7 +21,7 @@ public class DergonSpawner implements IConfigurationChanged
 			return "Failed, no worlds.";
 
 		List<IPlayer> selectedPlayers = new ArrayList<IPlayer>(0);
-		for (IPlayer player : server.getOnlinePlayers())
+		for (IPlayer player : Dergons.server.getOnlinePlayers())
 		{
 			if (player != null && isDergonWorld(player.getWorld()))
 			{
@@ -67,18 +63,15 @@ public class DergonSpawner implements IConfigurationChanged
 		worldNames.addAll(config.getConfigValueAsList("dergonWorlds"));
 
 		if (timerID > -1)
-			scheduler.cancelTask(timerID);
+			Dergons.scheduler.cancelTask(timerID);
 
 		int spawnTimer = config.getConfigValueAsInt("spawnTimer");
-		timerID = scheduler.startSyncRepeatingTask(() ->
-			console.logInformation("Attempting to spawn a dergon: " + attemptSpawn()),
+		timerID = Dergons.scheduler.startSyncRepeatingTask(() ->
+			Dergons.console.logInformation("Attempting to spawn a dergon: " + attemptSpawn()),
 			spawnTimer, spawnTimer
 		);
 	}
 
-	private final IScheduler scheduler;
-	private final IConsole console;
-	private final IServer server;
 	private final DergonHandler handler;
 	private int timerID;
 	private int spawnChance;

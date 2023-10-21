@@ -3,7 +3,6 @@ package no.runsafe.dergons;
 import net.minecraft.server.v1_12_R1.GenericAttributes;
 import net.minecraft.server.v1_12_R1.World;
 import no.runsafe.framework.api.ILocation;
-import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
@@ -13,9 +12,8 @@ import java.util.Random;
 
 public class DergonHolder
 {
-	public DergonHolder(IScheduler scheduler, ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
+	public DergonHolder(ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
-		this.scheduler = scheduler;
 		this.targetLocation = targetLocation;
 		this.handler = handler;
 
@@ -119,7 +117,7 @@ public class DergonHolder
 			return;
 		}
 
-		scheduler.startSyncTask(this::processStep, random.nextInt(maxStep) + minStep);
+		Dergons.scheduler.startSyncTask(this::processStep, random.nextInt(maxStep) + minStep);
 		currentStep++;
 	}
 
@@ -135,7 +133,6 @@ public class DergonHolder
 	private Dergon heldDergon;
 	private int currentStep = 0;
 	private float maxHealth = 0;
-	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IWorld world;
 	private final int minStep;

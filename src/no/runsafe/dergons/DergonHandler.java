@@ -15,14 +15,12 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler)
+	public DergonHandler()
 	{
-		this.scheduler = scheduler;
 	}
 
 	public DergonHandler(Dergon orphan)
 	{
-		this.scheduler = null;
 		IWorld orphanWorld = orphan.getDergonWorld();
 		if (orphanWorld == null)
 			return;
@@ -48,13 +46,13 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public int spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
-		if (world == null || scheduler == null)
+		if (world == null)
 			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
 		activeDergons.put( // Construct the dergon.
 			currentDergonID,
-			new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+			new DergonHolder(location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
 		);
 		return currentDergonID++;
 	}
@@ -236,7 +234,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		dergonBossBars.remove(dergonID);
 	}
 
-	private final IScheduler scheduler;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
