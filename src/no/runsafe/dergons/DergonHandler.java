@@ -15,16 +15,14 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler, IServer server)
+	public DergonHandler(IScheduler scheduler)
 	{
 		this.scheduler = scheduler;
-		if(this.server != null)
-			this.server = server;
 	}
 
 	public DergonHandler()
 	{
-		this(null, null);
+		this(null);
 	}
 
 	public int spawnDergon(ILocation location)
@@ -81,9 +79,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			damage = 6.0F;
 
 		Entity attackingEntity = source.getEntity();
-		if (attackingEntity instanceof EntityPlayer && server != null)
+		if (attackingEntity instanceof EntityPlayer)
 		{
-			IPlayer attackingPlayer = server.getPlayer(attackingEntity.getUniqueID());
+			IPlayer attackingPlayer = Dergons.server.getPlayer(attackingEntity.getUniqueID());
 
 			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
 				new DergonSnowballEvent(attackingPlayer).Fire();
@@ -208,7 +206,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	}
 
 	private final IScheduler scheduler;
-	private static IServer server;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
