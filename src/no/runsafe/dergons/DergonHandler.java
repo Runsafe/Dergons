@@ -50,9 +50,14 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (success)
 			return "&aDergon killed.";
 
+		removeDergon(ID);
+		return "&cDergon entity does not exist, removing from list.";
+	}
+
+	public void removeDergon(int ID)
+	{
 		damageCounter.remove(ID);
 		activeDergons.remove(ID);
-		return "&cDergon entity does not exist, removing from list.";
 	}
 
 	@Override
@@ -137,9 +142,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 					slayerDamage = damage;
 				}
 			}
-			damageCounter.remove(dergonID); // Remove the tracking for this dergon.
 		}
-		activeDergons.remove(dergonID);
+		removeDergon(dergonID); // Remove the tracking for this dergon.
 		removeBossBar(dergonID);
 
 		if (slayer != null)

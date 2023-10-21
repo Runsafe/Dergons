@@ -63,8 +63,10 @@ public class DergonHolder
 				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
 				heldDergon.setHealth(health);
 				rawWorld.addEntity(heldDergon);
+				return;
 			}
 		}
+		handler.removeDergon(dergonID); // no dergon was spawned, remove it from list.
 	}
 
 	boolean kill()
