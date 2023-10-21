@@ -506,6 +506,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
+		if (source.getEntity() == null)
+			return false;
+
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
 			return super.damageEntity0(source, handler.handleDergonDamage(this, source, damageValue));
 
