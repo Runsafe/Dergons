@@ -177,6 +177,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 			return;
 
+		// Handle despawn timer
+		if (idleTicks >= handler.getDespawnTime())
+		{
+			handler.killDergon(dergonID);
+			return;
+		}
+		else if (targetEntity == null)
+			idleTicks++;
+		else idleTicks = 0;
+
 		// Handle randomized dergon attacks
 		ILocation dergonLocation = dergonWorld.getLocation(locX, locY, locZ);
 		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld().isWorld(dergonWorld))
@@ -692,6 +702,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
  	private float randomYawVelocity = 0;
 	private int deathTicks = 0;
+	private int idleTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
 	private final ILocation targetLocation;

@@ -86,6 +86,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		spawnY = config.getConfigValueAsInt("spawnY");
 		eventMinTime = config.getConfigValueAsInt("eventMinTime");
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
+		despawnTime = config.getConfigValueAsInt("despawnTimer");
 		stepCount = config.getConfigValueAsInt("eventSteps");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
@@ -235,9 +236,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		dergonBossBars.remove(dergonID);
 	}
 
+	public int getDespawnTime()
+	{
+		return despawnTime;
+	}
+
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
+	private static int despawnTime;
 	private static int stepCount;
 	private static int minSpawnY;
 	private static float baseDamage;
