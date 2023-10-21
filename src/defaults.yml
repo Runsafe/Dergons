@@ -1,5 +1,6 @@
 spawnChance: 10
 spawnTimer: 3600
+despawnTimer: 1200
 dergonWorlds:
  - new_survival
 spawnMinY: 60

@@ -1,6 +1,7 @@
 package no.runsafe.dergons.commands;
 
 import no.runsafe.dergons.DergonHandler;
+import no.runsafe.dergons.Dergons;
 import no.runsafe.framework.api.command.argument.IArgumentList;
 import no.runsafe.framework.api.command.argument.Player;
 import no.runsafe.framework.api.command.player.PlayerCommand;
@@ -20,7 +21,9 @@ public class SpawnDergon extends PlayerCommand
 		IPlayer targetPlayer = parameters.getValue("player");
 		if (targetPlayer != null && targetPlayer.isOnline())
 		{
-			return "&eDergon spawned with ID:" + handler.spawnDergon(targetPlayer.getLocation());
+			int dergonID = handler.spawnDergon(targetPlayer.getLocation());
+			Dergons.console.logInformation("Manually spawning dergon with ID: " + dergonID);
+			return "&eDergon spawned with ID:" + dergonID;
 		}
 		return "&cInvalid player.";
 	}

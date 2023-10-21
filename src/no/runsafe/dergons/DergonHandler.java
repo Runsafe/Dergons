@@ -15,14 +15,12 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler)
+	public DergonHandler()
 	{
-		this.scheduler = scheduler;
 	}
 
 	public DergonHandler(Dergon orphan)
 	{
-		this.scheduler = null;
 		IWorld orphanWorld = orphan.getDergonWorld();
 		if (orphanWorld == null)
 			return;
@@ -48,13 +46,13 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public int spawnDergon(ILocation location)
 	{
 		IWorld world = location.getWorld();
-		if (world == null || scheduler == null)
+		if (world == null)
 			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
 		activeDergons.put( // Construct the dergon.
 			currentDergonID,
-			new DergonHolder(scheduler, location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+			new DergonHolder(location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
 		);
 		return currentDergonID++;
 	}
@@ -66,6 +64,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (victim == null)
 			return "&cDergon could not be killed, invalid ID.";
 
+		Dergons.console.logInformation("Silently killing dergon with ID: " + ID);
 		boolean success = victim.kill();
 		if (success)
 			return "&aDergon killed.";
@@ -87,6 +86,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		spawnY = config.getConfigValueAsInt("spawnY");
 		eventMinTime = config.getConfigValueAsInt("eventMinTime");
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
+		despawnTime = config.getConfigValueAsInt("despawnTimer");
 		stepCount = config.getConfigValueAsInt("eventSteps");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
@@ -134,8 +134,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return baseDamage;
 	}
 
-	public void handleDergonDeath(Dergon dergon)
+	public void handleDergonDeath(Dergon dergon, boolean quickKill)
 	{
+		int dergonID = dergon.getDergonID();
+		if (quickKill)
+		{
+			removeDergon(dergonID);
+			return;
+		}
+
 		IWorld world = dergon.getDergonWorld();
 		ILocation location = world.getLocation(dergon.locX, dergon.locY, dergon.locZ);
 
@@ -146,8 +153,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
-
-		int dergonID = dergon.getDergonID();
 
 		if (damageCounter.containsKey(dergonID))
 		{
@@ -231,10 +236,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		dergonBossBars.remove(dergonID);
 	}
 
-	private final IScheduler scheduler;
+	public int getDespawnTime()
+	{
+		return despawnTime;
+	}
+
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
+	private static int despawnTime;
 	private static int stepCount;
 	private static int minSpawnY;
 	private static float baseDamage;
