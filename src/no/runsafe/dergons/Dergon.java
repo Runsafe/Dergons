@@ -188,14 +188,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		else idleTicks = 0;
 
 		// Handle randomized dergon attacks
-		ILocation dergonLocation = dergonWorld.getLocation(locX, locY, locZ);
-		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld().isWorld(dergonWorld))
+		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);
+		if (targetEntity != null && dergonHeadLocation != null && targetEntity.getWorld().isWorld(dergonWorld))
 		{
 			if (random.nextFloat() < 0.2F)
-				((RunsafeFallingBlock) dergonWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
+				((RunsafeFallingBlock) dergonWorld.spawnFallingBlock(dergonHeadLocation, Item.Unavailable.Fire)).setDropItem(false);
 
 			if (random.nextInt(30) == 1)
-				ProjectileEntity.DragonFireball.spawn(dergonLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonLocation.toVector()).normalize());
+				ProjectileEntity.DragonFireball.spawn(dergonHeadLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonHeadLocation.toVector()).normalize());
 		}
 
 		yaw = (float) trimDegrees(yaw);
