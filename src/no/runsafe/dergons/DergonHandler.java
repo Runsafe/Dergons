@@ -215,8 +215,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (bossBar == null) return;
 
 		// Update the health bar to show the percentage of the dergon
-		long pct = round((currentHealth / maxHealth));
-		bossBar.setTitle("Dergon (" + (pct * 100) + "%)");
+		double pct = (currentHealth / maxHealth);
+		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)");
 		bossBar.setProgress(pct);
 
 		// Handle which players can see the boss bar
