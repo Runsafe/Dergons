@@ -547,7 +547,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if(this.deathTicks == 200)
 		{
 			die();
-			handler.handleDergonDeath(this);
+			handler.handleDergonDeath(this, false);
 		}
 	}
 

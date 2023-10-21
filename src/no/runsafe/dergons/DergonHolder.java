@@ -73,7 +73,8 @@ public class DergonHolder
 		if (heldDergon == null)
 			return false;
 
-		heldDergon.setHealth(0);
+		heldDergon.dead = true;
+		handler.handleDergonDeath(heldDergon, true);
 		return true;
 	}
 

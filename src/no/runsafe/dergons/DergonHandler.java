@@ -134,8 +134,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return baseDamage;
 	}
 
-	public void handleDergonDeath(Dergon dergon)
+	public void handleDergonDeath(Dergon dergon, boolean quickKill)
 	{
+		int dergonID = dergon.getDergonID();
+		if (quickKill)
+		{
+			removeDergon(dergonID);
+			return;
+		}
+
 		IWorld world = dergon.getDergonWorld();
 		ILocation location = world.getLocation(dergon.locX, dergon.locY, dergon.locZ);
 
@@ -146,8 +153,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
-
-		int dergonID = dergon.getDergonID();
 
 		if (damageCounter.containsKey(dergonID))
 		{
