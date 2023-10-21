@@ -194,7 +194,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			if (random.nextFloat() < 0.2F)
 				((RunsafeFallingBlock) dergonWorld.spawnFallingBlock(dergonHeadLocation, Item.Unavailable.Fire)).setDropItem(false);
 
-			if (random.nextInt(30) == 1)
+			if (random.nextInt(60) == 1)
 				ProjectileEntity.DragonFireball.spawn(dergonHeadLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonHeadLocation.toVector()).normalize());
 		}
 
