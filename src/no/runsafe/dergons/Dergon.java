@@ -119,16 +119,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			}
 
 			targetEntity = null;
-			targetX = locX + random.nextInt(200) + -100;
+			targetX = locX + random.nextInt(200) - 100;
 			targetY = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			targetZ = locZ + random.nextInt(200) + -100;
+			targetZ = locZ + random.nextInt(200) - 100;
 			flyOffLocation = targetWorld.getLocation(targetX, targetY, targetZ); // Store the target fly-off location.
 			return;
 		}
 		else
 		{
 			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
-			List<IPlayer> targets = new ArrayList<IPlayer>(0);
+			List<IPlayer> targets = new ArrayList<>(0);
 
 			for (IPlayer player : players)
 			{
@@ -276,7 +276,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (movementSpeedTrimmed > 40.0D)
 			movementSpeedTrimmed = 40.0D;
 
-		bh += targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart);
+		bh += (float) (targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
 		yaw += bh * 0.1F;
 		float f2 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float frictionDampener = 0.06F;
