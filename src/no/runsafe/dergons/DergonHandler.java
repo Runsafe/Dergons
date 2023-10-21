@@ -58,6 +58,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	{
 		damageCounter.remove(ID);
 		activeDergons.remove(ID);
+		removeBossBar(ID);
 	}
 
 	@Override
@@ -144,7 +145,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			}
 		}
 		removeDergon(dergonID); // Remove the tracking for this dergon.
-		removeBossBar(dergonID);
 
 		if (slayer != null)
 			new DergonSlayEvent(slayer).Fire();
