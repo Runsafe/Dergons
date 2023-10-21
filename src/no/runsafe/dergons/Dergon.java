@@ -26,7 +26,6 @@ import static java.lang.Math.*;
  *
  * EntityLiving.Class:
  * protected int        bi       Position rotation increment.
- * protected float      bh       Random Yaw Velocity.
  */
 
 public class Dergon extends EntityInsentient implements IComplex, IMonster
@@ -268,15 +267,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (f3 < 0.0F)
 			f3 = 0.0F;
 
-		bh *= 0.8F;
+		randomYawVelocity *= 0.8F;
 		float movementSpeedStart = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
 		double movementSpeedTrimmed = sqrt(motX * motX + motZ * motZ) + 1.0D;
 
 		if (movementSpeedTrimmed > 40.0D)
 			movementSpeedTrimmed = 40.0D;
 
-		bh += (float) (targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
-		yaw += bh * 0.1F;
+		randomYawVelocity += (float) (targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
+		yaw += randomYawVelocity * 0.1F;
 		float f2 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float frictionDampener = 0.06F;
 
@@ -691,6 +690,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private final double[][] positionBuffer = new double[64][2];
 	private int positionBufferIndex = -1;
 
+ 	private float randomYawVelocity = 0;
 	private int deathTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
