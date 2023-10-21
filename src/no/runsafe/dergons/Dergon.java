@@ -50,14 +50,18 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.noclip = true;
 		this.fireProof = true;
 		this.persistent = true;
+		this.targetWorld = world;
 
 		if (handler != null)
 			this.handler = handler;
 		else
-			this.handler = new DergonHandler();
+			this.handler = new DergonHandler(this);
 
-		this.targetLocation = targetLocation;
-		this.targetWorld = targetLocation.getWorld();
+		if (targetLocation != null)
+			this.targetLocation = targetLocation;
+		else
+			this.targetLocation = world.getLocation(locX, locY, locZ);
+
 		this.dergonID = dergonID;
 
 		this.handler.createBossBar(this.dergonID);
@@ -69,12 +73,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 */
 	public Dergon(World bukkitWorld)
 	{
-		this(
-			ObjectWrapper.convert(bukkitWorld.getWorld()),
-			null,
-			ObjectWrapper.convert(bukkitWorld.getWorld()).getLocation(0D,100D,0D),
-			-1
-		);
+		this(ObjectWrapper.convert(bukkitWorld.getWorld()), null, null, -1);
 	}
 
 	/**
@@ -665,6 +664,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return dergonID;
 	}
 
+	public void setDergonID(int newID)
+	{
+		this.dergonID = newID;
+	}
+
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
@@ -695,5 +699,5 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private final IWorld targetWorld;
 	private final Random random = new Random();
 	private IPlayer ridingPlayer = null;
-	private final int dergonID;
+	private int dergonID;
 }

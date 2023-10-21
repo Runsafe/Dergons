@@ -20,9 +20,29 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		this.scheduler = scheduler;
 	}
 
-	public DergonHandler()
+	public DergonHandler(Dergon orphan)
 	{
-		this(null);
+		this.scheduler = null;
+		IWorld orphanWorld = orphan.getDergonWorld();
+		if (orphanWorld == null)
+			return;
+
+		// try to find a new home for our orphanized dergon
+		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		{
+			int dergonID = dergonHolderEntry.getKey();
+			DergonHolder dergonHolder = dergonHolderEntry.getValue();
+
+			if (dergonHolder.getWorld() == orphanWorld && !dergonHolder.isHoldingDergon())
+			{
+				float damageDealt = 0;
+				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
+					damageDealt += node.getValue();
+
+				dergonHolder.setHeldDergon(orphan, damageDealt);
+				return;
+			}
+		}
 	}
 
 	public int spawnDergon(ILocation location)
