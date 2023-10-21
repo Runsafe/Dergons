@@ -64,6 +64,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (victim == null)
 			return "&cDergon could not be killed, invalid ID.";
 
+		Dergons.console.logInformation("Silently killing dergon with ID: " + ID);
 		boolean success = victim.kill();
 		if (success)
 			return "&aDergon killed.";
