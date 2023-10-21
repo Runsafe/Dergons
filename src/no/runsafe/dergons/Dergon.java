@@ -179,7 +179,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Handle randomized dergon attacks
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
-		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld() == targetWorld)
+		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld().isWorld(targetWorld))
 		{
 			if (random.nextFloat() < 0.2F)
 				((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
