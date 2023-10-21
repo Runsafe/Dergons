@@ -9,6 +9,8 @@ import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
+import no.runsafe.framework.minecraft.entity.ProjectileEntity;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,6 @@ import static java.lang.Math.*;
  *
  * EntityLiving.Class:
  * protected int        bi       Position rotation increment.
- * protected float      bh       Random Yaw Velocity.
  */
 
 public class Dergon extends EntityInsentient implements IComplex, IMonster
@@ -48,14 +49,18 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.noclip = true;
 		this.fireProof = true;
 		this.persistent = true;
+		this.targetWorld = world;
 
 		if (handler != null)
 			this.handler = handler;
 		else
-			this.handler = new DergonHandler();
+			this.handler = new DergonHandler(this);
 
-		this.targetLocation = targetLocation;
-		this.targetWorld = targetLocation.getWorld();
+		if (targetLocation != null)
+			this.targetLocation = targetLocation;
+		else
+			this.targetLocation = world.getLocation(locX, locY, locZ);
+
 		this.dergonID = dergonID;
 
 		this.handler.createBossBar(this.dergonID);
@@ -67,12 +72,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 */
 	public Dergon(World bukkitWorld)
 	{
-		this(
-			ObjectWrapper.convert(bukkitWorld.getWorld()),
-			null,
-			ObjectWrapper.convert(bukkitWorld.getWorld()).getLocation(0D,100D,0D),
-			-1
-		);
+		this(ObjectWrapper.convert(bukkitWorld.getWorld()), null, null, -1);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			if (ridingPlayer == null && random.nextFloat() < 0.5F)
+			if (ridingPlayer == null && random.nextFloat() < 0.3F)
 			{
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
@@ -104,21 +104,29 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 						rawChum.startRiding(this);
 						ridingPlayer = unluckyChum;
 						handler.handleDergonMount(ridingPlayer);
+
+						// Crumple their elytra if they're wearing one
+						RunsafeMeta chestplate = ridingPlayer.getChestplate();
+						if (chestplate != null && chestplate.getItemType() == Item.Transportation.Elytra)
+						{
+							chestplate.setDurability((short) (chestplate.getDurability() - 220));
+							ridingPlayer.setChestplate(chestplate);
+						}
 					}
 				}
 			}
 
 			targetEntity = null;
-			targetX = locX + random.nextInt(200) + -100;
+			targetX = locX + random.nextInt(200) - 100;
 			targetY = random.nextInt(100) + 70; // Somewhere above 70 to prevent floor clipping.
-			targetZ = locZ + random.nextInt(200) + -100;
+			targetZ = locZ + random.nextInt(200) - 100;
 			flyOffLocation = targetWorld.getLocation(targetX, targetY, targetZ); // Store the target fly-off location.
 			return;
 		}
 		else
 		{
 			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
-			List<IPlayer> targets = new ArrayList<IPlayer>(0);
+			List<IPlayer> targets = new ArrayList<>(0);
 
 			for (IPlayer player : players)
 			{
@@ -166,12 +174,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (targetWorld != null)
 			handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
 
-		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
-		if (targetEntity != null && dergonLocation != null && random.nextFloat() < 0.2F)
-			((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
-
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 			return;
+
+		// Handle randomized dergon attacks
+		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
+		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld() == targetWorld)
+		{
+			if (random.nextFloat() < 0.2F)
+				((RunsafeFallingBlock) targetWorld.spawnFallingBlock(dergonLocation, Item.Unavailable.Fire)).setDropItem(false);
+
+			if (random.nextInt(30) == 1)
+				ProjectileEntity.DragonFireball.spawn(dergonLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonLocation.toVector()).normalize());
+		}
 
 		yaw = (float) trimDegrees(yaw);
 		if (positionBufferIndex < 0) // Load up the position buffer if and only if the dergon was just spawned.
@@ -252,15 +267,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (f3 < 0.0F)
 			f3 = 0.0F;
 
-		bh *= 0.8F;
+		randomYawVelocity *= 0.8F;
 		float movementSpeedStart = (float) sqrt(motX * motX + motZ * motZ) + 1.0F;
 		double movementSpeedTrimmed = sqrt(motX * motX + motZ * motZ) + 1.0D;
 
 		if (movementSpeedTrimmed > 40.0D)
 			movementSpeedTrimmed = 40.0D;
 
-		bh += targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart);
-		yaw += bh * 0.1F;
+		randomYawVelocity += (float) (targetHeadingDifference * (0.699999988079071D / movementSpeedTrimmed / (double) movementSpeedStart));
+		yaw += randomYawVelocity * 0.1F;
 		float f2 = (float) (2.0D / (movementSpeedTrimmed + 1.0D));
 		float frictionDampener = 0.06F;
 
@@ -648,6 +663,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return dergonID;
 	}
 
+	public void setDergonID(int newID)
+	{
+		this.dergonID = newID;
+	}
+
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
@@ -670,6 +690,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private final double[][] positionBuffer = new double[64][2];
 	private int positionBufferIndex = -1;
 
+ 	private float randomYawVelocity = 0;
 	private int deathTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
@@ -678,5 +699,5 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private final IWorld targetWorld;
 	private final Random random = new Random();
 	private IPlayer ridingPlayer = null;
-	private final int dergonID;
+	private int dergonID;
 }

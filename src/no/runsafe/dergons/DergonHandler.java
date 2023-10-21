@@ -15,16 +15,34 @@ import static java.lang.Math.round;
 
 public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
-	public DergonHandler(IScheduler scheduler, IServer server)
+	public DergonHandler(IScheduler scheduler)
 	{
 		this.scheduler = scheduler;
-		if(this.server != null)
-			this.server = server;
 	}
 
-	public DergonHandler()
+	public DergonHandler(Dergon orphan)
 	{
-		this(null, null);
+		this.scheduler = null;
+		IWorld orphanWorld = orphan.getDergonWorld();
+		if (orphanWorld == null)
+			return;
+
+		// try to find a new home for our orphanized dergon
+		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		{
+			int dergonID = dergonHolderEntry.getKey();
+			DergonHolder dergonHolder = dergonHolderEntry.getValue();
+
+			if (dergonHolder.getWorld() == orphanWorld && !dergonHolder.isHoldingDergon())
+			{
+				float damageDealt = 0;
+				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
+					damageDealt += node.getValue();
+
+				dergonHolder.setHeldDergon(orphan, damageDealt);
+				return;
+			}
+		}
 	}
 
 	public int spawnDergon(ILocation location)
@@ -52,9 +70,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (success)
 			return "&aDergon killed.";
 
+		removeDergon(ID);
+		return "&cDergon entity does not exist, removing from list.";
+	}
+
+	public void removeDergon(int ID)
+	{
 		damageCounter.remove(ID);
 		activeDergons.remove(ID);
-		return "&cDergon entity does not exist, removing from list.";
+		removeBossBar(ID);
 	}
 
 	@Override
@@ -81,9 +105,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			damage = 6.0F;
 
 		Entity attackingEntity = source.getEntity();
-		if (attackingEntity instanceof EntityPlayer && server != null)
+		if (attackingEntity instanceof EntityPlayer)
 		{
-			IPlayer attackingPlayer = server.getPlayer(attackingEntity.getUniqueID());
+			IPlayer attackingPlayer = Dergons.server.getPlayer(attackingEntity.getUniqueID());
 
 			if (source instanceof EntityDamageSourceIndirect && source.i() != null && source.i() instanceof EntitySnowball)
 				new DergonSnowballEvent(attackingPlayer).Fire();
@@ -117,6 +141,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		world.dropItem(location, DergonItems.getEgg(1));
 		world.dropItem(location, DergonItems.getBones(random.nextInt(4) + 5));
+		if (random.nextInt(5) == 1)
+			world.dropItem(location, DergonItems.getDergonHead(1));
 
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
@@ -137,10 +163,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 					slayerDamage = damage;
 				}
 			}
-			damageCounter.remove(dergonID); // Remove the tracking for this dergon.
 		}
-		activeDergons.remove(dergonID);
-		removeBossBar(dergonID);
+		removeDergon(dergonID); // Remove the tracking for this dergon.
 
 		if (slayer != null)
 			new DergonSlayEvent(slayer).Fire();
@@ -191,8 +215,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (bossBar == null) return;
 
 		// Update the health bar to show the percentage of the dergon
-		long pct = round((currentHealth / maxHealth));
-		bossBar.setTitle("Dergon (" + (pct * 100) + "%)");
+		double pct = (currentHealth / maxHealth);
+		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)");
 		bossBar.setProgress(pct);
 
 		// Handle which players can see the boss bar
@@ -208,7 +232,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	}
 
 	private final IScheduler scheduler;
-	private static IServer server;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;

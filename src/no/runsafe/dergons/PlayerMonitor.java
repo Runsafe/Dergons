@@ -18,5 +18,11 @@ public class PlayerMonitor implements IItemSpawn
 			location.getWorld().dropItem(location, DergonItems.getEgg(1));
 			event.cancel();
 		}
+		else if (item.is(Item.Decoration.Head.Dragon) && !DergonItems.isDergonHead(item))
+		{
+			ILocation location = event.getLocation();
+			location.getWorld().dropItem(location, DergonItems.getDergonHead(1));
+			event.cancel();
+		}
 	}
 }

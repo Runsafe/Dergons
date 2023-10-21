@@ -5,7 +5,6 @@ import net.minecraft.server.v1_12_R1.World;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IScheduler;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
@@ -38,7 +37,7 @@ public class DergonHolder
 	private void spawn()
 	{
 		IPlayer idealPlayer = null;
-		float health = baseHealth;
+		maxHealth = baseHealth;
 
 		for (IPlayer player : world.getPlayers())
 		{
@@ -48,7 +47,7 @@ public class DergonHolder
 				if (idealPlayer == null && playerLocation.getY() > minY)
 					idealPlayer = player;
 
-				health += (baseHealth / 2);
+				maxHealth += (baseHealth / 2);
 			}
 		}
 
@@ -60,11 +59,13 @@ public class DergonHolder
 				heldDergon = new Dergon(world, handler, targetLocation, dergonID);
 				heldDergon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
 				heldDergon.setCustomName("Dergon");
-				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
-				heldDergon.setHealth(health);
+				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+				heldDergon.setHealth(maxHealth);
 				rawWorld.addEntity(heldDergon);
+				return;
 			}
 		}
+		handler.removeDergon(dergonID); // no dergon was spawned, remove it from list.
 	}
 
 	boolean kill()
@@ -81,6 +82,16 @@ public class DergonHolder
 		if (heldDergon == null)
 			return null;
 		return world.getLocation(heldDergon.locX, heldDergon.locY, heldDergon.locZ);
+	}
+
+	public IWorld getWorld()
+	{
+		return world;
+	}
+
+	public Boolean isHoldingDergon()
+	{
+		return heldDergon != null;
 	}
 
 	public IPlayer getCurrentTarget()
@@ -107,12 +118,22 @@ public class DergonHolder
 			return;
 		}
 
-		scheduler.startSyncTask(() -> processStep(), random.nextInt(maxStep) + minStep);
+		scheduler.startSyncTask(this::processStep, random.nextInt(maxStep) + minStep);
 		currentStep++;
+	}
+
+	public void setHeldDergon(Dergon newDergon, float damageDealt)
+	{
+		heldDergon = newDergon;
+		heldDergon.setCustomName("Dergon");
+		heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+		heldDergon.setHealth(maxHealth - damageDealt);
+		heldDergon.setDergonID(dergonID);
 	}
 
 	private Dergon heldDergon;
 	private int currentStep = 0;
+	private float maxHealth = 0;
 	private final IScheduler scheduler;
 	private final ILocation targetLocation;
 	private final IWorld world;
