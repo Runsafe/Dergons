@@ -176,6 +176,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (targetWorld != null)
 			handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), targetWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
 
+		if (getHealth() <= 0.0F) // Check if the dragon is dead.
+			return;
+
 		// Handle randomized dergon attacks
 		ILocation dergonLocation = targetWorld.getLocation(locX, locY, locZ);
 		if (targetEntity != null && dergonLocation != null && targetEntity.getWorld() == targetWorld)
@@ -186,9 +189,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			if (random.nextInt(30) == 1)
 				ProjectileEntity.DragonFireball.spawn(dergonLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonLocation.toVector()).normalize());
 		}
-
-		if (getHealth() <= 0.0F) // Check if the dragon is dead.
-			return;
 
 		yaw = (float) trimDegrees(yaw);
 		if (positionBufferIndex < 0) // Load up the position buffer if and only if the dergon was just spawned.
