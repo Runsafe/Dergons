@@ -107,7 +107,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 						// Crumple their elytra if they're wearing one
 						RunsafeMeta chestplate = ridingPlayer.getChestplate();
-						if (chestplate != null && chestplate.getItemType() == Item.Transportation.Elytra)
+						if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
 						{
 							chestplate.setDurability((short) (chestplate.getDurability() - 220));
 							ridingPlayer.setChestplate(chestplate);
