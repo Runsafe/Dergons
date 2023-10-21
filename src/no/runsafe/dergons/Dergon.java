@@ -10,6 +10,7 @@ import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
+import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			if (ridingPlayer == null && random.nextFloat() < 0.5F)
+			if (ridingPlayer == null && random.nextFloat() < 0.3F)
 			{
 				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
 				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
@@ -105,6 +106,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 						rawChum.startRiding(this);
 						ridingPlayer = unluckyChum;
 						handler.handleDergonMount(ridingPlayer);
+
+						// Crumple their elytra if they're wearing one
+						RunsafeMeta chestplate = ridingPlayer.getChestplate();
+						if (chestplate != null && chestplate.getItemType() == Item.Transportation.Elytra)
+						{
+							chestplate.setDurability((short) (chestplate.getDurability() - 220));
+							ridingPlayer.setChestplate(chestplate);
+						}
 					}
 				}
 			}
