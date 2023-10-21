@@ -521,7 +521,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected void bO()
 	{
-		handler.removeBossBar(dergonID);
 		if (dead)
 			return;
 
