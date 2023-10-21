@@ -115,6 +115,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		world.dropItem(location, DergonItems.getEgg(1));
 		world.dropItem(location, DergonItems.getBones(random.nextInt(4) + 5));
+		if (random.nextInt(5) == 1)
+			world.dropItem(location, DergonItems.getDergonHead(1));
 
 		IPlayer slayer = null;
 		float slayerDamage = 0F;
