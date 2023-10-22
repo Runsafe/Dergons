@@ -21,9 +21,6 @@ import static java.lang.Math.*;
 /*
  * Names of obfuscated variables in various spigot versions:
  * Type                 v1_12_R1
- * Entity.class:
- * public boolean       C        Checks if entity is collided with a vertical block.
- *
  * EntityLiving.Class:
  * protected int        bi       Position rotation increment.
  */
@@ -109,7 +106,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 						RunsafeMeta chestplate = ridingPlayer.getChestplate();
 						if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
 						{
-							chestplate.setDurability((short) (chestplate.getDurability() - 220));
+							chestplate.setDurability((short) (chestplate.getDurability() + 100));
 							ridingPlayer.setChestplate(chestplate);
 						}
 					}
@@ -166,7 +163,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public void n()
 	{
 		// Throw a player off its back if we're high up.
-		if (ridingPlayer != null && locY >= 90)
+		int highestYBlock = dergonWorld.getHighestBlockYAt((int)locX, (int)locZ);
+		if (ridingPlayer != null && ((locY >= highestYBlock + 25) // check for being high up.
+			|| (highestYBlock - 50 > locY && locY > 90))) // deal with situation where there's a high ceiling.
 		{
 			ridingPlayer.leaveVehicle();
 			ridingPlayer = null;
@@ -240,7 +239,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			targetZ += random.nextGaussian() * 2.0D;
 		}
 
-		if (targetDistanceSquared < 100.0D || targetDistanceSquared > 22500.0D || positionChanged || C)
+		if (targetDistanceSquared < 100.0D
+			|| targetDistanceSquared > 22500.0D
+			|| positionChanged
+			|| !dergonWorld.getLocation(locX, locY, locZ).getBlock().isAir()
+		)
 			updateCurrentTarget();
 
 		targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);

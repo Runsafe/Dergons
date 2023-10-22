@@ -32,6 +32,27 @@ public class DergonHolder
 			processStep();
 	}
 
+	public DergonHolder(Dergon newDergon, DergonHandler handler, int dergonID, float health)
+	{
+		this.targetLocation = null;
+		this.handler = handler;
+		this.heldDergon = newDergon;
+		this.world = heldDergon.getDergonWorld();
+
+		this.minStep = 0;
+		this.maxStep = 0;
+		this.stepCount = 0;
+		this.minY = 0;
+		this.baseHealth = health;
+		this.maxHealth = health;
+		this.dergonID = dergonID;
+
+		heldDergon.setCustomName("Dergon");
+		heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+		heldDergon.setHealth(maxHealth);
+		heldDergon.setDergonID(dergonID);
+	}
+
 	private void spawn()
 	{
 		IPlayer idealPlayer = null;

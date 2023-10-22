@@ -41,6 +41,11 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				return;
 			}
 		}
+		// give dergon a brand new home
+		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
+		createBossBar(currentDergonID);
+		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
+		currentDergonID++;
 	}
 
 	public int spawnDergon(ILocation location)
@@ -207,8 +212,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public void createBossBar(int dergonID)
 	{
 		if (dergonID < 0) return;
-
-		dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
+		if (!dergonBossBars.containsKey(dergonID))
+			dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
 	}
 
 	public void updateBossBar(int dergonID, float currentHealth, float maxHealth, List<IPlayer> newBarPlayers)
