@@ -166,7 +166,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public void n()
 	{
 		// Throw a player off its back if we're high up.
-		if (ridingPlayer != null && locY >= 90)
+		int highestYBlock = dergonWorld.getHighestBlockYAt((int)locX, (int)locZ);
+		if (ridingPlayer != null && ((locY >= highestYBlock + 25) // check for being high up.
+			|| (highestYBlock - 50 > locY && locY > 90))) // deal with situation where there's a high ceiling.
 		{
 			ridingPlayer.leaveVehicle();
 			ridingPlayer = null;
