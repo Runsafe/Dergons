@@ -21,9 +21,6 @@ import static java.lang.Math.*;
 /*
  * Names of obfuscated variables in various spigot versions:
  * Type                 v1_12_R1
- * Entity.class:
- * public boolean       C        Checks if entity is collided with a vertical block.
- *
  * EntityLiving.Class:
  * protected int        bi       Position rotation increment.
  */
@@ -242,7 +239,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			targetZ += random.nextGaussian() * 2.0D;
 		}
 
-		if (targetDistanceSquared < 100.0D || targetDistanceSquared > 22500.0D || positionChanged || C)
+		if (targetDistanceSquared < 100.0D
+			|| targetDistanceSquared > 22500.0D
+			|| positionChanged
+			|| !dergonWorld.getLocation(locX, locY, locZ).getBlock().isAir()
+		)
 			updateCurrentTarget();
 
 		targetPosY /= sqrt(targetPosX * targetPosX + targetPosZ * targetPosZ);
