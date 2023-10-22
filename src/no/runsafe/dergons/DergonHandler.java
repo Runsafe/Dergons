@@ -212,8 +212,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	public void createBossBar(int dergonID)
 	{
 		if (dergonID < 0) return;
-
-		dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
+		if (!dergonBossBars.containsKey(dergonID))
+			dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
 	}
 
 	public void updateBossBar(int dergonID, float currentHealth, float maxHealth, List<IPlayer> newBarPlayers)
