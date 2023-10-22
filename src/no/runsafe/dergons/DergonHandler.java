@@ -41,6 +41,11 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				return;
 			}
 		}
+		// give dergon a brand new home
+		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
+		createBossBar(currentDergonID);
+		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
+		currentDergonID++;
 	}
 
 	public int spawnDergon(ILocation location)
