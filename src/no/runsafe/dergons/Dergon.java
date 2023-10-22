@@ -109,7 +109,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 						RunsafeMeta chestplate = ridingPlayer.getChestplate();
 						if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
 						{
-							chestplate.setDurability((short) (chestplate.getDurability() - 220));
+							chestplate.setDurability((short) (chestplate.getDurability() + 100));
 							ridingPlayer.setChestplate(chestplate);
 						}
 					}
