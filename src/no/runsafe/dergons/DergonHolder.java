@@ -68,6 +68,7 @@ public class DergonHolder
 				continue;
 
 			if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
+				&& playerLocation.getWorld().isWorld(dergonRepellentLocation.getWorld())
 				&& dergonRepellentLocation.distanceSquared(playerLocation) < dergonRepellentRadius)
 				continue;
 
