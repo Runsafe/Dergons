@@ -58,6 +58,16 @@ public class DergonHolder
 		ILocation dergonRepellentLocation = handler.getDergonRepellentLocation();
 		int dergonRepellentRadius = handler.getDergonRepellentRadius();
 		dergonRepellentRadius *= dergonRepellentRadius;
+
+		// Check if trying to spawn in anti-dergon bubble
+		if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
+			&& world.isWorld(dergonRepellentLocation.getWorld())
+			&& dergonRepellentLocation.distanceSquared(targetLocation) < dergonRepellentRadius)
+		{
+			handler.removeDergon(dergonID);
+			return;
+		}
+
 		IPlayer idealPlayer = null;
 		maxHealth = baseHealth;
 
