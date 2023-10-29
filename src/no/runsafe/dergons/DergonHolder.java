@@ -55,19 +55,26 @@ public class DergonHolder
 
 	private void spawn()
 	{
+		ILocation dergonRepellentLocation = handler.getDergonRepellentLocation();
+		int dergonRepellentRadius = handler.getDergonRepellentRadius();
+		dergonRepellentRadius *= dergonRepellentRadius;
 		IPlayer idealPlayer = null;
 		maxHealth = baseHealth;
 
 		for (IPlayer player : world.getPlayers())
 		{
 			ILocation playerLocation = player.getLocation();
-			if (playerLocation != null && playerLocation.distance(targetLocation) < 200)
-			{
-				if (idealPlayer == null && playerLocation.getY() > minY)
-					idealPlayer = player;
+			if (playerLocation == null || playerLocation.distanceSquared(targetLocation) > 40000) // 200 blocks
+				continue;
 
-				maxHealth += (baseHealth / 2);
-			}
+			if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
+				&& dergonRepellentLocation.distanceSquared(playerLocation) < dergonRepellentRadius)
+				continue;
+
+			if (idealPlayer == null && playerLocation.getY() > minY)
+				idealPlayer = player;
+
+			maxHealth += (baseHealth / 2);
 		}
 
 		if (idealPlayer != null)

@@ -10,3 +10,10 @@ eventMaxTime: 6
 eventSteps: 7
 baseDamage: 20.0
 baseHealth: 200.0
+dergonRepellentRadius: 1
+dergonRepellentLocation:
+  location:
+    world: survival3
+    x: 0
+    y: 64
+    z: 0
