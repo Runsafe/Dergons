@@ -97,8 +97,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
 		baseHealth = config.getConfigValueAsFloat("baseHealth");
 
-		dergonRepellentRadius = config.getConfigValueAsInt("dergonRepellentRadius");
-		dergonRepellentLocation = config.getConfigValueAsLocation("dergonRepellentLocation");
+		dergonRepellentRadius = config.getConfigValueAsInt("antiDergonBubble.radius");
+		dergonRepellentLocation = config.getConfigValueAsLocation("antiDergonBubble.location");
 	}
 
 	@Override
