@@ -96,6 +96,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
 		baseHealth = config.getConfigValueAsFloat("baseHealth");
+
+		dergonRepellentRadius = config.getConfigValueAsInt("dergonRepellentRadius");
+		dergonRepellentLocation = config.getConfigValueAsLocation("dergonRepellentLocation");
 	}
 
 	@Override
@@ -246,6 +249,16 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return despawnTime;
 	}
 
+	public int getDergonRepellentRadius()
+	{
+		return dergonRepellentRadius;
+	}
+
+	public ILocation getDergonRepellentLocation()
+	{
+		return dergonRepellentLocation;
+	}
+
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
@@ -254,6 +267,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private static int minSpawnY;
 	private static float baseDamage;
 	private static float baseHealth;
+	private static int dergonRepellentRadius;
+	private static ILocation dergonRepellentLocation;
 	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
 	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
 	private static final HashMap<Integer, IBossBar> dergonBossBars = new HashMap<>(0);
