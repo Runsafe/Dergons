@@ -23,22 +23,28 @@ public class DergonSpawner implements IConfigurationChanged
 		List<IPlayer> selectedPlayers = new ArrayList<IPlayer>(0);
 		for (IPlayer player : Dergons.server.getOnlinePlayers())
 		{
-			if (player != null && isDergonWorld(player.getWorld()))
-			{
-				ILocation playerLocation = player.getLocation();
-				if (playerLocation == null) // Make sure we have a valid location.
-					continue;
+			if (player == null || !isDergonWorld(player.getWorld()))
+				continue;
 
-				double playerY = playerLocation.getY(); // The player's Y position.
-				if (playerY < minSpawnY) // Check the player is above the minimum spawn point.
-					continue;
+			ILocation playerLocation = player.getLocation();
+			if (playerLocation == null) // Make sure we have a valid location.
+				continue;
 
-				if (player.getWorld().getHighestBlockYAt(playerLocation) > playerY) // Check nothing is blocking the sky.
-					continue;
+			double playerY = playerLocation.getY(); // The player's Y position.
+			if (playerY < minSpawnY) // Check the player is above the minimum spawn point.
+				continue;
 
-				if (random.nextInt(100) <= spawnChance + ((playerY - minSpawnY) * 0.5))
-					selectedPlayers.add(player);
-			}
+			if (player.getWorld().getHighestBlockYAt(playerLocation) > playerY) // Check nothing is blocking the sky.
+				continue;
+
+			// Check if we're in the anti dergon bubble
+			if (antiDergonBubbleRadiusSquared != 0 && antiDergonBubbleLocation != null
+					&& playerLocation.getWorld().isWorld(antiDergonBubbleLocation.getWorld())
+					&& antiDergonBubbleLocation.distanceSquared(playerLocation) < antiDergonBubbleRadiusSquared)
+				continue;
+
+			if (random.nextInt(100) <= spawnChance + ((playerY - minSpawnY) * 0.5))
+				selectedPlayers.add(player);
 		}
 
 		if (selectedPlayers.isEmpty())
@@ -58,6 +64,9 @@ public class DergonSpawner implements IConfigurationChanged
 	{
 		spawnChance = config.getConfigValueAsInt("spawnChance");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
+		antiDergonBubbleLocation = config.getConfigValueAsLocation("antiDergonBubble.location");
+		antiDergonBubbleRadiusSquared = config.getConfigValueAsInt("antiDergonBubble.radius");
+		antiDergonBubbleRadiusSquared *= antiDergonBubbleRadiusSquared;
 
 		worldNames.clear();
 		worldNames.addAll(config.getConfigValueAsList("dergonWorlds"));
@@ -76,6 +85,8 @@ public class DergonSpawner implements IConfigurationChanged
 	private int timerID;
 	private int spawnChance;
 	private int minSpawnY;
+	private int antiDergonBubbleRadiusSquared;
+	private ILocation antiDergonBubbleLocation;
 	private final List<String> worldNames = new ArrayList<>(0);
 	private final Random random = new Random();
 }
