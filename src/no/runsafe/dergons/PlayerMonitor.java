@@ -64,7 +64,7 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent
 		}
 
 		inventory.removeExact(usingItem, 1);
-		RunsafeMeta item = Item.Brewing.DragonsBreath;
+		RunsafeMeta item = Item.Brewing.DragonsBreath.getItem();
 		item.setAmount(1);
 		inventory.addItems(item);
 		player.updateInventory();
