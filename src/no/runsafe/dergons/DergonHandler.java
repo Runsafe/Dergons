@@ -224,13 +224,21 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			ILocation targetDestination = dergon.getTargetFlyToLocation();
 			IPlayer target = dergon.getCurrentTarget();
 			info.add(
-				"&eID: &r " + id +
+				"&eID: &r " + id + ((!dergon.isHoldingDergon()) ? " Null Dergon. " :
 				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
-				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : dergonLocation.toString()) +
-				", &eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : targetDestination.toString())
-			);
+				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
+				", &eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
+			));
 		}
 		return info;
+	}
+
+	private String locationInfo(ILocation location)
+	{
+		return String.format(
+			"world: %s X: %.0f Y: %.0f Z: %.0f",
+			location.getWorld(), location.getX(), location.getY(), location.getZ()
+		);
 	}
 
 	public void createBossBar(int dergonID)
