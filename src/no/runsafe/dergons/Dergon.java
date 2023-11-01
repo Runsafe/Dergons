@@ -171,7 +171,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			ridingPlayer = null;
 		}
 		if (world != null)
-			handler.updateBossBar(dergonID, getHealth(), getMaxHealth(), dergonWorld.getLocation(locX, locY, locZ).getPlayersInRange(150));
+			handler.updateBossBarHealth(dergonID, getHealth(), getMaxHealth());
 
 		if (getHealth() <= 0.0F) // Check if the dragon is dead.
 			return;

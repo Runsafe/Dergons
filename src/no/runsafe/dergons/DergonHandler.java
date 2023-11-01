@@ -17,6 +17,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
 	public DergonHandler()
 	{
+		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 10, 10);
 	}
 
 	public DergonHandler(Dergon orphan)
@@ -46,6 +47,25 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		createBossBar(currentDergonID);
 		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
 		currentDergonID++;
+	}
+
+	private void BossBarPlayersInRangeCycle()
+	{
+		if (dergonBossBars.isEmpty())
+			return;
+
+		for (Map.Entry<Integer, IBossBar> bossBarEntry : dergonBossBars.entrySet())
+		{
+			int dergonID = bossBarEntry.getKey();
+			IBossBar bossBar = bossBarEntry.getValue();
+			DergonHolder dergonHolder = activeDergons.get(dergonID);
+			if (!dergonHolder.isHoldingDergon())
+			{
+				bossBar.removeAllPlayers();
+				continue;
+			}
+			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(200));
+		}
 	}
 
 	public int spawnDergon(ILocation location)
@@ -219,7 +239,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			dergonBossBars.put(dergonID, new RunsafeBossBar("Dergon", BarColour.PURPLE, BarStyle.SOLID));
 	}
 
-	public void updateBossBar(int dergonID, float currentHealth, float maxHealth, List<IPlayer> newBarPlayers)
+	public void updateBossBarHealth(int dergonID, float currentHealth, float maxHealth)
 	{
 		if (dergonID < 0) return;
 
@@ -231,9 +251,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		double pct = (currentHealth / maxHealth);
 		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)");
 		bossBar.setProgress(pct);
-
-		// Handle which players can see the boss bar
-		bossBar.setActivePlayers(newBarPlayers);
 	}
 
 	public void removeBossBar(int dergonID)
