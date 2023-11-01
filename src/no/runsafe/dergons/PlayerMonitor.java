@@ -2,7 +2,9 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.entity.IAreaEffectCloud;
+import no.runsafe.framework.api.entity.IBlockProjectileSource;
 import no.runsafe.framework.api.entity.IEntity;
+import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
 import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
 import no.runsafe.framework.api.player.IPlayer;
@@ -43,6 +45,11 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent
 
 		IEntity entity = event.getRightClicked();
 		if (!(entity instanceof IAreaEffectCloud))
+			return;
+
+		// Check that fireball was launched something other than a Dergon
+		IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
+		if (source == null || source instanceof IPlayer || source instanceof IBlockProjectileSource)
 			return;
 
 		float cloudSize = ((IAreaEffectCloud) entity).getRadius();
