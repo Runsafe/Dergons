@@ -17,7 +17,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
 	public DergonHandler()
 	{
-		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 10, 10);
+		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 2, 2);
 	}
 
 	public DergonHandler(Dergon orphan)
