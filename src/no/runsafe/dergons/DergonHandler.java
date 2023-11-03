@@ -17,7 +17,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 {
 	public DergonHandler()
 	{
-		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 10, 10);
+		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 2, 2);
 	}
 
 	public DergonHandler(Dergon orphan)
@@ -43,13 +43,12 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				return;
 			}
 		}
-		/*
+
 		// give dergon a brand new home
 		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
 		createBossBar(currentDergonID);
 		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
 		currentDergonID++;
-		*/
 	}
 
 	private void BossBarPlayersInRangeCycle()
@@ -239,7 +238,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	{
 		return String.format(
 			"world: %s X: %.0f Y: %.0f Z: %.0f",
-			location.getWorld(), location.getX(), location.getY(), location.getZ()
+			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
 		);
 	}
 
@@ -260,8 +259,13 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		// Update the health bar to show the percentage of the dergon
 		double pct = (currentHealth / maxHealth);
-		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)");
+		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)" + (showBarIDs ? " ID: " + dergonID : ""));
 		bossBar.setProgress(pct);
+	}
+
+	public void setShowBossBarID(boolean showBarID)
+	{
+		showBarIDs = showBarID;
 	}
 
 	public void removeBossBar(int dergonID)
@@ -287,6 +291,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return dergonRepellentLocation;
 	}
 
+	private static boolean showBarIDs = false;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
