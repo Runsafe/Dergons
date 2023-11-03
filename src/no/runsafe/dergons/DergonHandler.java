@@ -239,7 +239,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	{
 		return String.format(
 			"world: %s X: %.0f Y: %.0f Z: %.0f",
-			location.getWorld(), location.getX(), location.getY(), location.getZ()
+			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
 		);
 	}
 
