@@ -260,8 +260,13 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		// Update the health bar to show the percentage of the dergon
 		double pct = (currentHealth / maxHealth);
-		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)");
+		bossBar.setTitle("Dergon (" + round(pct * 100) + "%)" + (showBarIDs ? " ID: " + dergonID : ""));
 		bossBar.setProgress(pct);
+	}
+
+	public void setShowBossBarID(boolean showBarID)
+	{
+		showBarIDs = showBarID;
 	}
 
 	public void removeBossBar(int dergonID)
@@ -287,6 +292,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return dergonRepellentLocation;
 	}
 
+	private static boolean showBarIDs = false;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;
