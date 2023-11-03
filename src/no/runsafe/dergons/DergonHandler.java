@@ -44,10 +44,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			}
 		}
 
-		// give dergon a brand new home
+		// Track rogue dergon and kill them if able.
 		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
-		createBossBar(currentDergonID);
 		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
+		killDergon(currentDergonID);
 		currentDergonID++;
 	}
 
