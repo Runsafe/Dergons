@@ -49,7 +49,7 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent
 
 		// Check that fireball was launched something other than a Dergon
 		IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
-		if (source == null || source instanceof IPlayer || source instanceof IBlockProjectileSource)
+		if (source instanceof IPlayer || source instanceof IBlockProjectileSource)
 			return;
 
 		float cloudSize = ((IAreaEffectCloud) entity).getRadius();
