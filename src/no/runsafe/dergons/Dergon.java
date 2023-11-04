@@ -8,6 +8,8 @@ import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
+import no.runsafe.framework.minecraft.WorldBlockEffectType;
+import no.runsafe.framework.minecraft.WorldEffect;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
@@ -185,6 +187,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		else if (targetEntity == null)
 			idleTicks++;
 		else idleTicks = 0;
+
+		// Wing particles
+		dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ)
+			.playEffect(WorldEffect.FLAME, 1F, 1, 1);
+		dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ)
+			.playEffect(WorldEffect.FLAME, 1F, 1, 1);
 
 		// Handle randomized dergon attacks
 		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);

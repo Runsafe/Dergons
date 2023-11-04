@@ -131,7 +131,7 @@ public class DergonHolder
 
 	public Boolean isHoldingDergon()
 	{
-		return heldDergon != null;
+		return (heldDergon != null && !heldDergon.isNoAI());
 	}
 
 	public IPlayer getCurrentTarget()

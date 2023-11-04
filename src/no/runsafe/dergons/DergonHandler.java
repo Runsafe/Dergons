@@ -66,7 +66,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				bossBar.removeAllPlayers();
 				continue;
 			}
-			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(200));
+			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(150));
 		}
 	}
 
@@ -238,7 +238,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private String locationInfo(ILocation location)
 	{
 		return String.format(
-			"world: %s X: %.0f Y: %.0f Z: %.0f",
+			"&aWorld:&r %s &aX:&r %.0f &aY:&r %.0f &aZ:&r %.0f",
 			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
 		);
 	}
