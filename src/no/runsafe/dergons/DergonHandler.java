@@ -66,7 +66,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				bossBar.removeAllPlayers();
 				continue;
 			}
-			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(200));
+			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(150));
 		}
 	}
 
