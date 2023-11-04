@@ -44,10 +44,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			}
 		}
 
-		// give dergon a brand new home
+		// Track rogue dergon and kill them if able.
 		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
-		createBossBar(currentDergonID);
 		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
+		killDergon(currentDergonID);
 		currentDergonID++;
 	}
 
@@ -225,7 +225,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			ILocation targetDestination = dergon.getTargetFlyToLocation();
 			IPlayer target = dergon.getCurrentTarget();
 			info.add(
-				"&eID: &r " + id + ((!dergon.isHoldingDergon()) ? " Null Dergon. " :
+				"&eID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
+				", &eHealth: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
 				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
 				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
 				", &eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))

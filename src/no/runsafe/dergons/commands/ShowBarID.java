@@ -8,7 +8,7 @@ import no.runsafe.framework.api.command.argument.IArgumentList;
 
 public class ShowBarID extends ExecutableCommand
 {
-	protected ShowBarID(DergonHandler handler)
+	public ShowBarID(DergonHandler handler)
 	{
 		super(
 			"barID", "Shows a dergons ID on their boss bar.", "runsafe.dergons.id",

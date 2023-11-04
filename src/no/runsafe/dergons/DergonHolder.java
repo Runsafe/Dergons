@@ -8,6 +8,7 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
 
+import java.util.Map;
 import java.util.Random;
 
 public class DergonHolder
@@ -145,6 +146,16 @@ public class DergonHolder
 		if (heldDergon == null)
 			return null;
 		return heldDergon.getTargetFlyToLocation();
+	}
+
+	public float getHealth()
+	{
+		return heldDergon.getHealth();
+	}
+
+	public float getMaxHealth()
+	{
+		return heldDergon.getMaxHealth();
 	}
 
 	private void processStep()
