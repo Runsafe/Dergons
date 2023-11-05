@@ -158,6 +158,16 @@ public class DergonHolder
 		return heldDergon.getMaxHealth();
 	}
 
+	public void setUnloaded()
+	{
+		isUnloaded = true;
+	}
+
+	public boolean isUnloaded()
+	{
+		return isUnloaded;
+	}
+
 	private void processStep()
 	{
 		targetLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);
@@ -172,16 +182,23 @@ public class DergonHolder
 		currentStep++;
 	}
 
-	public void setHeldDergon(Dergon newDergon, float damageDealt)
+	public void reloadDergon(Dergon newDergon)
 	{
+		if (heldDergon == null)
+			return;
+
+		newDergon.setCustomName("Dergon");
+		newDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
+		newDergon.setHealth(heldDergon.getHealth());
+		newDergon.setTargetLocation(heldDergon.getTargetLocation());
+		newDergon.setDergonID(dergonID);
+
 		heldDergon = newDergon;
-		heldDergon.setCustomName("Dergon");
-		heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
-		heldDergon.setHealth(maxHealth - damageDealt);
-		heldDergon.setDergonID(dergonID);
+		isUnloaded = false;
 	}
 
 	private Dergon heldDergon;
+	private boolean isUnloaded = false;
 	private int currentStep = 0;
 	private float maxHealth = 0;
 	private final ILocation targetLocation;

@@ -190,9 +190,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Wing particles
 		dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ)
-			.playEffect(WorldEffect.FLAME, 1F, 1, 1);
+			.playEffect(WorldEffect.FLAME, 0.3F, 5, 10);
 		dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ)
-			.playEffect(WorldEffect.FLAME, 1F, 1, 1);
+			.playEffect(WorldEffect.FLAME, 0.3F, 5, 10);
 
 		// Handle randomized dergon attacks
 		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);
@@ -691,6 +691,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.dergonID = newID;
 	}
 
+	public ILocation getTargetLocation()
+	{
+		return targetLocation;
+	}
+
+	public void setTargetLocation(ILocation newLocation)
+	{
+		targetLocation = newLocation;
+	}
+
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
@@ -718,7 +728,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private int idleTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
-	private final ILocation targetLocation;
+	private ILocation targetLocation;
 	private ILocation flyOffLocation;
 	private final IWorld dergonWorld;
 	private final Random random = new Random();

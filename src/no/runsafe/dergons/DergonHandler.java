@@ -32,13 +32,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			int dergonID = dergonHolderEntry.getKey();
 			DergonHolder dergonHolder = dergonHolderEntry.getValue();
 
-			if (dergonHolder.getWorld().isWorld(orphanWorld) && !dergonHolder.isHoldingDergon())
+			if (dergonHolder.getWorld().isWorld(orphanWorld) && dergonHolder.isUnloaded())
 			{
-				float damageDealt = 0;
-				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
-					damageDealt += node.getValue();
-
-				dergonHolder.setHeldDergon(orphan, damageDealt);
+				dergonHolder.reloadDergon(orphan);
 				Dergons.console.logInformation("Tracking pre-existing dergon with old ID: " + dergonID);
 				return;
 			}
@@ -205,6 +201,12 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			new DergonSlayEvent(slayer).Fire();
 	}
 
+	public void setDergonUnloaded(int dergonID)
+	{
+		Dergons.Debugger.debugInfo("Unloading dergon with ID: " + dergonID);
+		activeDergons.get(dergonID).setUnloaded();
+	}
+
 	public void handleDergonMount(IPlayer player)
 	{
 		new DergonMountEvent(player).Fire();
@@ -226,6 +228,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			IPlayer target = dergon.getCurrentTarget();
 			info.add(
 				"&eID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
+				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r." : "") +
 				", &eHealth: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
 				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
 				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
