@@ -2,16 +2,12 @@ package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.chunk.IChunk;
-import no.runsafe.framework.api.entity.IAreaEffectCloud;
-import no.runsafe.framework.api.entity.IBlockProjectileSource;
-import no.runsafe.framework.api.entity.IEntity;
-import no.runsafe.framework.api.entity.IProjectileSource;
+import no.runsafe.framework.api.entity.*;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
 import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
 import no.runsafe.framework.api.event.world.IChunkUnload;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
-import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.entity.RunsafeItemSpawnEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
@@ -86,9 +82,13 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IC
 	public boolean OnChunkUnload(IChunk chunk)
 	{
 		// Check if player unloaded a chunk with a dergon in it so we can register it.
-		for (RunsafeEntity entity : chunk.getEntities())
-			if (entity.getRaw() instanceof Dergon)
-				handler.setDergonUnloaded(((Dergon) entity.getRaw()).getDergonID());
+		for (IEntity entity : chunk.getEntities())
+			if (entity instanceof ILivingEntity && ((ILivingEntity) entity).getCustomName().matches("§4Dergon:\\s[0-9]+"))
+			{
+				String dergonIDString = ((ILivingEntity) entity).getCustomName();
+				handler.setDergonUnloaded(Integer.getInteger(dergonIDString.substring(10)));
+			}
+
 		return true;
 	}
 

@@ -48,7 +48,7 @@ public class DergonHolder
 		this.maxHealth = health;
 		this.dergonID = dergonID;
 
-		heldDergon.setCustomName("Dergon");
+		heldDergon.setCustomName("§4Dergon: " + dergonID);
 		heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 		heldDergon.setHealth(maxHealth);
 		heldDergon.setDergonID(dergonID);
@@ -187,7 +187,7 @@ public class DergonHolder
 		if (heldDergon == null)
 			return;
 
-		newDergon.setCustomName("Dergon");
+		newDergon.setCustomName("§4Dergon: " + dergonID);
 		newDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 		newDergon.setHealth(heldDergon.getHealth());
 		newDergon.setTargetLocation(heldDergon.getTargetLocation());
