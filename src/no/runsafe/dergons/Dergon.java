@@ -63,7 +63,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.dergonID = dergonID;
 
 		this.handler.createBossBar(this.dergonID);
-		setCustomName("Dergon");
 	}
 
 	/**
