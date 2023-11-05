@@ -55,6 +55,8 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IC
 		if (!(entity instanceof IAreaEffectCloud))
 			return;
 
+		Dergons.Debugger.debugFine("Player right clicking area effect cloud with a bottle: " + player.getName());
+
 		// Check that fireball was launched something other than a Dergon
 		IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
 		if (source instanceof IPlayer || source instanceof IBlockProjectileSource)
