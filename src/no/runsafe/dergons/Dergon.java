@@ -189,9 +189,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Wing particles
 		dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ)
-			.playEffect(WorldEffect.FLAME, 0.3F, 5, 10);
+			.playEffect(WorldEffect.FLAME, 1, 1, 50);
 		dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ)
-			.playEffect(WorldEffect.FLAME, 0.3F, 5, 10);
+			.playEffect(WorldEffect.FLAME, 1, 1, 50);
 
 		// Handle randomized dergon attacks
 		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);
