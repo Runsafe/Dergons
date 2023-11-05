@@ -691,6 +691,16 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.dergonID = newID;
 	}
 
+	public ILocation getTargetLocation()
+	{
+		return targetLocation;
+	}
+
+	public void setTargetLocation(ILocation newLocation)
+	{
+		targetLocation = newLocation;
+	}
+
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.
@@ -718,7 +728,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private int idleTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
-	private final ILocation targetLocation;
+	private ILocation targetLocation;
 	private ILocation flyOffLocation;
 	private final IWorld dergonWorld;
 	private final Random random = new Random();

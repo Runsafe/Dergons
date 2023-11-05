@@ -1,21 +1,29 @@
 package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.entity.IAreaEffectCloud;
 import no.runsafe.framework.api.entity.IBlockProjectileSource;
 import no.runsafe.framework.api.entity.IEntity;
 import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
 import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
+import no.runsafe.framework.api.event.world.IChunkUnload;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
+import no.runsafe.framework.minecraft.entity.RunsafeEntity;
 import no.runsafe.framework.minecraft.event.entity.RunsafeItemSpawnEvent;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
-public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent
+public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IChunkUnload
 {
+	public PlayerMonitor(DergonHandler handler)
+	{
+		this.handler = handler;
+	}
+
 	@Override
 	public void OnItemSpawn(RunsafeItemSpawnEvent event)
 	{
@@ -71,4 +79,16 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent
 
 		((IAreaEffectCloud) entity).setRadius(cloudSize - ((IAreaEffectCloud) entity).getRadiusOnUse());
 	}
+
+	@Override
+	public boolean OnChunkUnload(IChunk chunk)
+	{
+		// Check if player unloaded a chunk with a dergon in it so we can register it.
+		for (RunsafeEntity entity : chunk.getEntities())
+			if (entity.getRaw() instanceof Dergon)
+				handler.setDergonUnloaded(((Dergon) entity.getRaw()).getDergonID());
+		return true;
+	}
+
+	private final DergonHandler handler;
 }
