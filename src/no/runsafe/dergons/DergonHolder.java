@@ -8,8 +8,8 @@ import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Sound;
 
-import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class DergonHolder
 {
@@ -195,6 +195,11 @@ public class DergonHolder
 
 		heldDergon = newDergon;
 		isUnloaded = false;
+	}
+
+	public UUID getDergonUniqueID()
+	{
+		return heldDergon.getUniqueID();
 	}
 
 	private Dergon heldDergon;

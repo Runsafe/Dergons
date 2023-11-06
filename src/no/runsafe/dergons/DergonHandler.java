@@ -280,6 +280,19 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		dergonBossBars.remove(dergonID);
 	}
 
+	public void unloadIfDergon(UUID id)
+	{
+		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		{
+			DergonHolder holder = dergonHolderEntry.getValue();
+			if (id == holder.getDergonUniqueID())
+			{
+				holder.setUnloaded();
+				return;
+			}
+		}
+	}
+
 	public int getDespawnTime()
 	{
 		return despawnTime;
