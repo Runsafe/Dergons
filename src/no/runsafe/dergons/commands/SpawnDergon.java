@@ -23,7 +23,7 @@ public class SpawnDergon extends PlayerCommand
 		{
 			int dergonID = handler.spawnDergon(targetPlayer.getLocation());
 			Dergons.console.logInformation("Manually spawning dergon with ID: " + dergonID);
-			return "&eDergon spawned with ID:" + dergonID;
+			return "&aDergon spawned with ID:" + dergonID;
 		}
 		return "&cInvalid player.";
 	}

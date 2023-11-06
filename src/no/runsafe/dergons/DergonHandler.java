@@ -221,13 +221,13 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			ILocation targetDestination = dergon.getTargetFlyToLocation();
 			IPlayer target = dergon.getCurrentTarget();
 			info.add(
-				"&eID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
-				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r." : "") +
-				", &eHealth: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
-				", \n&eSpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
-				", \n&eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
-				", \n&eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
+				"&5ID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
+				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r" : "") +
+				", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
+				", &9Target: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
+				", \n&9SpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
+				", \n&9Location: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
+				", \n&9Destination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
 			));
 		}
 		return info;
@@ -236,7 +236,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	private String locationInfo(ILocation location)
 	{
 		return String.format(
-			"&aWorld:&r %s &aX:&r %.0f &aY:&r %.0f &aZ:&r %.0f",
+			"&eWorld:&r %s &eX:&r %.0f &eY:&r %.0f &eZ:&r %.0f",
 			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
 		);
 	}
