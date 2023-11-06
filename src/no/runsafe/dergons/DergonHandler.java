@@ -68,8 +68,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	public int spawnDergon(ILocation location)
 	{
-		IWorld world = location.getWorld();
-		if (world == null)
+		if (location == null || location.getWorld() == null)
 			return -1;
 
 		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
@@ -201,12 +200,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			new DergonSlayEvent(slayer).Fire();
 	}
 
-	public void setDergonUnloaded(int dergonID)
-	{
-		Dergons.Debugger.debugInfo("Unloading dergon with ID: " + dergonID);
-		activeDergons.get(dergonID).setUnloaded();
-	}
-
 	public void handleDergonMount(IPlayer player)
 	{
 		new DergonMountEvent(player).Fire();
@@ -287,6 +280,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			DergonHolder holder = dergonHolderEntry.getValue();
 			if (id == holder.getDergonUniqueID())
 			{
+				Dergons.Debugger.debugInfo("Unloading dergon with ID: " + id);
 				holder.setUnloaded();
 				return;
 			}

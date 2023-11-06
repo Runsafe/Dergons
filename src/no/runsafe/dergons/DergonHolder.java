@@ -121,7 +121,7 @@ public class DergonHolder
 	{
 		if (heldDergon == null)
 			return null;
-		return world.getLocation(heldDergon.locX, heldDergon.locY, heldDergon.locZ);
+		return heldDergon.getLocation();
 	}
 
 	public IWorld getWorld()
