@@ -55,9 +55,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			this.handler = new DergonHandler(this);
 
 		if (targetLocation != null)
-			this.targetLocation = targetLocation;
+			this.spawnLocation = targetLocation;
 		else
-			this.targetLocation = world.getLocation(locX, locY, locZ);
+			this.spawnLocation = world.getLocation(locX, locY, locZ);
 
 		this.dergonID = dergonID;
 
@@ -122,7 +122,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 		else
 		{
-			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
+			List<IPlayer> players = spawnLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
 			List<IPlayer> targets = new ArrayList<>(0);
 
 			for (IPlayer player : players)
@@ -134,7 +134,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 				ILocation playerLocation = player.getLocation();
 
 				// If the player is greater than 50 blocks, we can target them.
-				if (playerLocation != null && playerLocation.distance(targetLocation) > 50)
+				if (playerLocation != null && playerLocation.distance(spawnLocation) > 50)
 					targets.add(player);
 			}
 
@@ -147,9 +147,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Send the dergon back to the start point.
-		targetX = targetLocation.getX();
-		targetY = targetLocation.getY();
-		targetZ = targetLocation.getZ();
+		targetX = spawnLocation.getX();
+		targetY = spawnLocation.getY();
+		targetZ = spawnLocation.getZ();
 
 		targetEntity = null;
 	}
@@ -690,14 +690,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.dergonID = newID;
 	}
 
-	public ILocation getTargetLocation()
+	public ILocation getSpawnLocation()
 	{
-		return targetLocation;
+		return spawnLocation;
 	}
 
-	public void setTargetLocation(ILocation newLocation)
+	public void setSpawnLocation(ILocation newLocation)
 	{
-		targetLocation = newLocation;
+		spawnLocation = newLocation;
 	}
 
 	/*
@@ -727,7 +727,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private int idleTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
-	private ILocation targetLocation;
+	private ILocation spawnLocation;
 	private ILocation flyOffLocation;
 	private final IWorld dergonWorld;
 	private final Random random = new Random();

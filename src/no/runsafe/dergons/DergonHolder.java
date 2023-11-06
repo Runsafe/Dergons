@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class DergonHolder
 {
-	public DergonHolder(ILocation targetLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
+	public DergonHolder(ILocation spawnLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
 	{
-		this.targetLocation = targetLocation;
+		this.spawnLocation = spawnLocation;
 		this.handler = handler;
 
-		world = targetLocation.getWorld();
+		world = spawnLocation.getWorld();
 
 		this.minStep = min;
 		this.maxStep = max;
@@ -35,7 +35,7 @@ public class DergonHolder
 
 	public DergonHolder(Dergon newDergon, DergonHandler handler, int dergonID, float health)
 	{
-		this.targetLocation = null;
+		this.spawnLocation = newDergon.getLocation();
 		this.handler = handler;
 		this.heldDergon = newDergon;
 		this.world = heldDergon.getDergonWorld();
@@ -63,7 +63,7 @@ public class DergonHolder
 		// Check if trying to spawn in anti-dergon bubble
 		if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
 			&& world.isWorld(dergonRepellentLocation.getWorld())
-			&& dergonRepellentLocation.distanceSquared(targetLocation) < dergonRepellentRadius)
+			&& dergonRepellentLocation.distanceSquared(spawnLocation) < dergonRepellentRadius)
 		{
 			handler.removeDergon(dergonID);
 			return;
@@ -75,7 +75,7 @@ public class DergonHolder
 		for (IPlayer player : world.getPlayers())
 		{
 			ILocation playerLocation = player.getLocation();
-			if (playerLocation == null || playerLocation.distanceSquared(targetLocation) > 40000) // 200 blocks
+			if (playerLocation == null || playerLocation.distanceSquared(spawnLocation) > 40000) // 200 blocks
 				continue;
 
 			if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
@@ -94,8 +94,8 @@ public class DergonHolder
 			World rawWorld = ObjectUnwrapper.getMinecraft(world);
 			if (rawWorld != null)
 			{
-				heldDergon = new Dergon(world, handler, targetLocation, dergonID);
-				heldDergon.setPosition(targetLocation.getX(), targetLocation.getY(), targetLocation.getZ());
+				heldDergon = new Dergon(world, handler, spawnLocation, dergonID);
+				heldDergon.setPosition(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ());
 				heldDergon.setCustomName("Dergon");
 				heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 				heldDergon.setHealth(maxHealth);
@@ -170,7 +170,7 @@ public class DergonHolder
 
 	private void processStep()
 	{
-		targetLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);
+		spawnLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);
 
 		if (currentStep == stepCount)
 		{
@@ -190,7 +190,7 @@ public class DergonHolder
 		newDergon.setCustomName("§4Dergon: " + dergonID);
 		newDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
 		newDergon.setHealth(heldDergon.getHealth());
-		newDergon.setTargetLocation(heldDergon.getTargetLocation());
+		newDergon.setSpawnLocation(spawnLocation);
 		newDergon.setDergonID(dergonID);
 
 		heldDergon = newDergon;
@@ -206,7 +206,7 @@ public class DergonHolder
 	private boolean isUnloaded = false;
 	private int currentStep = 0;
 	private float maxHealth = 0;
-	private final ILocation targetLocation;
+	private final ILocation spawnLocation;
 	private final IWorld world;
 	private final int minStep;
 	private final int maxStep;
