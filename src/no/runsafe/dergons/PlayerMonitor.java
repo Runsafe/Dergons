@@ -83,11 +83,17 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IC
 	{
 		// Check if player unloaded a chunk with a dergon in it so we can register it.
 		for (IEntity entity : chunk.getEntities())
-			if (entity instanceof ILivingEntity && ((ILivingEntity) entity).getCustomName().matches("§4Dergon:\\s[0-9]+"))
+		{
+			if (entity instanceof ILivingEntity)
 			{
-				String dergonIDString = ((ILivingEntity) entity).getCustomName();
-				handler.setDergonUnloaded(Integer.getInteger(dergonIDString.substring(10)));
+				String entityName = ((ILivingEntity) entity).getCustomName();
+				if (entityName == null || entityName.isEmpty())
+					continue;
+
+				if (entityName.matches("§4Dergon:\\s[0-9]+"))
+					handler.setDergonUnloaded(Integer.getInteger(entityName.substring(10)));
 			}
+		}
 
 		return true;
 	}
