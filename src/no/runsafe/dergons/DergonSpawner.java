@@ -4,6 +4,7 @@ import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,7 +21,7 @@ public class DergonSpawner implements IConfigurationChanged
 		if (worldNames.isEmpty())
 			return "Failed, no worlds.";
 
-		List<IPlayer> selectedPlayers = new ArrayList<IPlayer>(0);
+		List<IPlayer> selectedPlayers = new ArrayList<>(0);
 		for (IPlayer player : Dergons.server.getOnlinePlayers())
 		{
 			if (player == null || !isDergonWorld(player.getWorld()))
@@ -54,8 +55,10 @@ public class DergonSpawner implements IConfigurationChanged
 		return "Spawning @ " + selectedPlayer.getName() + " with ID: " + handler.spawnDergon(selectedPlayer.getLocation());
 	}
 
-	public boolean isDergonWorld(IWorld world)
+	public boolean isDergonWorld(@Nullable IWorld world)
 	{
+		if (world == null) return false;
+
 		return worldNames.contains(world.getName());
 	}
 

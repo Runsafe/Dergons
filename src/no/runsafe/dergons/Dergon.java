@@ -8,7 +8,6 @@ import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
-import no.runsafe.framework.minecraft.WorldBlockEffectType;
 import no.runsafe.framework.minecraft.WorldEffect;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
@@ -56,9 +55,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			this.handler = new DergonHandler(this);
 
 		if (targetLocation != null)
-			this.targetLocation = targetLocation;
+			this.spawnLocation = targetLocation;
 		else
-			this.targetLocation = world.getLocation(locX, locY, locZ);
+			this.spawnLocation = world.getLocation(locX, locY, locZ);
 
 		this.dergonID = dergonID;
 
@@ -123,7 +122,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 		else
 		{
-			List<IPlayer> players = targetLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
+			List<IPlayer> players = spawnLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
 			List<IPlayer> targets = new ArrayList<>(0);
 
 			for (IPlayer player : players)
@@ -135,7 +134,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 				ILocation playerLocation = player.getLocation();
 
 				// If the player is greater than 50 blocks, we can target them.
-				if (playerLocation != null && playerLocation.distance(targetLocation) > 50)
+				if (playerLocation != null && playerLocation.distance(spawnLocation) > 50)
 					targets.add(player);
 			}
 
@@ -148,9 +147,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Send the dergon back to the start point.
-		targetX = targetLocation.getX();
-		targetY = targetLocation.getY();
-		targetZ = targetLocation.getZ();
+		targetX = spawnLocation.getX();
+		targetY = spawnLocation.getY();
+		targetZ = spawnLocation.getZ();
 
 		targetEntity = null;
 	}
@@ -189,13 +188,13 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Wing particles
 		dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ)
-			.playEffect(WorldEffect.FLAME, 1, 1, 50);
+			.playEffect(WorldEffect.FLAME, 0, 1, 50);
 		dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ)
-			.playEffect(WorldEffect.FLAME, 1, 1, 50);
+			.playEffect(WorldEffect.FLAME, 0, 1, 50);
 
 		// Handle randomized dergon attacks
 		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);
-		if (targetEntity != null && dergonHeadLocation != null && targetEntity.getWorld().isWorld(dergonWorld))
+		if (targetEntity != null && dergonHeadLocation != null && dergonWorld.isWorld(targetEntity.getWorld()))
 		{
 			if (random.nextFloat() < 0.2F)
 				((RunsafeFallingBlock) dergonWorld.spawnFallingBlock(dergonHeadLocation, Item.Unavailable.Fire)).setDropItem(false);
@@ -225,7 +224,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		double targetPosY = targetY - locY;
 		double targetPosZ = targetZ - locZ;
 		double targetDistanceSquared = targetPosX * targetPosX + targetPosY * targetPosY + targetPosZ * targetPosZ;
-		if (targetEntity != null)
+		if (targetEntity != null && targetEntity.getLocation() != null)
 		{
 			ILocation targetPlayerLocation = targetEntity.getLocation();
 			targetX = targetPlayerLocation.getX();
@@ -249,7 +248,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (targetDistanceSquared < 100.0D
 			|| targetDistanceSquared > 22500.0D
 			|| positionChanged
-			|| !dergonWorld.getLocation(locX, locY, locZ).getBlock().isAir()
+			|| !getLocation().getBlock().isAir()
 		)
 			updateCurrentTarget();
 
@@ -561,7 +560,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 		// Play the death sound as the death animation starts.
 		if (this.deathTicks == 1)
-			dergonWorld.getLocation(locX, locY, locZ).playSound(
+			getLocation().playSound(
 				Sound.Creature.EnderDragon.Death, 32.0F, 1.0F
 			);
 
@@ -607,9 +606,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected SoundEffect F()
 	{
-		dergonWorld.getLocation(locX, locY, locZ).playSound(
-			Sound.Creature.EnderDragon.Growl, 5, 1
-		);
+		getLocation().playSound(Sound.Creature.EnderDragon.Growl, 5, 1);
 		return null;
 	}
 
@@ -622,9 +619,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected SoundEffect d(DamageSource damageSource)
 	{
-		dergonWorld.getLocation(locX, locY, locZ).playSound(
-			Sound.Creature.EnderDragon.Hit, 5, 1
-		);
+		getLocation().playSound(Sound.Creature.EnderDragon.Hit, 5, 1);
 		return null;
 	}
 
@@ -645,6 +640,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public ILocation getTargetFlyToLocation()
 	{
 		return dergonWorld.getLocation(targetX, targetY, targetZ);
+	}
+
+	public ILocation getLocation()
+	{
+		return dergonWorld.getLocation(locX, locY, locZ);
 	}
 
 	/**
@@ -690,14 +690,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.dergonID = newID;
 	}
 
-	public ILocation getTargetLocation()
+	public ILocation getSpawnLocation()
 	{
-		return targetLocation;
+		return spawnLocation;
 	}
 
-	public void setTargetLocation(ILocation newLocation)
+	public void setSpawnLocation(ILocation newLocation)
 	{
-		targetLocation = newLocation;
+		spawnLocation = newLocation;
 	}
 
 	/*
@@ -727,7 +727,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	private int idleTicks = 0;
 	private IPlayer targetEntity;
 	private final DergonHandler handler;
-	private ILocation targetLocation;
+	private ILocation spawnLocation;
 	private ILocation flyOffLocation;
 	private final IWorld dergonWorld;
 	private final Random random = new Random();
