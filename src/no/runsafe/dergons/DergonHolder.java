@@ -148,6 +148,13 @@ public class DergonHolder
 		return heldDergon.getTargetFlyToLocation();
 	}
 
+	public ILocation getSpawnLocation()
+	{
+		if (heldDergon == null)
+			return null;
+		return heldDergon.getSpawnLocation();
+	}
+
 	public float getHealth()
 	{
 		return heldDergon.getHealth();

@@ -216,6 +216,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		for (Integer id : activeDergons.keySet())
 		{
 			DergonHolder dergon = activeDergons.get(id);
+			ILocation spawnLocation = dergon.getSpawnLocation();
 			ILocation dergonLocation = dergon.getLocation();
 			ILocation targetDestination = dergon.getTargetFlyToLocation();
 			IPlayer target = dergon.getCurrentTarget();
@@ -224,8 +225,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r." : "") +
 				", &eHealth: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
 				", &eTarget: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
-				", &eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
-				", &eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
+				", \n&eSpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
+				", \n&eLocation: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
+				", \n&eIntendedDestination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
 			));
 		}
 		return info;
