@@ -24,7 +24,7 @@ public class ListDergons extends ExecutableCommand
             return "&cNo dergons found.";
 
         return String.format(
-            "&a%d dergons located:&r\n %s", dergonListInfo.size(),
+            "&a&l%d Dergon(s) Located:&r\n %s", dergonListInfo.size(),
             StringUtils.join(dergonListInfo, "\n  ")
         );
     }
