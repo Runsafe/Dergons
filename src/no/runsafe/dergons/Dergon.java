@@ -442,6 +442,10 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			damageEntity(damager, damageValue);
 		}
 
+		// Spawn in some creatures to help defend the dergon
+		if (random.nextFloat() < 0.5F)
+			dergonWorld.spawnCreature(getLocation(), "Vex");
+
 		return true;
 	}
 
