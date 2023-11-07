@@ -54,11 +54,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		else
 			this.handler = new DergonHandler(this);
 
-		if (targetLocation != null)
-			this.spawnLocation = targetLocation;
-		else
-			this.spawnLocation = world.getLocation(locX, locY, locZ);
-
+		this.spawnLocation = targetLocation;
 		this.dergonID = dergonID;
 
 		this.handler.createBossBar(this.dergonID);
@@ -122,7 +118,13 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 		else
 		{
-			List<IPlayer> players = spawnLocation.getPlayersInRange(200); // Grab all players in 200 blocks.
+			// Grab all players in 200 blocks.
+			List<IPlayer> players;
+			if (spawnLocation != null)
+				players = spawnLocation.getPlayersInRange(200);
+			else
+				players = getLocation().getPlayersInRange(200);
+
 			List<IPlayer> targets = new ArrayList<>(0);
 
 			for (IPlayer player : players)
@@ -133,8 +135,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 				ILocation playerLocation = player.getLocation();
 
-				// If the player is greater than 50 blocks, we can target them.
-				if (playerLocation != null && playerLocation.distance(spawnLocation) > 50)
+				if (spawnLocation != null) // If the player is greater than 50 blocks from the spawning location, we can target them.
+				{
+					if (playerLocation != null && playerLocation.distance(spawnLocation) > 50)
+						targets.add(player);
+				}
+				else
 					targets.add(player);
 			}
 
@@ -146,10 +152,19 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			}
 		}
 
-		// Send the dergon back to the start point.
-		targetX = spawnLocation.getX();
-		targetY = spawnLocation.getY();
-		targetZ = spawnLocation.getZ();
+		if (spawnLocation != null)
+		{
+			// Send the dergon back to the start point.
+			targetX = spawnLocation.getX();
+			targetY = spawnLocation.getY();
+			targetZ = spawnLocation.getZ();
+		}
+		else
+		{
+			targetX = locX;
+			targetY = locY + 20;
+			targetZ = locZ;
+		}
 
 		targetEntity = null;
 	}
