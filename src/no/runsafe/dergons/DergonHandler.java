@@ -34,7 +34,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 			if (dergonHolder.getWorld().isWorld(orphanWorld) && dergonHolder.isUnloaded())
 			{
-				dergonHolder.reloadDergon(orphan);
+				float damageDealt = 0;
+				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
+					damageDealt += node.getValue();
+				dergonHolder.reloadDergon(orphan, damageDealt);
 				Dergons.console.logInformation("Tracking pre-existing dergon with old ID: " + dergonID);
 				return;
 			}

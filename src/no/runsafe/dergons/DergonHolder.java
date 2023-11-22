@@ -190,14 +190,11 @@ public class DergonHolder
 		currentStep++;
 	}
 
-	public void reloadDergon(Dergon newDergon)
+	public void reloadDergon(Dergon newDergon, float damageDealt)
 	{
-		if (heldDergon == null)
-			return;
-
 		newDergon.setCustomName("§4Dergon: " + dergonID);
 		newDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
-		newDergon.setHealth(heldDergon.getHealth());
+		newDergon.setHealth(maxHealth - damageDealt);
 		newDergon.setSpawnLocation(spawnLocation);
 		newDergon.setDergonID(dergonID);
 
