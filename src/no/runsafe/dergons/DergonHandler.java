@@ -34,7 +34,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 			if (dergonHolder.getWorld().isWorld(orphanWorld) && dergonHolder.isUnloaded())
 			{
-				dergonHolder.reloadDergon(orphan);
+				float damageDealt = 0;
+				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
+					damageDealt += node.getValue();
+				dergonHolder.reloadDergon(orphan, damageDealt);
 				Dergons.console.logInformation("Tracking pre-existing dergon with old ID: " + dergonID);
 				return;
 			}
@@ -105,6 +108,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
+		vexChance = config.getConfigValueAsFloat("vexChance");
 		spawnY = config.getConfigValueAsInt("spawnY");
 		eventMinTime = config.getConfigValueAsInt("eventMinTime");
 		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
@@ -289,6 +293,11 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		}
 	}
 
+	public float getVexChance()
+	{
+		return vexChance;
+	}
+
 	public int getDespawnTime()
 	{
 		return despawnTime;
@@ -305,6 +314,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 	}
 
 	private static boolean showBarIDs = false;
+	private static float vexChance;
 	private static int spawnY;
 	private static int eventMinTime;
 	private static int eventMaxTime;

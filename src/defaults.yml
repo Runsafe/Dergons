@@ -1,4 +1,5 @@
 spawnChance: 10
+vexChance: 3
 spawnTimer: 3600
 despawnTimer: 1200
 dergonWorlds:

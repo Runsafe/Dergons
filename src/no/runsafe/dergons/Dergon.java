@@ -434,7 +434,8 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		targetEntity = null;
 
 		// Only apply damage if the source is a player or an explosion.
-		if (damager.getEntity() instanceof EntityHuman || damager.isExplosion())
+		Entity attacker = damager.getEntity();
+		if (attacker instanceof EntityHuman || damager.isExplosion())
 		{
 			// Do more damage for head shots
 			if(bodyPart != dergonHead)
@@ -443,8 +444,15 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Spawn in some creatures to help defend the dergon
-		if (random.nextFloat() < 0.5F)
-			dergonWorld.spawnCreature(getLocation(), "Vex");
+		if (attacker instanceof EntityHuman && random.nextFloat() < (handler.getVexChance() / 100))
+		{
+			ILocation attackerLocation = dergonWorld.getLocation(attacker.locX, attacker.locY + 5, attacker.locZ);
+			if (attackerLocation == null)
+				return true;
+
+			attackerLocation.playSound(Sound.Creature.Ghast.Scream, 1, 0.5F);
+			dergonWorld.spawnCreature(attackerLocation, "Vex");
+		}
 
 		return true;
 	}
@@ -534,7 +542,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
-		if (source.getEntity() == null)
+		if (source.getEntity() == null || (!(source.getEntity() instanceof EntityHuman) && !source.isExplosion()))
 			return false;
 
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
