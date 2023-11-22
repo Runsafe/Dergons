@@ -230,7 +230,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				"&5ID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
 				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r" : "") +
 				", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-				", &9Target: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
+				", \n&9Target: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
 				", \n&9SpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
 				", \n&9Location: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
 				", \n&9Destination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
