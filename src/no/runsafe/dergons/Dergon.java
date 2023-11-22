@@ -443,7 +443,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Spawn in some creatures to help defend the dergon
-		if (random.nextFloat() < 0.5F)
+		if (random.nextFloat() < (handler.getVexChance() / 100))
 			dergonWorld.spawnCreature(getLocation(), "Vex");
 
 		return true;
