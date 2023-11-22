@@ -534,7 +534,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
-		if (source.getEntity() == null)
+		if (source.getEntity() == null || (!(source.getEntity() instanceof EntityHuman) && !source.isExplosion()))
 			return false;
 
 		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
