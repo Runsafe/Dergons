@@ -196,53 +196,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		new DergonMountEvent(player).Fire();
 	}
 
-	public List<String> getAllDergonInfo()
+	public HashMap<Integer, DergonHolder> getActiveDergons()
 	{
-		List<String> info = new ArrayList<>();
-		for (Integer id : activeDergons.keySet())
-		{
-			DergonHolder dergon = activeDergons.get(id);
-			boolean isUnloaded = dergon.isUnloaded();
-			boolean isNull = !dergon.isHoldingDergon();
-
-			if (!isNull && !isUnloaded)
-			{
-				ILocation spawnLocation = dergon.getSpawnLocation();
-				ILocation dergonLocation = dergon.getLocation();
-				ILocation targetDestination = dergon.getTargetFlyToLocation();
-				IPlayer target = dergon.getCurrentTarget();
-				info.add(
-					"&5ID: &r " + id +
-					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-					", \n&9Target: &r " + target.getPrettyName() +
-					", \n&9SpawnLocation: &r" + locationInfo(spawnLocation) +
-					", \n&9Location: &r" + locationInfo(dergonLocation) +
-					", \n&9Destination: &r" + locationInfo(targetDestination)
-				);
-			}
-			else if (isUnloaded)
-			{
-				ILocation unloadLocation = dergon.getUnloadLocation();
-				info.add(
-					"&5ID: &r " + id +
-					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + "), &cUnloaded Dergon&r" +
-					"\n&9UnloadLocation: &r" + locationInfo(unloadLocation)
-				);
-			}
-			else info.add("&5ID: &r " + id +", &4Null Dergon.");
-		}
-		return info;
-	}
-
-	private String locationInfo(ILocation location)
-	{
-		if (location == null)
-			return "&cN/A&r";
-
-		return String.format(
-			"&eWorld:&r %s &eX:&r %.0f &eY:&r %.0f &eZ:&r %.0f",
-			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
-		);
+		return activeDergons;
 	}
 
 	public void createBossBar(int dergonID)
