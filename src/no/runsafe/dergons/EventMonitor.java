@@ -115,7 +115,10 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 		for (Map.Entry<Integer, IChunk> dergonChunkEntry : dergonChunks.entrySet())
 		{
 			IChunk dergonChunk = dergonChunkEntry.getValue();
-			if (chunk.getX() != dergonChunk.getX() || chunk.getZ() != dergonChunk.getZ())
+			if (chunk.getX() != dergonChunk.getX()
+				|| chunk.getZ() != dergonChunk.getZ()
+				|| !chunk.getWorld().isWorld(dergonChunk.getWorld())
+			)
 				continue;
 
 			int dergonID = dergonChunkEntry.getKey();
