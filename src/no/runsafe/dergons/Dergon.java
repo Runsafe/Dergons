@@ -31,6 +31,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
+		Dergons.Debugger.debugInfo("Spawning dergon with ID: " + getUniqueID() + (handler == null ? " (reloaded?)":""));
 
 		this.children = new EntityComplexPart[]
 		{
