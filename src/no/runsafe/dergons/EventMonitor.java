@@ -132,6 +132,11 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 				dergonChunks.remove(dergonID);
 	}
 
+	public static void removeDergonFromList(int id)
+	{
+		dergonChunks.remove(id);
+	}
+
 	private final DergonHandler handler;
 	private static final HashMap<Integer, IChunk> dergonChunks = new HashMap<>(0);
 }
