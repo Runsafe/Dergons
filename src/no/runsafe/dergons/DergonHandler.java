@@ -208,7 +208,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		{
 			DergonHolder dergon = activeDergons.get(id);
 			boolean isUnloaded = dergon.isUnloaded();
-			boolean isNull = dergon.isHoldingDergon();
+			boolean isNull = !dergon.isHoldingDergon();
 
 			if (!isNull && !isUnloaded)
 			{
