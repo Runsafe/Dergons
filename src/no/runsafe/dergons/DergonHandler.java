@@ -20,36 +20,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		Dergons.scheduler.startSyncRepeatingTask(this::BossBarPlayersInRangeCycle, 2, 2);
 	}
 
-	public DergonHandler(Dergon orphan)
-	{
-		IWorld orphanWorld = orphan.getDergonWorld();
-		if (orphanWorld == null)
-			return;
-
-		// try to find a new home for our orphanized dergon
-		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
-		{
-			int dergonID = dergonHolderEntry.getKey();
-			DergonHolder dergonHolder = dergonHolderEntry.getValue();
-
-			if (dergonHolder.getWorld().isWorld(orphanWorld) && dergonHolder.isUnloaded())
-			{
-				float damageDealt = 0;
-				for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
-					damageDealt += node.getValue();
-				dergonHolder.reloadDergon(orphan, damageDealt);
-				Dergons.console.logInformation("Tracking pre-existing dergon with old ID: " + dergonID);
-				return;
-			}
-		}
-
-		// Track rogue dergon and kill them if able.
-		activeDergons.put(currentDergonID, new DergonHolder(orphan, this, currentDergonID, baseHealth));
-		Dergons.console.logInformation("Tracking pre-existing dergon with new ID: " + currentDergonID);
-		killDergon(currentDergonID);
-		currentDergonID++;
-	}
-
 	private void BossBarPlayersInRangeCycle()
 	{
 		if (dergonBossBars.isEmpty())
@@ -67,6 +37,15 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			}
 			bossBar.setActivePlayers(dergonHolder.getLocation().getPlayersInRange(150));
 		}
+	}
+
+	public void reloadDergon(int dergonID)
+	{
+		DergonHolder holder = activeDergons.get(dergonID);
+		if (holder == null)
+			return;
+
+		holder.reloadDergon();
 	}
 
 	public int spawnDergon(ILocation location)
@@ -88,6 +67,14 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 		if (victim == null)
 			return "&cDergon could not be killed, invalid ID.";
+
+		if (victim.isUnloaded())
+		{
+			EventMonitor.removeDergonFromList(ID);
+			removeDergon(ID);
+			Dergons.console.logInformation("Silently killing unloaded dergon with ID: " + ID);
+			return "&aUnloaded dergon killed.";
+		}
 
 		Dergons.console.logInformation("Silently killing dergon with ID: " + ID);
 		boolean success = victim.kill();
@@ -209,40 +196,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		new DergonMountEvent(player).Fire();
 	}
 
-	public Set<Integer> getAllDergonIDs()
+	public HashMap<Integer, DergonHolder> getActiveDergons()
 	{
-		return activeDergons.keySet();
-	}
-
-	public List<String> getAllDergonInfo()
-	{
-		List<String> info = new ArrayList<>();
-		for (Integer id : activeDergons.keySet())
-		{
-			DergonHolder dergon = activeDergons.get(id);
-			ILocation spawnLocation = dergon.getSpawnLocation();
-			ILocation dergonLocation = dergon.getLocation();
-			ILocation targetDestination = dergon.getTargetFlyToLocation();
-			IPlayer target = dergon.getCurrentTarget();
-			info.add(
-				"&5ID: &r " + id + ((!dergon.isHoldingDergon()) ? " &cNull Dergon&e. " :
-				(dergon.isUnloaded() ? ", &cUnloaded Dergon&r" : "") +
-				", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-				", &9Target: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
-				", \n&9SpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
-				", \n&9Location: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
-				", \n&9Destination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
-			));
-		}
-		return info;
-	}
-
-	private String locationInfo(ILocation location)
-	{
-		return String.format(
-			"&eWorld:&r %s &eX:&r %.0f &eY:&r %.0f &eZ:&r %.0f",
-			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
-		);
+		return activeDergons;
 	}
 
 	public void createBossBar(int dergonID)
@@ -279,7 +235,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		dergonBossBars.remove(dergonID);
 	}
 
-	public void unloadIfDergon(UUID id)
+	public int unloadIfDergon(UUID id)
 	{
 		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
 		{
@@ -288,9 +244,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			{
 				Dergons.Debugger.debugInfo("Unloading dergon with ID: " + id);
 				holder.setUnloaded();
-				return;
+				return dergonHolderEntry.getKey();
 			}
 		}
+		return -1;
 	}
 
 	public float getVexChance()

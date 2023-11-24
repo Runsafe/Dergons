@@ -5,7 +5,6 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
-import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.WorldEffect;
@@ -31,6 +30,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
+		Dergons.Debugger.debugInfo("Spawning dergon with UUID: " + getUniqueID());
 
 		this.children = new EntityComplexPart[]
 		{
@@ -48,12 +48,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.fireProof = true;
 		this.persistent = true;
 		this.dergonWorld = world;
-
-		if (handler != null)
-			this.handler = handler;
-		else
-			this.handler = new DergonHandler(this);
-
+		this.handler = handler;
 		this.spawnLocation = targetLocation;
 		this.dergonID = dergonID;
 
@@ -61,11 +56,25 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * This constructor is needed to prevent issues with unloading and loading again.
+	 * Bukkit likes when custom mobs have this constructor. Have it not do anything.
+	 * Called when re-loading a dergon that was allowed to unload naturally or spawned with the summon command.
 	 */
 	public Dergon(World bukkitWorld)
 	{
-		this(ObjectWrapper.convert(bukkitWorld.getWorld()), null, null, -1);
+		super(null);
+		children = null;
+		dergonHead = null;
+		dergonBody = null;
+		dergonWingRight = null;
+		dergonWingLeft = null;
+		dergonTailSection0 = null;
+		dergonTailSection1 = null;
+		dergonTailSection2 = null;
+		handler = null;
+		dergonWorld = null;
+		die();
+
+		Dergons.Debugger.debugInfo("Rogue Dergon attempted to spawn with UUID: " + getUniqueID() + ". Exterminating.");
 	}
 
 	/**
@@ -83,31 +92,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			if (ridingPlayer == null && random.nextFloat() < 0.3F)
-			{
-				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
-				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
-
-				if (isValidTarget(unluckyChum))
-				{
-					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
-
-					if (rawChum != null)
-					{
-						rawChum.startRiding(this);
-						ridingPlayer = unluckyChum;
-						handler.handleDergonMount(ridingPlayer);
-
-						// Crumple their elytra if they're wearing one
-						RunsafeMeta chestplate = ridingPlayer.getChestplate();
-						if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
-						{
-							chestplate.setDurability((short) (chestplate.getDurability() + 100));
-							ridingPlayer.setChestplate(chestplate);
-						}
-					}
-				}
-			}
+			attemptPlayerPickup();
 
 			targetEntity = null;
 			targetX = locX + random.nextInt(200) - 100;
@@ -167,6 +152,37 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		targetEntity = null;
+	}
+
+	private void attemptPlayerPickup()
+	{
+		if (ridingPlayer != null)
+			return;
+
+		List<IPlayer> closePlayers = getLocation().getPlayersInRange(10);
+		IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
+
+		if (!isValidTarget(unluckyChum))
+			return;
+
+		// Always pick up a player if they're wearing an elytra.
+		RunsafeMeta chestplate = unluckyChum.getChestplate();
+		if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
+		{
+			// Crumple their elytra
+			chestplate.setDurability((short) (chestplate.getDurability() + 100));
+			unluckyChum.setChestplate(chestplate);
+		}
+		else if (!(random.nextFloat() < 0.3F)) // If they're not flying and get lucky, avoid picking them up.
+			return;
+
+		EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
+		if (rawChum == null)
+			return;
+
+		rawChum.startRiding(this);
+		ridingPlayer = unluckyChum;
+		handler.handleDergonMount(ridingPlayer);
 	}
 
 	/**
@@ -712,19 +728,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return dergonID;
 	}
 
-	public void setDergonID(int newID)
-	{
-		this.dergonID = newID;
-	}
-
 	public ILocation getSpawnLocation()
 	{
 		return spawnLocation;
-	}
-
-	public void setSpawnLocation(ILocation newLocation)
-	{
-		spawnLocation = newLocation;
 	}
 
 	/*
