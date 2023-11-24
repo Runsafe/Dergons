@@ -214,10 +214,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				info.add(
 					"&5ID: &r " + id +
 					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-					", \n&9Target: &r " + ((target == null) ? "&cN/A&r" : target.getPrettyName()) +
-					", \n&9SpawnLocation: &r" + ((spawnLocation == null) ? "&cN/A&r" : locationInfo(spawnLocation)) +
-					", \n&9Location: &r" + ((dergonLocation == null) ? "&cN/A&r" : locationInfo(dergonLocation)) +
-					", \n&9Destination: &r" + ((targetDestination == null) ? "&cN/A&r" : locationInfo(targetDestination))
+					", \n&9Target: &r " + target.getPrettyName() +
+					", \n&9SpawnLocation: &r" + locationInfo(spawnLocation) +
+					", \n&9Location: &r" + locationInfo(dergonLocation) +
+					", \n&9Destination: &r" + locationInfo(targetDestination)
 				);
 			}
 			else if (isUnloaded)
@@ -226,7 +226,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 				info.add(
 					"&5ID: &r " + id +
 					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + "), &cUnloaded Dergon&r" +
-					"\n&9UnloadLocation: &r" + ((unloadLocation == null) ? "&cN/A&r" : locationInfo(unloadLocation))
+					"\n&9UnloadLocation: &r" + locationInfo(unloadLocation)
 				);
 			}
 			else info.add("&5ID: &r " + id +", &4Null Dergon.");
@@ -236,6 +236,9 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 
 	private String locationInfo(ILocation location)
 	{
+		if (location == null)
+			return "&cN/A&r";
+
 		return String.format(
 			"&eWorld:&r %s &eX:&r %.0f &eY:&r %.0f &eZ:&r %.0f",
 			location.getWorld().getName(), location.getX(), location.getY(), location.getZ()
