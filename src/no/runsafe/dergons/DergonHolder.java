@@ -34,27 +34,6 @@ public class DergonHolder
 			processStep();
 	}
 
-	public DergonHolder(Dergon newDergon, DergonHandler handler, int dergonID, float health)
-	{
-		this.spawnLocation = newDergon.getLocation();
-		this.handler = handler;
-		this.heldDergon = newDergon;
-		this.world = heldDergon.getDergonWorld();
-
-		this.minStep = 0;
-		this.maxStep = 0;
-		this.stepCount = 0;
-		this.minY = 0;
-		this.baseHealth = health;
-		this.maxHealth = health;
-		this.dergonID = dergonID;
-
-		heldDergon.setCustomName("§4Dergon: " + dergonID);
-		heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
-		heldDergon.setHealth(maxHealth);
-		heldDergon.setDergonID(dergonID);
-	}
-
 	private void attemptSpawn()
 	{
 		ILocation dergonRepellentLocation = handler.getDergonRepellentLocation();
@@ -134,11 +113,6 @@ public class DergonHolder
 	public ILocation getUnloadLocation()
 	{
 		return unloadLocation;
-	}
-
-	public IWorld getWorld()
-	{
-		return world;
 	}
 
 	public Boolean isHoldingDergon()

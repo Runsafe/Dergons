@@ -96,9 +96,6 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 					continue;
 
 				dergonChunks.put(dergonID, chunk);
-				Dergons.console.logInformation("Unloading dergon with ID: " + dergonID +
-						" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
-				); // TODO : remove this
 				Dergons.Debugger.debugInfo("Unloading dergon with ID: " + dergonID +
 					" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
 				);
@@ -124,9 +121,6 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 			int dergonID = dergonChunkEntry.getKey();
 			handler.reloadDergon(dergonID);
 			reloadedDergons.add(dergonID);
-			Dergons.console.logInformation("Reloading dergon with ID: " + dergonID +
-					" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
-			); // TODO : remove this
 			Dergons.Debugger.debugInfo("Reloading dergon with ID: " + dergonID +
 				" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
 			);

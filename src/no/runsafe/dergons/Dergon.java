@@ -738,11 +738,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return spawnLocation;
 	}
 
-	public void setSpawnLocation(ILocation newLocation)
-	{
-		spawnLocation = newLocation;
-	}
-
 	/*
 	 * Dergon bodily appendages.
 	 * Only their hitboxes.

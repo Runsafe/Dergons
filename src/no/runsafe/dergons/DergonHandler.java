@@ -193,11 +193,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		new DergonMountEvent(player).Fire();
 	}
 
-	public Set<Integer> getAllDergonIDs()
-	{
-		return activeDergons.keySet();
-	}
-
 	public List<String> getAllDergonInfo()
 	{
 		List<String> info = new ArrayList<>();
