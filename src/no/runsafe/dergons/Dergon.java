@@ -84,31 +84,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// Check if we have any close players, if we do, fly away.
 		if (dergonLocation != null && !dergonLocation.getPlayersInRange(10).isEmpty())
 		{
-			if (ridingPlayer == null && random.nextFloat() < 0.3F)
-			{
-				List<IPlayer> closePlayers = dergonLocation.getPlayersInRange(10);
-				IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
-
-				if (isValidTarget(unluckyChum))
-				{
-					EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
-
-					if (rawChum != null)
-					{
-						rawChum.startRiding(this);
-						ridingPlayer = unluckyChum;
-						handler.handleDergonMount(ridingPlayer);
-
-						// Crumple their elytra if they're wearing one
-						RunsafeMeta chestplate = ridingPlayer.getChestplate();
-						if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
-						{
-							chestplate.setDurability((short) (chestplate.getDurability() + 100));
-							ridingPlayer.setChestplate(chestplate);
-						}
-					}
-				}
-			}
+			attemptPlayerPickup();
 
 			targetEntity = null;
 			targetX = locX + random.nextInt(200) - 100;
@@ -168,6 +144,37 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		targetEntity = null;
+	}
+
+	private void attemptPlayerPickup()
+	{
+		if (ridingPlayer != null)
+			return;
+
+		List<IPlayer> closePlayers = getLocation().getPlayersInRange(10);
+		IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
+
+		if (!isValidTarget(unluckyChum))
+			return;
+
+		// Always pick up a player if they're wearing an elytra.
+		RunsafeMeta chestplate = unluckyChum.getChestplate();
+		if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
+		{
+			// Crumple their elytra
+			chestplate.setDurability((short) (chestplate.getDurability() + 100));
+			unluckyChum.setChestplate(chestplate);
+		}
+		else if (!(random.nextFloat() < 0.3F)) // If they're not flying and get lucky, avoid picking them up.
+			return;
+
+		EntityHuman rawChum = ObjectUnwrapper.getMinecraft(unluckyChum);
+		if (rawChum == null)
+			return;
+
+		rawChum.startRiding(this);
+		ridingPlayer = unluckyChum;
+		handler.handleDergonMount(ridingPlayer);
 	}
 
 	/**
