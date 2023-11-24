@@ -70,13 +70,13 @@ public class DergonHolder
 		}
 
 		if (idealPlayer != null)
-			if (spawn(spawnLocation, 0))
+			if (spawn(spawnLocation, maxHealth))
 				return;
 
 		handler.removeDergon(dergonID); // no dergon was spawned, remove it from list.
 	}
 
-	private boolean spawn(ILocation setLocation, float damageTaken)
+	private boolean spawn(ILocation setLocation, float health)
 	{
 		World rawWorld = ObjectUnwrapper.getMinecraft(world);
 		if (rawWorld != null)
@@ -85,7 +85,7 @@ public class DergonHolder
 			heldDergon.setPosition(setLocation.getX(), setLocation.getY(), setLocation.getZ());
 			heldDergon.setCustomName("Dergon");
 			heldDergon.getAttributeInstance(GenericAttributes.maxHealth).setValue(maxHealth);
-			heldDergon.setHealth(maxHealth - damageTaken);
+			heldDergon.setHealth(health);
 			rawWorld.addEntity(heldDergon);
 			return true;
 		}
@@ -148,12 +148,15 @@ public class DergonHolder
 
 	public float getMaxHealth()
 	{
-		return heldDergon.getMaxHealth();
+		if (!isUnloaded)
+			return heldDergon.getMaxHealth();
+		else return unloadedHealth;
 	}
 
 	public void setUnloaded()
 	{
 		unloadLocation = heldDergon.getLocation();
+		unloadedHealth = heldDergon.getHealth();
 		isUnloaded = true;
 		heldDergon.setHealth(0);
 		heldDergon.die();
@@ -179,9 +182,9 @@ public class DergonHolder
 		currentStep++;
 	}
 
-	public void reloadDergon(float damageDealt)
+	public void reloadDergon()
 	{
-		spawn(unloadLocation, damageDealt);
+		spawn(unloadLocation, unloadedHealth);
 	}
 
 	@Nullable
@@ -196,6 +199,7 @@ public class DergonHolder
 	private boolean isUnloaded = false;
 	private int currentStep = 0;
 	private float maxHealth = 0;
+	private float unloadedHealth = 0;
 	private final ILocation spawnLocation;
 	private ILocation unloadLocation;
 	private final IWorld world;

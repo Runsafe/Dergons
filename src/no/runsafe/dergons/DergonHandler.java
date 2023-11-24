@@ -45,12 +45,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (holder == null)
 			return;
 
-		float damageDealt = 0;
-		if (damageCounter.get(dergonID) != null)
-			for (Map.Entry<IPlayer, Float> node : damageCounter.get(dergonID).entrySet())
-				damageDealt += node.getValue();
-
-		holder.reloadDergon(damageDealt);
+		holder.reloadDergon();
 	}
 
 	public int spawnDergon(ILocation location)
@@ -229,7 +224,8 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 			{
 				ILocation unloadLocation = dergon.getUnloadLocation();
 				info.add(
-					"&5ID: &r " + id + ", &cUnloaded Dergon&r" +
+					"&5ID: &r " + id +
+					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + "), &cUnloaded Dergon&r" +
 					"\n&9UnloadLocation: &r" + ((unloadLocation == null) ? "&cN/A&r" : locationInfo(unloadLocation))
 				);
 			}
