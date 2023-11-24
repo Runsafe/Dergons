@@ -5,6 +5,7 @@ import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.entity.*;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
 import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
+import no.runsafe.framework.api.event.world.IChunkLoad;
 import no.runsafe.framework.api.event.world.IChunkUnload;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
@@ -13,9 +14,14 @@ import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEv
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
-public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IChunkUnload
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IChunkUnload, IChunkLoad
 {
-	public PlayerMonitor(DergonHandler handler)
+	public EventMonitor(DergonHandler handler)
 	{
 		this.handler = handler;
 	}
@@ -84,10 +90,54 @@ public class PlayerMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IC
 		// Check if player unloaded a chunk with a dergon in it so we can register it.
 		for (IEntity entity : chunk.getEntities())
 			if (entity instanceof ILivingEntity)
-				handler.unloadIfDergon(entity.getUniqueId());
+			{
+				int dergonID = handler.unloadIfDergon(entity.getUniqueId());
+				if (dergonID <= 0)
+					continue;
+
+				dergonChunks.put(dergonID, chunk);
+				Dergons.console.logInformation("Unloading dergon with ID: " + dergonID +
+						" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
+				); // TODO : remove this
+				Dergons.Debugger.debugInfo("Unloading dergon with ID: " + dergonID +
+					" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
+				);
+			}
 
 		return true;
 	}
 
+	@Override
+	public void OnChunkLoad(IChunk chunk)
+	{
+		// Check if re-loading a chunk that had a dergon in it, if so spawn it back in.
+		if (dergonChunks.isEmpty())
+			return;
+
+		List<Integer> reloadedDergons = new ArrayList<>();
+		for (Map.Entry<Integer, IChunk> dergonChunkEntry : dergonChunks.entrySet())
+		{
+			IChunk dergonChunk = dergonChunkEntry.getValue();
+			if (chunk.getX() != dergonChunk.getX() || chunk.getZ() != dergonChunk.getZ())
+				continue;
+
+			int dergonID = dergonChunkEntry.getKey();
+			handler.reloadDergon(dergonID);
+			reloadedDergons.add(dergonID);
+			Dergons.console.logInformation("Reloading dergon with ID: " + dergonID +
+					" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
+			); // TODO : remove this
+			Dergons.Debugger.debugInfo("Reloading dergon with ID: " + dergonID +
+				" at *chunk coordinates* X: " + chunk.getX() + " Z: " + chunk.getZ()
+			);
+		}
+
+		// Remove loaded dergons from list.
+		if (!reloadedDergons.isEmpty())
+			for (int dergonID : reloadedDergons)
+				dergonChunks.remove(dergonID);
+	}
+
 	private final DergonHandler handler;
+	private static final HashMap<Integer, IChunk> dergonChunks = new HashMap<>(0);
 }

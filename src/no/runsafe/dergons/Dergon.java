@@ -5,7 +5,6 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
-import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.WorldEffect;
@@ -31,7 +30,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	public Dergon(IWorld world, DergonHandler handler, ILocation targetLocation, int dergonID)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
-		Dergons.Debugger.debugInfo("Spawning dergon with ID: " + getUniqueID() + (handler == null ? " (reloaded?)":""));
+		Dergons.Debugger.debugInfo("Spawning dergon with UUID: " + getUniqueID());
 
 		this.children = new EntityComplexPart[]
 		{
@@ -49,12 +48,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		this.fireProof = true;
 		this.persistent = true;
 		this.dergonWorld = world;
-
-		if (handler != null)
-			this.handler = handler;
-		else
-			this.handler = new DergonHandler(this);
-
+		this.handler = handler;
 		this.spawnLocation = targetLocation;
 		this.dergonID = dergonID;
 
@@ -62,11 +56,25 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * This constructor is needed to prevent issues with unloading and loading again.
+	 * Bukkit likes when custom mobs have this constructor. Have it not do anything.
+	 * Called when re-loading a dergon that was allowed to unload naturally or spawned with the summon command.
 	 */
 	public Dergon(World bukkitWorld)
 	{
-		this(ObjectWrapper.convert(bukkitWorld.getWorld()), null, null, -1);
+		super(null);
+		children = null;
+		dergonHead = null;
+		dergonBody = null;
+		dergonWingRight = null;
+		dergonWingLeft = null;
+		dergonTailSection0 = null;
+		dergonTailSection1 = null;
+		dergonTailSection2 = null;
+		handler = null;
+		dergonWorld = null;
+		die();
+
+		Dergons.Debugger.debugInfo("Rogue Dergon attempted to spawn with UUID: " + getUniqueID() + ". Exterminating.");
 	}
 
 	/**
