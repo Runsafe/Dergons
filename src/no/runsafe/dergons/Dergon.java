@@ -728,11 +728,6 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		return dergonID;
 	}
 
-	public void setDergonID(int newID)
-	{
-		this.dergonID = newID;
-	}
-
 	public ILocation getSpawnLocation()
 	{
 		return spawnLocation;
