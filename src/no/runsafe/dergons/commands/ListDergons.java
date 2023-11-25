@@ -54,7 +54,7 @@ public class ListDergons extends ExecutableCommand
 				info.add(
 					"&5ID: &r " + id +
 					", &9Health: &r (" + dergon.getHealth() + "/" + dergon.getMaxHealth() + ")" +
-					", \n&9Target: &r " + target.getPrettyName() +
+					", \n&9Target: &r " + (target == null ? "&cN/A&r" : target.getPrettyName()) +
 					", \n&9SpawnLocation: &r" + locationInfo(spawnLocation) +
 					", \n&9Location: &r" + locationInfo(dergonLocation) +
 					", \n&9Destination: &r" + locationInfo(targetDestination)

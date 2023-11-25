@@ -143,14 +143,14 @@ public class DergonHolder
 
 	public float getHealth()
 	{
-		return heldDergon.getHealth();
+		if (!isUnloaded && heldDergon != null)
+			return heldDergon.getHealth();
+		else return unloadedHealth;
 	}
 
 	public float getMaxHealth()
 	{
-		if (!isUnloaded)
-			return heldDergon.getMaxHealth();
-		else return unloadedHealth;
+		return maxHealth;
 	}
 
 	public void setUnloaded()
@@ -184,6 +184,7 @@ public class DergonHolder
 
 	public void reloadDergon()
 	{
+		isUnloaded = false;
 		spawn(unloadLocation, unloadedHealth);
 	}
 
@@ -198,8 +199,8 @@ public class DergonHolder
 	private Dergon heldDergon;
 	private boolean isUnloaded = false;
 	private int currentStep = 0;
-	private float maxHealth = 0;
-	private float unloadedHealth = 0;
+	private float maxHealth = -1;
+	private float unloadedHealth = -1;
 	private final ILocation spawnLocation;
 	private ILocation unloadLocation;
 	private final IWorld world;
