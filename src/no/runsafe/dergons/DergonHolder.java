@@ -14,19 +14,12 @@ import java.util.UUID;
 
 public class DergonHolder
 {
-	public DergonHolder(ILocation spawnLocation, int min, int max, int steps, int minY, DergonHandler handler, int dergonID, float baseHealth)
+	public DergonHolder(ILocation spawnLocation, DergonHandler handler, int dergonID)
 	{
 		this.spawnLocation = spawnLocation;
 		this.handler = handler;
 
 		world = spawnLocation.getWorld();
-
-		this.minStep = min;
-		this.maxStep = max;
-		this.stepCount = steps;
-		this.baseHealth = baseHealth;
-
-		this.minY = minY;
 
 		this.dergonID = dergonID;
 
@@ -36,9 +29,8 @@ public class DergonHolder
 
 	private void attemptSpawn()
 	{
-		ILocation dergonRepellentLocation = handler.getDergonRepellentLocation();
-		int dergonRepellentRadius = handler.getDergonRepellentRadius();
-		dergonRepellentRadius *= dergonRepellentRadius;
+		ILocation dergonRepellentLocation = Config.getDergonRepellentLocation();
+		int dergonRepellentRadius = Config.getDergonRepellentRadiusSquared();
 
 		// Check if trying to spawn in anti-dergon bubble
 		if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
@@ -50,6 +42,7 @@ public class DergonHolder
 		}
 
 		IPlayer idealPlayer = null;
+		float baseHealth = Config.getBaseHealth();
 		maxHealth = baseHealth;
 
 		for (IPlayer player : world.getPlayers())
@@ -63,7 +56,7 @@ public class DergonHolder
 				&& dergonRepellentLocation.distanceSquared(playerLocation) < dergonRepellentRadius)
 				continue;
 
-			if (idealPlayer == null && playerLocation.getY() > minY)
+			if (idealPlayer == null && playerLocation.getY() > Config.getMinSpawnY())
 				idealPlayer = player;
 
 			maxHealth += (baseHealth / 2);
@@ -172,13 +165,13 @@ public class DergonHolder
 	{
 		spawnLocation.playSound(random.nextInt(2) == 1 ? Sound.Creature.EnderDragon.Growl : Sound.Creature.EnderDragon.Flap, 30, 1);
 
-		if (currentStep == stepCount)
+		if (currentStep == Config.getStepCount())
 		{
 			attemptSpawn();
 			return;
 		}
 
-		Dergons.scheduler.startSyncTask(this::processStep, random.nextInt(maxStep) + minStep);
+		Dergons.scheduler.startSyncTask(this::processStep, random.nextInt(Config.getEventMaxTime()) + Config.getEventMinTime());
 		currentStep++;
 	}
 
@@ -204,11 +197,6 @@ public class DergonHolder
 	private final ILocation spawnLocation;
 	private ILocation unloadLocation;
 	private final IWorld world;
-	private final int minStep;
-	private final int maxStep;
-	private final int minY;
-	private final int stepCount;
-	private final float baseHealth;
 	private final Random random = new Random();
 	private final DergonHandler handler;
 	private final int dergonID;
