@@ -91,6 +91,9 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 		if (handler.getActiveDergons().isEmpty())
 			return true;
 
+		if (!Config.isDergonWorld(chunk.getWorld()))
+			return true;
+
 		for (IEntity entity : chunk.getEntities())
 			if (entity instanceof ILivingEntity)
 			{
@@ -112,6 +115,9 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 	{
 		// Check if re-loading a chunk that had a dergon in it, if so spawn it back in.
 		if (dergonChunks.isEmpty())
+			return;
+
+		if (!Config.isDergonWorld(chunk.getWorld()))
 			return;
 
 		List<Integer> reloadedDergons = new ArrayList<>();
