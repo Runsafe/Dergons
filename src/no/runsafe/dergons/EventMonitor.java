@@ -88,6 +88,9 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 	public boolean OnChunkUnload(IChunk chunk)
 	{
 		// Check if player unloaded a chunk with a dergon in it so we can register it.
+		if (handler.getActiveDergons().isEmpty())
+			return true;
+
 		for (IEntity entity : chunk.getEntities())
 			if (entity instanceof ILivingEntity)
 			{
