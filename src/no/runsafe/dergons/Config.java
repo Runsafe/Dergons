@@ -127,10 +127,10 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 
 		for (String antiDergonRegionName : antiDergonRegionsInWorld)
 			if (insideRegions.contains(antiDergonRegionName))
-				{
-					Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside an anti dergon region.");
-					return false;
-				}
+			{
+				Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside an anti dergon region.");
+				return false;
+			}
 
 		return true;
 	}
