@@ -122,6 +122,9 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 			return true;
 
 		List<String> insideRegions = worldGuard.getRegionsAtLocation(location);
+		if (insideRegions == null || insideRegions.isEmpty())
+			return true;
+
 		for (String antiDergonRegionName : antiDergonRegionsInWorld)
 			if (insideRegions.contains(antiDergonRegionName))
 				{
