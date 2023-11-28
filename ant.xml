@@ -7,8 +7,10 @@
     <property name="framework.dir" value="../../Framework"/>
     <property name="runsafe.dir" value="${framework.dir}/lastStable/archive/build/jar"/>
     <property name="lib.dir" value="${framework.dir}/workspace/lib"/>
+    <property name="worldguard.dir" value="../../WorldGuardBridge/lastStable/archive/build/jar"/>
 
     <path id="classpath">
+        <fileset dir="${worldguard.dir}" includes="*.jar"/>
         <fileset dir="${runsafe.dir}" includes="framework.jar"/>
         <fileset dir="${lib.dir}" includes="*.jar"/>
     </path>

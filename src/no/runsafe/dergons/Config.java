@@ -6,13 +6,21 @@ import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.tools.nms.EntityRegister;
+import no.runsafe.worldguardbridge.IRegionControl;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Config implements IConfigurationChanged, IPluginEnabled
 {
+	public Config(IRegionControl worldGuard)
+	{
+		Config.worldGuard = worldGuard;
+	}
+
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
@@ -30,6 +38,8 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		dergonRepellentRadiusSquared = config.getConfigValueAsInt("antiDergonBubble.radius");
 		dergonRepellentRadiusSquared *= dergonRepellentRadiusSquared;
 		dergonRepellentLocation = config.getConfigValueAsLocation("antiDergonBubble.location");
+
+		antiDergonRegions.putAll(config.getConfigSectionsAsList("antiDergonRegions"));
 
 		worldNames.clear();
 		worldNames.addAll(config.getConfigValueAsList("dergonWorlds"));
@@ -88,11 +98,38 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	public static boolean isValidSpawnLocation(ILocation location)
 	{
 		if (location == null)
+		{
+			Dergons.Debugger.debugFine("Failing to spawn dergon due to null location.");
 			return false;
+		}
 
-		return dergonRepellentRadiusSquared == 0 || dergonRepellentLocation == null
-			|| !location.getWorld().isWorld(dergonRepellentLocation.getWorld())
-			|| !(dergonRepellentLocation.distanceSquared(location) < dergonRepellentRadiusSquared);
+		IWorld world = location.getWorld();
+		// Check if in anti dergon bubble.
+		if(!(dergonRepellentRadiusSquared == 0 || dergonRepellentLocation == null
+			|| !world.isWorld(dergonRepellentLocation.getWorld())
+			|| !(dergonRepellentLocation.distanceSquared(location) < dergonRepellentRadiusSquared)))
+		{
+			Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside the anti dergon bubble.");
+			return false;
+		}
+
+		// Check if in a region it shouldn't spawn in.
+		if(!worldGuard.serverHasWorldGuard())
+			return true;
+
+		List<String> antiDergonRegionsInWorld = antiDergonRegions.get(world.getName());
+		if (antiDergonRegionsInWorld.isEmpty())
+			return true;
+
+		List<String> insideRegions = worldGuard.getRegionsAtLocation(location);
+		for (String antiDergonRegionName : antiDergonRegionsInWorld)
+			if (insideRegions.contains(antiDergonRegionName))
+				{
+					Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside an anti dergon region.");
+					return false;
+				}
+
+		return true;
 	}
 
 	public static boolean isDergonWorldListEmpty()
@@ -125,5 +162,7 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	private static int spawnChance;
 	private static int dergonRepellentRadiusSquared;
 	private static ILocation dergonRepellentLocation;
+	private static final Map<String, List<String>> antiDergonRegions = new HashMap<>();
 	private static final List<String> worldNames = new ArrayList<>(0);
+	private static IRegionControl worldGuard;
 }

@@ -2,6 +2,7 @@ name: Dergons
 main: no.runsafe.dergons.Dergons
 version: 1.0.@BUILD@
 author: Kruithne
+depend: [RunsafeWorldGuardBridge]
 description:
 commands:
   dergons:
