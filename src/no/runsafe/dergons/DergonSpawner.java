@@ -4,7 +4,6 @@ import no.runsafe.framework.api.*;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,13 +17,13 @@ public class DergonSpawner implements IConfigurationChanged
 
 	private String attemptSpawn()
 	{
-		if (worldNames.isEmpty())
+		if (Config.isDergonWorldListEmpty())
 			return "Failed, no worlds.";
 
 		List<IPlayer> selectedPlayers = new ArrayList<>(0);
 		for (IPlayer player : Dergons.server.getOnlinePlayers())
 		{
-			if (player == null || !isDergonWorld(player.getWorld()))
+			if (player == null || !Config.isDergonWorld(player.getWorld()))
 				continue;
 
 			ILocation playerLocation = player.getLocation();
@@ -32,19 +31,17 @@ public class DergonSpawner implements IConfigurationChanged
 				continue;
 
 			double playerY = playerLocation.getY(); // The player's Y position.
-			if (playerY < minSpawnY) // Check the player is above the minimum spawn point.
+			if (playerY < Config.getMinSpawnY()) // Check the player is above the minimum spawn point.
 				continue;
 
 			if (player.getWorld().getHighestBlockYAt(playerLocation) > playerY) // Check nothing is blocking the sky.
 				continue;
 
 			// Check if we're in the anti dergon bubble
-			if (antiDergonBubbleRadiusSquared != 0 && antiDergonBubbleLocation != null
-					&& playerLocation.getWorld().isWorld(antiDergonBubbleLocation.getWorld())
-					&& antiDergonBubbleLocation.distanceSquared(playerLocation) < antiDergonBubbleRadiusSquared)
+			if (Config.isValidSpawnLocation(playerLocation))
 				continue;
 
-			if (random.nextInt(100) <= spawnChance + ((playerY - minSpawnY) * 0.5))
+			if (random.nextInt(100) <= Config.getSpawnChance() + ((playerY - Config.getMinSpawnY()) * 0.5))
 				selectedPlayers.add(player);
 		}
 
@@ -55,25 +52,9 @@ public class DergonSpawner implements IConfigurationChanged
 		return "Spawning @ " + selectedPlayer.getName() + " with ID: " + handler.spawnDergon(selectedPlayer.getLocation());
 	}
 
-	public boolean isDergonWorld(@Nullable IWorld world)
-	{
-		if (world == null) return false;
-
-		return worldNames.contains(world.getName());
-	}
-
 	@Override
 	public void OnConfigurationChanged(IConfiguration config)
 	{
-		spawnChance = config.getConfigValueAsInt("spawnChance");
-		minSpawnY = config.getConfigValueAsInt("spawnMinY");
-		antiDergonBubbleLocation = config.getConfigValueAsLocation("antiDergonBubble.location");
-		antiDergonBubbleRadiusSquared = config.getConfigValueAsInt("antiDergonBubble.radius");
-		antiDergonBubbleRadiusSquared *= antiDergonBubbleRadiusSquared;
-
-		worldNames.clear();
-		worldNames.addAll(config.getConfigValueAsList("dergonWorlds"));
-
 		if (timerID > -1)
 			Dergons.scheduler.cancelTask(timerID);
 
@@ -86,10 +67,5 @@ public class DergonSpawner implements IConfigurationChanged
 
 	private final DergonHandler handler;
 	private int timerID;
-	private int spawnChance;
-	private int minSpawnY;
-	private int antiDergonBubbleRadiusSquared;
-	private ILocation antiDergonBubbleLocation;
-	private final List<String> worldNames = new ArrayList<>(0);
 	private final Random random = new Random();
 }

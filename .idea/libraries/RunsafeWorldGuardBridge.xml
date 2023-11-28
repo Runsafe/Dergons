@@ -1,0 +1,9 @@
+<component name="libraryTable">
+    <library name="RunsafeWorldGuardBridge">
+        <CLASSES>
+            <root url="jar://$PROJECT_DIR$/../out/RunsafeWorldGuardBridge.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+    </library>
+</component>

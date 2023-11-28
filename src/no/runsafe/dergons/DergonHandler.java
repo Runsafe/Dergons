@@ -3,17 +3,14 @@ package no.runsafe.dergons;
 import net.minecraft.server.v1_12_R1.*;
 import no.runsafe.dergons.event.*;
 import no.runsafe.framework.api.*;
-import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
-import no.runsafe.framework.api.event.plugin.IPluginEnabled;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.bossBar.*;
-import no.runsafe.framework.tools.nms.EntityRegister;
 
 import java.util.*;
 
 import static java.lang.Math.round;
 
-public class DergonHandler implements IConfigurationChanged, IPluginEnabled
+public class DergonHandler
 {
 	public DergonHandler()
 	{
@@ -53,10 +50,10 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		if (location == null || location.getWorld() == null)
 			return -1;
 
-		location.offset(0, spawnY, 0); // Set the location to be high in the sky.
+		location.offset(0, Config.getSpawnY(), 0); // Set the location to be high in the sky.
 		activeDergons.put( // Construct the dergon.
 			currentDergonID,
-			new DergonHolder(location, eventMinTime, eventMaxTime, stepCount, minSpawnY, this, currentDergonID, baseHealth)
+			new DergonHolder(location, this, currentDergonID)
 		);
 		return currentDergonID++;
 	}
@@ -92,29 +89,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		removeBossBar(ID);
 	}
 
-	@Override
-	public void OnConfigurationChanged(IConfiguration config)
-	{
-		vexChance = config.getConfigValueAsFloat("vexChance");
-		spawnY = config.getConfigValueAsInt("spawnY");
-		eventMinTime = config.getConfigValueAsInt("eventMinTime");
-		eventMaxTime = config.getConfigValueAsInt("eventMaxTime");
-		despawnTime = config.getConfigValueAsInt("despawnTimer");
-		stepCount = config.getConfigValueAsInt("eventSteps");
-		minSpawnY = config.getConfigValueAsInt("spawnMinY");
-		baseDamage = config.getConfigValueAsFloat("baseDamage");
-		baseHealth = config.getConfigValueAsFloat("baseHealth");
-
-		dergonRepellentRadius = config.getConfigValueAsInt("antiDergonBubble.radius");
-		dergonRepellentLocation = config.getConfigValueAsLocation("antiDergonBubble.location");
-	}
-
-	@Override
-	public void OnPluginEnabled()
-	{
-		EntityRegister.registerEntity(Dergon.class, "Dergon", 63);
-	}
-
 	public float handleDergonDamage(Dergon dergon, DamageSource source, float damage)
 	{
 		if (source.p().equalsIgnoreCase("arrow"))
@@ -143,11 +117,6 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		}
 
 		return damage;
-	}
-
-	public float getDergonAttackingDamage()
-	{
-		return baseDamage;
 	}
 
 	public void handleDergonDeath(Dergon dergon, boolean quickKill)
@@ -250,38 +219,7 @@ public class DergonHandler implements IConfigurationChanged, IPluginEnabled
 		return -1;
 	}
 
-	public float getVexChance()
-	{
-		return vexChance;
-	}
-
-	public int getDespawnTime()
-	{
-		return despawnTime;
-	}
-
-	public int getDergonRepellentRadius()
-	{
-		return dergonRepellentRadius;
-	}
-
-	public ILocation getDergonRepellentLocation()
-	{
-		return dergonRepellentLocation;
-	}
-
 	private static boolean showBarIDs = false;
-	private static float vexChance;
-	private static int spawnY;
-	private static int eventMinTime;
-	private static int eventMaxTime;
-	private static int despawnTime;
-	private static int stepCount;
-	private static int minSpawnY;
-	private static float baseDamage;
-	private static float baseHealth;
-	private static int dergonRepellentRadius;
-	private static ILocation dergonRepellentLocation;
 	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
 	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
 	private static final HashMap<Integer, IBossBar> dergonBossBars = new HashMap<>(0);

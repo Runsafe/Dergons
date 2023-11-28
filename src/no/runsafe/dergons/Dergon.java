@@ -208,7 +208,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			return;
 
 		// Handle despawn timer
-		if (idleTicks >= handler.getDespawnTime())
+		if (idleTicks >= Config.getDespawnTime())
 		{
 			handler.killDergon(dergonID);
 			return;
@@ -460,7 +460,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Spawn in some creatures to help defend the dergon
-		if (attacker instanceof EntityHuman && random.nextFloat() < (handler.getVexChance() / 100))
+		if (attacker instanceof EntityHuman && random.nextFloat() < (Config.getVexChance() / 100))
 		{
 			ILocation attackerLocation = dergonWorld.getLocation(attacker.locX, attacker.locY + 5, attacker.locZ);
 			if (attackerLocation == null)
@@ -507,7 +507,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	{
 		for (Entity entity : list)
 			if (entity instanceof EntityLiving)
-					entity.damageEntity(DamageSource.mobAttack(this), handler.getDergonAttackingDamage());
+				entity.damageEntity(DamageSource.mobAttack(this), Config.getBaseDamage());
 	}
 
 	/**
