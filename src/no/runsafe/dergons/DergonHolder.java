@@ -29,13 +29,8 @@ public class DergonHolder
 
 	private void attemptSpawn()
 	{
-		ILocation dergonRepellentLocation = Config.getDergonRepellentLocation();
-		int dergonRepellentRadius = Config.getDergonRepellentRadiusSquared();
-
 		// Check if trying to spawn in anti-dergon bubble
-		if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
-			&& world.isWorld(dergonRepellentLocation.getWorld())
-			&& dergonRepellentLocation.distanceSquared(spawnLocation) < dergonRepellentRadius)
+		if (!Config.isValidSpawnLocation(spawnLocation))
 		{
 			handler.removeDergon(dergonID);
 			return;
@@ -49,11 +44,6 @@ public class DergonHolder
 		{
 			ILocation playerLocation = player.getLocation();
 			if (playerLocation == null || playerLocation.distanceSquared(spawnLocation) > 40000) // 200 blocks
-				continue;
-
-			if (dergonRepellentRadius != 0 && dergonRepellentLocation != null
-				&& playerLocation.getWorld().isWorld(dergonRepellentLocation.getWorld())
-				&& dergonRepellentLocation.distanceSquared(playerLocation) < dergonRepellentRadius)
 				continue;
 
 			if (idealPlayer == null && playerLocation.getY() > Config.getMinSpawnY())

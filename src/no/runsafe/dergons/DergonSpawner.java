@@ -38,10 +38,7 @@ public class DergonSpawner implements IConfigurationChanged
 				continue;
 
 			// Check if we're in the anti dergon bubble
-			ILocation antiDergonBubbleLocation = Config.getDergonRepellentLocation();
-			if (Config.getDergonRepellentRadiusSquared() != 0 && antiDergonBubbleLocation != null
-					&& playerLocation.getWorld().isWorld(antiDergonBubbleLocation.getWorld())
-					&& antiDergonBubbleLocation.distanceSquared(playerLocation) < Config.getDergonRepellentRadiusSquared())
+			if (Config.isValidSpawnLocation(playerLocation))
 				continue;
 
 			if (random.nextInt(100) <= Config.getSpawnChance() + ((playerY - Config.getMinSpawnY()) * 0.5))

@@ -80,19 +80,19 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		return baseHealth;
 	}
 
-	public static int getDergonRepellentRadiusSquared()
-	{
-		return dergonRepellentRadiusSquared;
-	}
-
-	public static ILocation getDergonRepellentLocation()
-	{
-		return dergonRepellentLocation;
-	}
-
 	public static int getSpawnChance()
 	{
 		return spawnChance;
+	}
+
+	public static boolean isValidSpawnLocation(ILocation location)
+	{
+		if (location == null)
+			return false;
+
+		return dergonRepellentRadiusSquared == 0 || dergonRepellentLocation == null
+			|| !location.getWorld().isWorld(dergonRepellentLocation.getWorld())
+			|| !(dergonRepellentLocation.distanceSquared(location) < dergonRepellentRadiusSquared);
 	}
 
 	public static boolean isDergonWorldListEmpty()
