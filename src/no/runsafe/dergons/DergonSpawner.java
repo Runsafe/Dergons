@@ -38,7 +38,7 @@ public class DergonSpawner implements IConfigurationChanged
 				continue;
 
 			// Check if we're in the anti dergon bubble
-			if (Config.isValidSpawnLocation(playerLocation))
+			if (!Config.isValidSpawnLocation(playerLocation))
 				continue;
 
 			if (random.nextInt(100) <= Config.getSpawnChance() + ((playerY - Config.getMinSpawnY()) * 0.5))
