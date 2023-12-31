@@ -27,7 +27,15 @@ public class DergonHandler
 			int dergonID = bossBarEntry.getKey();
 			IBossBar bossBar = bossBarEntry.getValue();
 			DergonHolder dergonHolder = activeDergons.get(dergonID);
-			if (!dergonHolder.isHoldingDergon())
+
+			if (dergonHolder == null)
+			{
+				Dergons.console.logWarning("Attempting to manage boss bar of dergon not being held with ID: %d. Removing from list.", dergonID);
+				removeDergon(dergonID);
+				continue;
+			}
+
+			if (dergonHolder.isUnloaded() || !dergonHolder.isHoldingDergon())
 			{
 				bossBar.removeAllPlayers();
 				continue;
