@@ -79,6 +79,7 @@ public class DergonHandler
 			return "&aDergon killed.";
 
 		removeDergon(ID);
+		Dergons.console.logInformation("Dergon could not be killed, removing from list.");
 		return "&cDergon entity does not exist, removing from list.";
 	}
 
