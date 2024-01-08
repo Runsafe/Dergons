@@ -6,7 +6,7 @@ pipeline {
   }
   environment { plugin = "Dergons" }
   triggers {
-    upstream '/Runsafe/Framework/master'
+    upstream '/Runsafe/WorldGuardBridge/master'
     pollSCM '@monthly'
   }
   stages {
