@@ -5,6 +5,7 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import no.runsafe.framework.minecraft.Buff;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.WorldEffect;
@@ -172,6 +173,10 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			// Crumple their elytra
 			chestplate.setDurability((short) (chestplate.getDurability() + 100));
 			unluckyChum.setChestplate(chestplate);
+			// Do additional damage
+			unluckyChum.damage(Config.getBaseDamage() / 2);
+			unluckyChum.addBuff(Buff.Combat.Blindness.duration(10));
+			unluckyChum.sendColouredMessage("&4You feel a darkness wash over you.");
 		}
 		else if (!(random.nextFloat() < 0.3F)) // If they're not flying and get lucky, avoid picking them up.
 			return;
@@ -180,6 +185,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (rawChum == null)
 			return;
 
+		unluckyChum.damage(Config.getBaseDamage() / 4);
 		rawChum.startRiding(this);
 		ridingPlayer = unluckyChum;
 		handler.handleDergonMount(ridingPlayer);
