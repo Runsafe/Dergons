@@ -468,7 +468,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		// Spawn in some creatures to help defend the dergon
 		if (attacker instanceof EntityHuman && random.nextFloat() < (Config.getVexChance() / 100))
 		{
-			ILocation attackerLocation = dergonWorld.getLocation(attacker.locX, attacker.locY + 5, attacker.locZ);
+			ILocation attackerLocation = dergonWorld.getLocation(attacker.locX, attacker.locY + 1, attacker.locZ);
 			if (attackerLocation == null)
 				return true;
 
