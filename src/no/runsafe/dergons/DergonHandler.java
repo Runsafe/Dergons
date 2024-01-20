@@ -27,7 +27,15 @@ public class DergonHandler
 			int dergonID = bossBarEntry.getKey();
 			IBossBar bossBar = bossBarEntry.getValue();
 			DergonHolder dergonHolder = activeDergons.get(dergonID);
-			if (!dergonHolder.isHoldingDergon())
+
+			if (dergonHolder == null)
+			{
+				Dergons.console.logWarning("Attempting to manage boss bar of dergon not being held with ID: %d. Removing from list.", dergonID);
+				removeDergon(dergonID);
+				continue;
+			}
+
+			if (dergonHolder.isUnloaded() || !dergonHolder.isHoldingDergon())
 			{
 				bossBar.removeAllPlayers();
 				continue;
@@ -79,6 +87,7 @@ public class DergonHandler
 			return "&aDergon killed.";
 
 		removeDergon(ID);
+		Dergons.console.logInformation("Dergon could not be killed, removing from list.");
 		return "&cDergon entity does not exist, removing from list.";
 	}
 
@@ -213,6 +222,21 @@ public class DergonHandler
 			{
 				Dergons.Debugger.debugInfo("Unloading dergon with ID: " + id);
 				holder.setUnloaded();
+				return dergonHolderEntry.getKey();
+			}
+		}
+		return -1;
+	}
+
+	public int healIfDergon(UUID id)
+	{
+		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		{
+			DergonHolder holder = dergonHolderEntry.getValue();
+			if (id == holder.getDergonUniqueID())
+			{
+				Dergons.Debugger.debugInfo("Healing dergon with ID: " + id);
+				holder.heal(Config.getHealAmount());
 				return dergonHolderEntry.getKey();
 			}
 		}

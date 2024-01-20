@@ -86,6 +86,11 @@ public class DergonHolder
 		return true;
 	}
 
+	public void heal(float healAmount)
+	{
+		heldDergon.heal(healAmount);
+	}
+
 	public ILocation getLocation()
 	{
 		if (heldDergon == null)

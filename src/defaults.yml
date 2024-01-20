@@ -11,6 +11,7 @@ eventMaxTime: 6
 eventSteps: 7
 baseDamage: 20.0
 baseHealth: 200.0
+healAmount: 30.0
 antiDergonBubble:
   radius: 0
   location:

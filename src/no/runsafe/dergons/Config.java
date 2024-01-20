@@ -33,6 +33,7 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
 		baseHealth = config.getConfigValueAsFloat("baseHealth");
+		healAmount = config.getConfigValueAsFloat("healAmount");
 		spawnChance = config.getConfigValueAsInt("spawnChance");
 
 		dergonRepellentRadiusSquared = config.getConfigValueAsInt("antiDergonBubble.radius");
@@ -88,6 +89,11 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	public static float getBaseHealth()
 	{
 		return baseHealth;
+	}
+
+	public static float getHealAmount()
+	{
+		return healAmount;
 	}
 
 	public static int getSpawnChance()
@@ -162,6 +168,7 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	private static int minSpawnY;
 	private static float baseDamage;
 	private static float baseHealth;
+	private static float healAmount;
 	private static int spawnChance;
 	private static int dergonRepellentRadiusSquared;
 	private static ILocation dergonRepellentLocation;
