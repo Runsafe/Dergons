@@ -1,16 +1,16 @@
 package no.runsafe.dergons;
 
 import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.entity.*;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
-import no.runsafe.framework.api.event.player.IPlayerInteractEntityEvent;
+import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.event.world.IChunkLoad;
 import no.runsafe.framework.api.event.world.IChunkUnload;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.entity.RunsafeItemSpawnEvent;
-import no.runsafe.framework.minecraft.event.player.RunsafePlayerInteractEntityEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, IChunkUnload, IChunkLoad
+public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload, IChunkLoad
 {
 	public EventMonitor(DergonHandler handler)
 	{
@@ -45,34 +45,54 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 	}
 
 	@Override
-	public void OnPlayerInteractEntityEvent(RunsafePlayerInteractEntityEvent event)
+	public boolean OnPlayerRightClick(IPlayer player, RunsafeMeta usingItem, IBlock targetBlock)
 	{
 		// Handle players collecting dragon's breath.
-		IPlayer player = event.getPlayer();
-		RunsafeMeta usingItem = player.getItemInMainHand();
-		if (usingItem == null || !usingItem.is(Item.Brewing.GlassBottle))
-			return;
+		if (usingItem == null || !usingItem.is(Item.Brewing.GlassBottle) || player.getWorld() == null)
+			return true;
 
-		IEntity entity = event.getRightClicked();
-		if (!(entity instanceof IAreaEffectCloud))
-			return;
+		// If there aren't any active dergons there probably isn't a cloud nearby
+		if (handler.getActiveDergons().isEmpty())
+			return true;
 
-		Dergons.Debugger.debugFine("Player right clicking area effect cloud with a bottle: " + player.getName());
+		// Check if a cloud is near the player
+		IAreaEffectCloud cloud = null;
+		List<IEntity> entities = player.getWorld().getEntities();
+		for (IEntity entity : entities)
+		{
+			// Check if entity is a cloud
+			if (!(entity instanceof IAreaEffectCloud))
+				continue;
 
-		// Check that fireball was launched something other than a Dergon
-		IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
-		if (source instanceof IPlayer || source instanceof IBlockProjectileSource)
-			return;
+			// Make sure cloud is near the player
+			if (player.getLocation().distance(entity.getLocation()) > 5)
+				continue;
 
-		float cloudSize = ((IAreaEffectCloud) entity).getRadius();
-		if (cloudSize <= 0)
-			return;
+			Dergons.Debugger.debugFine("Player %s right clicking near area effect cloud with a bottle", player.getName());
 
+			// Check if fireball was launched something other than a Dergon
+			IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
+			Dergons.Debugger.debugFine("Area of effect source: " + source);
+			if (source instanceof IPlayer || source instanceof IBlockProjectileSource)
+				continue;
+
+			// Make sure cloud isn't empty
+			if (((IAreaEffectCloud) entity).getRadius() <= 0)
+				continue;
+
+			cloud = (IAreaEffectCloud) entity;
+			break;
+		}
+
+		if (cloud == null)
+			return true;
+
+		Dergons.Debugger.debugFine("Area Effect selected with radius: " + cloud.getRadius());
 		RunsafeInventory inventory = player.getInventory();
 		if (inventory.getContents().size() >= inventory.getSize())
 		{
 			player.sendColouredMessage("&cYour inventory is a bit too full to do that.");
-			return;
+			return true;
 		}
 
 		inventory.removeExact(usingItem, 1);
@@ -81,7 +101,9 @@ public class EventMonitor implements IItemSpawn, IPlayerInteractEntityEvent, ICh
 		inventory.addItems(item);
 		player.updateInventory();
 
-		((IAreaEffectCloud) entity).setRadius(cloudSize - ((IAreaEffectCloud) entity).getRadiusOnUse());
+		cloud.setRadius(cloud.getRadius() - cloud.getRadiusOnUse());
+		Dergons.Debugger.debugFine("Area Effect new radius: " + cloud.getRadius());
+		return false;
 	}
 
 	@Override
