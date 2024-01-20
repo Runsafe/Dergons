@@ -5,12 +5,14 @@ import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.chunk.IChunk;
 import no.runsafe.framework.api.entity.*;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
+import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
 import no.runsafe.framework.api.event.world.IChunkLoad;
 import no.runsafe.framework.api.event.world.IChunkUnload;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.event.entity.RunsafeItemSpawnEvent;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerDeathEvent;
 import no.runsafe.framework.minecraft.inventory.RunsafeInventory;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 
@@ -19,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload, IChunkLoad
+public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload, IChunkLoad, IPlayerDeathEvent
 {
 	public EventMonitor(DergonHandler handler)
 	{
@@ -104,6 +106,23 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		cloud.setRadius(cloud.getRadius() - cloud.getRadiusOnUse());
 		Dergons.Debugger.debugFine("Area Effect new radius: " + cloud.getRadius());
 		return false;
+	}
+
+	@Override
+	public void OnPlayerDeathEvent(RunsafePlayerDeathEvent event)
+	{
+		if (handler.getActiveDergons().isEmpty())
+			return;
+
+		IEntity killer = event.getEntity().getKiller();
+		if (killer == null)
+			return;
+
+		int dergonID = handler.healIfDergon(killer.getUniqueId());
+		if (dergonID <= 0)
+			return;
+
+		event.getEntity().sendColouredMessage("&4The Dergon steals away a bit of your essence.");
 	}
 
 	@Override

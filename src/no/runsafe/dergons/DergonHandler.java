@@ -228,6 +228,21 @@ public class DergonHandler
 		return -1;
 	}
 
+	public int healIfDergon(UUID id)
+	{
+		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		{
+			DergonHolder holder = dergonHolderEntry.getValue();
+			if (id == holder.getDergonUniqueID())
+			{
+				Dergons.Debugger.debugInfo("Healing dergon with ID: " + id);
+				holder.heal(Config.getHealAmount());
+				return dergonHolderEntry.getKey();
+			}
+		}
+		return -1;
+	}
+
 	private static boolean showBarIDs = false;
 	private static final HashMap<Integer, HashMap<IPlayer, Float>> damageCounter = new HashMap<>(0);
 	private static final HashMap<Integer, DergonHolder> activeDergons = new HashMap<>(0);
