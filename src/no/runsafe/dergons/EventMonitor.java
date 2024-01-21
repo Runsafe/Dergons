@@ -75,7 +75,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 			// Check if fireball was launched something other than a Dergon
 			IProjectileSource source = ((IAreaEffectCloud) entity).getSource();
 			Dergons.Debugger.debugFine("Area of effect source: " + source);
-			if (source instanceof IPlayer || source instanceof IBlockProjectileSource)
+			if (source != null)
 				continue;
 
 			// Make sure cloud isn't empty
