@@ -89,7 +89,8 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		if (cloud == null)
 			return true;
 
-		Dergons.Debugger.debugFine("Area Effect selected with radius: " + cloud.getRadius());
+		float cloudRadius = cloud.getRadius();
+		Dergons.Debugger.debugFine("Area Effect selected with radius: " + cloudRadius);
 		RunsafeInventory inventory = player.getInventory();
 		if (inventory.getContents().size() >= inventory.getSize())
 		{
@@ -103,7 +104,10 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		inventory.addItems(item);
 		player.updateInventory();
 
-		cloud.setRadius(cloud.getRadius() - cloud.getRadiusOnUse());
+		if (cloudRadius < 0.25F)
+			cloud.setRadius(0);
+		else
+			cloud.setRadius(cloudRadius - 0.25F);
 		Dergons.Debugger.debugFine("Area Effect new radius: " + cloud.getRadius());
 		return false;
 	}
