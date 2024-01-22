@@ -32,6 +32,7 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		stepCount = config.getConfigValueAsInt("eventSteps");
 		minSpawnY = config.getConfigValueAsInt("spawnMinY");
 		baseDamage = config.getConfigValueAsFloat("baseDamage");
+		pickupDamage = config.getConfigValueAsFloat("pickupDamage");
 		baseHealth = config.getConfigValueAsFloat("baseHealth");
 		healAmount = config.getConfigValueAsFloat("healAmount");
 		spawnChance = config.getConfigValueAsInt("spawnChance");
@@ -84,6 +85,11 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	public static float getBaseDamage()
 	{
 		return baseDamage;
+	}
+
+	public static float getPickupDamage()
+	{
+		return pickupDamage;
 	}
 
 	public static float getBaseHealth()
@@ -167,6 +173,7 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 	private static int stepCount;
 	private static int minSpawnY;
 	private static float baseDamage;
+	private static float pickupDamage;
 	private static float baseHealth;
 	private static float healAmount;
 	private static int spawnChance;

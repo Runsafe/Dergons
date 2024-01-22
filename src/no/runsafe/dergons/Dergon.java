@@ -174,7 +174,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			chestplate.setDurability((short) (chestplate.getDurability() + 100));
 			unluckyChum.setChestplate(chestplate);
 			// Do additional damage
-			unluckyChum.damage(Config.getBaseDamage() / 2);
+			unluckyChum.damage(Config.getPickupDamage());
 			unluckyChum.addBuff(Buff.Combat.Blindness.duration(10));
 			unluckyChum.sendColouredMessage("&4You feel a darkness wash over you.");
 		}
@@ -185,7 +185,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		if (rawChum == null)
 			return;
 
-		unluckyChum.damage(Config.getBaseDamage() / 4);
+		unluckyChum.damage(Config.getPickupDamage());
 		rawChum.startRiding(this);
 		ridingPlayer = unluckyChum;
 		handler.handleDergonMount(ridingPlayer);
