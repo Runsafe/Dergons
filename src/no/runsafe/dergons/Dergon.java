@@ -180,7 +180,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			// Do additional damage
 			unluckyChum.damage(Config.getPickupDamage());
 			unluckyChum.addBuff(Buff.Combat.Blindness.duration(10));
-			unluckyChum.sendColouredMessage("&4You feel a darkness wash over you.");
+			unluckyChum.sendColouredMessage(Config.Message.getDergonElytraPickup());
 		}
 		else if (!(random.nextFloat() < 0.3F)) // If they're not flying and get lucky, avoid picking them up.
 			return;
@@ -468,7 +468,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 					attacker.setVelocity(new Vector(4, 4, 4));
 					attacker.addBuff(Buff.Combat.Blindness.duration(15));
-					attacker.sendColouredMessage("&4The dergon punches you back instead.");
+					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
 					return false;
 				}
 			}
@@ -482,7 +482,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 					attacker.setVelocity(new Vector(4, 4, 4));
 					attacker.addBuff(Buff.Combat.Blindness.duration(15));
-					attacker.sendColouredMessage("&4The dergon punches you back instead.");
+					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
 					return false;
 				}
 			}

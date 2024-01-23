@@ -43,8 +43,41 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 
 		antiDergonRegions.putAll(config.getConfigSectionsAsList("antiDergonRegions"));
 
+		Message.dergonPunchback = config.getConfigValueAsString("message.dergonPunchback");
+		Message.dergonElytraPickup = config.getConfigValueAsString("message.dergonElytraPickup");
+		Message.dergonKillPlayer = config.getConfigValueAsString("message.dergonKillPlayer");
+		Message.inventoryFull = config.getConfigValueAsString("message.inventoryFull");
+
 		worldNames.clear();
 		worldNames.addAll(config.getConfigValueAsList("dergonWorlds"));
+	}
+
+	public static final class Message
+	{
+		public static String getDergonPunchback()
+		{
+			return dergonPunchback;
+		}
+
+		public static String getDergonElytraPickup()
+		{
+			return dergonElytraPickup;
+		}
+
+		public static String getDergonKillPlayer()
+		{
+			return dergonKillPlayer;
+		}
+
+		public static String getInventoryFull()
+		{
+			return inventoryFull;
+		}
+
+		private static String dergonPunchback;
+		private static String dergonElytraPickup;
+		private static String dergonKillPlayer;
+		private static String inventoryFull;
 	}
 
 	public static float getVexChance()

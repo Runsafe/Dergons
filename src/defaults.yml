@@ -27,3 +27,8 @@ antiDergonRegions:
     - spawn
   azuren:
     - spawn
+message:
+  dergonPunchback: '&4The dergon punches you back instead.'
+  dergonElytraPickup: '&4You feel a darkness wash over you.'
+  dergonKillPlayer: '&4The Dergon steals away a bit of your essence.'
+  inventoryFull: '&cYour inventory is a bit too full to do that.'
