@@ -94,7 +94,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		RunsafeInventory inventory = player.getInventory();
 		if (inventory.getContents().size() >= inventory.getSize())
 		{
-			player.sendColouredMessage("&cYour inventory is a bit too full to do that.");
+			player.sendColouredMessage(Config.Message.getInventoryFull());
 			return true;
 		}
 
@@ -118,19 +118,11 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		if (handler.getActiveDergons().isEmpty())
 			return;
 
-		IEntity killer = event.getEntity().getKiller();
-		if (killer == null)
-		{
-			Dergons.Debugger.debugFine("Player %s killed by a null entity.", event.getEntity().getName());
-			return;
-		}
-
-		Dergons.Debugger.debugFine("Player %s killed by an entity with UUID: " + killer.getUniqueId(), event.getEntity().getName());
-		int dergonID = handler.healIfDergon(killer.getUniqueId());
+		int dergonID = handler.healIfFightingDergon(event.getEntity());
 		if (dergonID <= 0)
 			return;
 
-		event.getEntity().sendColouredMessage("&4The Dergon steals away a bit of your essence.");
+		event.getEntity().sendColouredMessage(Config.Message.getDergonKillPlayer());
 	}
 
 	@Override

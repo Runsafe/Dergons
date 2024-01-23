@@ -228,19 +228,24 @@ public class DergonHandler
 		return -1;
 	}
 
-	public int healIfDergon(UUID id)
+	public int healIfFightingDergon(IPlayer player)
 	{
-		for (Map.Entry<Integer, DergonHolder> dergonHolderEntry : activeDergons.entrySet())
+		int dergonID = -1;
+		for (Map.Entry<Integer, HashMap<IPlayer, Float>> entry : damageCounter.entrySet())
 		{
-			DergonHolder holder = dergonHolderEntry.getValue();
-			if (id == holder.getDergonUniqueID())
+			Integer currentID = entry.getKey();
+			for (Map.Entry<IPlayer, Float> node : entry.getValue().entrySet())
 			{
-				Dergons.Debugger.debugInfo("Healing dergon with ID: " + id);
-				holder.heal(Config.getHealAmount());
-				return dergonHolderEntry.getKey();
+				if (player != node.getKey())
+					continue;
+
+				dergonID = currentID;
+				Dergons.Debugger.debugInfo("Healing dergon with ID: " + currentID);
+				activeDergons.get(currentID).heal(Config.getHealAmount());
+				break; // Continue to the next dergon incase the player is fighting multiple dergons
 			}
 		}
-		return -1;
+		return dergonID;
 	}
 
 	private static boolean showBarIDs = false;

@@ -5,16 +5,20 @@ import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
+import no.runsafe.framework.internal.wrapper.ObjectWrapper;
 import no.runsafe.framework.minecraft.Buff;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
 import no.runsafe.framework.minecraft.WorldEffect;
+import no.runsafe.framework.minecraft.enchantment.RunsafeEnchantment;
 import no.runsafe.framework.minecraft.entity.RunsafeFallingBlock;
 import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static java.lang.Math.*;
@@ -176,7 +180,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			// Do additional damage
 			unluckyChum.damage(Config.getPickupDamage());
 			unluckyChum.addBuff(Buff.Combat.Blindness.duration(10));
-			unluckyChum.sendColouredMessage("&4You feel a darkness wash over you.");
+			unluckyChum.sendColouredMessage(Config.Message.getDergonElytraPickup());
 		}
 		else if (!(random.nextFloat() < 0.3F)) // If they're not flying and get lucky, avoid picking them up.
 			return;
@@ -441,11 +445,49 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * @param bodyPart Part of the dergon hit.
 	 * @param damager Source of the damage.
 	 * @param damageValue Amount of damage.
-	 * @return true
+	 * @return True if damage is dealt.
 	 */
 	@Override
 	public boolean a(EntityComplexPart bodyPart, DamageSource damager, float damageValue)
 	{
+		Entity bukkitAttacker = damager.getEntity();
+		IPlayer attacker = null;
+		if (bukkitAttacker instanceof EntityHuman)
+			attacker = ObjectWrapper.convert(((EntityHuman) bukkitAttacker).getBukkitEntity());
+
+		// Check if the player is attacking with a punch bow
+		if (attacker != null)
+		{
+			RunsafeMeta checkItem = attacker.getItemInMainHand();
+			if (checkItem != null && checkItem.is(Item.Combat.Bow))
+			{
+				for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
+				{
+					if (!enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
+						continue;
+
+					attacker.setVelocity(new Vector(4, 4, 4));
+					attacker.addBuff(Buff.Combat.Blindness.duration(15));
+					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
+					return false;
+				}
+			}
+			checkItem = attacker.getItemInOffHand();
+			if (checkItem != null && checkItem.is(Item.Combat.Bow))
+			{
+				for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
+				{
+					if (!enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
+						continue;
+
+					attacker.setVelocity(new Vector(4, 4, 4));
+					attacker.addBuff(Buff.Combat.Blindness.duration(15));
+					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
+					return false;
+				}
+			}
+		}
+
 		// Recalculate target location
 		double yawRadian = toRadians(yaw);
 		double xDirection = sin(yawRadian);
@@ -456,8 +498,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		targetEntity = null;
 
 		// Only apply damage if the source is a player or an explosion.
-		Entity attacker = damager.getEntity();
-		if (attacker instanceof EntityHuman || damager.isExplosion())
+		if (attacker != null || damager.isExplosion())
 		{
 			// Do more damage for head shots
 			if(bodyPart != dergonHead)
@@ -466,9 +507,9 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		// Spawn in some creatures to help defend the dergon
-		if (attacker instanceof EntityHuman && random.nextFloat() < (Config.getVexChance() / 100))
+		if (attacker != null && random.nextFloat() < (Config.getVexChance() / 100))
 		{
-			ILocation attackerLocation = dergonWorld.getLocation(attacker.locX, attacker.locY + 1, attacker.locZ);
+			ILocation attackerLocation = attacker.getLocation();
 			if (attackerLocation == null)
 				return true;
 
