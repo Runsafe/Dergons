@@ -118,15 +118,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		if (handler.getActiveDergons().isEmpty())
 			return;
 
-		IEntity killer = event.getEntity().getKiller();
-		if (killer == null)
-		{
-			Dergons.Debugger.debugFine("Player %s killed by a null entity.", event.getEntity().getName());
-			return;
-		}
-
-		Dergons.Debugger.debugFine("Player %s killed by an entity with UUID: " + killer.getUniqueId(), event.getEntity().getName());
-		int dergonID = handler.healIfDergon(killer.getUniqueId());
+		int dergonID = handler.healIfFightingDergon(event.getEntity());
 		if (dergonID <= 0)
 			return;
 
