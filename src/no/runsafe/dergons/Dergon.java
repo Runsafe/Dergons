@@ -456,36 +456,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			attacker = ObjectWrapper.convert(((EntityHuman) bukkitAttacker).getBukkitEntity());
 
 		// Check if the player is attacking with a punch bow
-		if (attacker != null)
+		if (usingPunchBow(attacker))
 		{
-			RunsafeMeta checkItem = attacker.getItemInMainHand();
-			if (checkItem != null && checkItem.is(Item.Combat.Bow))
-			{
-				for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
-				{
-					if (!enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
-						continue;
-
-					attacker.setVelocity(new Vector(4, 4, 4));
-					attacker.addBuff(Buff.Combat.Blindness.duration(15));
-					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
-					return false;
-				}
-			}
-			checkItem = attacker.getItemInOffHand();
-			if (checkItem != null && checkItem.is(Item.Combat.Bow))
-			{
-				for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
-				{
-					if (!enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
-						continue;
-
-					attacker.setVelocity(new Vector(4, 4, 4));
-					attacker.addBuff(Buff.Combat.Blindness.duration(15));
-					attacker.sendColouredMessage(Config.Message.getDergonPunchback());
-					return false;
-				}
-			}
+			attacker.setVelocity(new Vector(4, 4, 4));
+			attacker.addBuff(Buff.Combat.Blindness.duration(15));
+			attacker.sendColouredMessage(Config.Message.getDergonPunchback());
+			return false;
 		}
 
 		// Recalculate target location
@@ -518,6 +494,28 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		}
 
 		return true;
+	}
+
+	private boolean usingPunchBow(IPlayer player)
+	{
+		if (player == null)
+			return false;
+
+		RunsafeMeta checkItem = player.getItemInMainHand();
+		if (checkItem != null && checkItem.is(Item.Combat.Bow))
+		{
+			for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
+				if (enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
+					return true;
+		}
+		checkItem = player.getItemInOffHand();
+		if (checkItem != null && checkItem.is(Item.Combat.Bow))
+		{
+			for (Map.Entry<RunsafeEnchantment, Integer> enchantment : checkItem.getEnchantments().entrySet())
+				if (!enchantment.getKey().getName().equals("ARROW_KNOCKBACK"))
+					return true;
+		}
+		return false;
 	}
 
 	/**
@@ -605,10 +603,23 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	@Override
 	protected boolean damageEntity0(DamageSource source, float damageValue)
 	{
-		if (source.getEntity() == null || (!(source.getEntity() instanceof EntityHuman) && !source.isExplosion()))
+		Entity bukkitAttacker = source.getEntity();
+		if (bukkitAttacker == null || (!(bukkitAttacker instanceof EntityHuman) && !source.isExplosion()))
 			return false;
 
-		if (ridingPlayer == null || !isRidingPlayer(source.getEntity().getName()))
+		IPlayer attacker = null;
+		if (bukkitAttacker instanceof EntityHuman)
+			attacker = ObjectWrapper.convert(((EntityHuman) bukkitAttacker).getBukkitEntity());
+		// Check if the player is attacking with a punch bow
+		if (usingPunchBow(attacker))
+		{
+			attacker.setVelocity(new Vector(4, 4, 4));
+			attacker.addBuff(Buff.Combat.Blindness.duration(15));
+			attacker.sendColouredMessage(Config.Message.getDergonPunchback());
+			return false;
+		}
+
+		if (ridingPlayer == null || !isRidingPlayer(bukkitAttacker.getName()))
 			return super.damageEntity0(source, handler.handleDergonDamage(this, source, damageValue));
 
 		return false;
