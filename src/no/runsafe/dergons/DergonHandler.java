@@ -231,11 +231,13 @@ public class DergonHandler
 	public int healIfFightingDergon(IPlayer player)
 	{
 		int dergonID = -1;
+		Dergons.Debugger.debugFine("Player %s died. Checking if killed by dergon", player.getName());
 		for (Map.Entry<Integer, HashMap<IPlayer, Float>> entry : damageCounter.entrySet())
 		{
 			Integer currentID = entry.getKey();
 			for (Map.Entry<IPlayer, Float> node : entry.getValue().entrySet())
 			{
+				Dergons.Debugger.debugFine("Checking player %s against attacker %s", player.getName(), node.getKey().getName());
 				if (player != node.getKey())
 					continue;
 
