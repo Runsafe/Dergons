@@ -234,18 +234,13 @@ public class DergonHandler
 		Dergons.Debugger.debugFine("Player %s died. Checking if killed by dergon", player.getName());
 		for (Map.Entry<Integer, HashMap<IPlayer, Float>> entry : damageCounter.entrySet())
 		{
-			Integer currentID = entry.getKey();
-			for (Map.Entry<IPlayer, Float> node : entry.getValue().entrySet())
-			{
-				Dergons.Debugger.debugFine("Checking player %s against attacker %s", player.getName(), node.getKey().getName());
-				if (player != node.getKey())
-					continue;
+			if (!entry.getValue().containsKey(player))
+				continue;
 
-				dergonID = currentID;
-				Dergons.Debugger.debugInfo("Healing dergon with ID: " + currentID);
-				activeDergons.get(currentID).heal(Config.getHealAmount());
-				break; // Continue to the next dergon incase the player is fighting multiple dergons
-			}
+			dergonID = entry.getKey();
+			Dergons.Debugger.debugInfo("Healing dergon with ID: " + dergonID);
+			activeDergons.get(dergonID).heal(Config.getHealAmount());
+			// Continue to the next dergon incase the player is fighting multiple dergons
 		}
 		return dergonID;
 	}
