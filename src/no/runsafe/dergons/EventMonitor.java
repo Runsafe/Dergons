@@ -135,7 +135,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 	@Override
 	public void OnChunkUnload(IChunk chunk)
 	{
-		// Check if player unloaded a chunk with a dergon in it so we can register it.
+		// Check if player unloaded a chunk with a dergon in it, so we can register it.
 		if (handler.getActiveDergons().isEmpty())
 			return;
 
