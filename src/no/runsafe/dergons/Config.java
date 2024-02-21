@@ -140,12 +140,12 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		return spawnChance;
 	}
 
-	public static boolean isValidSpawnLocation(ILocation location)
+	public static boolean isInvalidSpawnLocation(ILocation location)
 	{
 		if (location == null)
 		{
 			Dergons.Debugger.debugFine("Failing to spawn dergon due to null location.");
-			return false;
+			return true;
 		}
 
 		IWorld world = location.getWorld();
@@ -155,29 +155,29 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 			|| !(dergonRepellentLocation.distanceSquared(location) < dergonRepellentRadiusSquared)))
 		{
 			Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside the anti dergon bubble.");
-			return false;
+			return true;
 		}
 
 		// Check if in a region it shouldn't spawn in.
-		if(!worldGuard.serverHasWorldGuard())
-			return true;
+		if(worldGuard.worldGuardIsMissing())
+			return false;
 
 		List<String> antiDergonRegionsInWorld = antiDergonRegions.get(world.getName());
 		if (antiDergonRegionsInWorld.isEmpty())
-			return true;
+			return false;
 
 		List<String> insideRegions = worldGuard.getRegionsAtLocation(location);
 		if (insideRegions == null || insideRegions.isEmpty())
-			return true;
+			return false;
 
 		for (String antiDergonRegionName : antiDergonRegionsInWorld)
 			if (insideRegions.contains(antiDergonRegionName))
 			{
 				Dergons.Debugger.debugFine("Failing to spawn dergon due it being inside an anti dergon region.");
-				return false;
+				return true;
 			}
 
-		return true;
+		return false;
 	}
 
 	public static boolean isDergonWorldListEmpty()
@@ -185,11 +185,11 @@ public class Config implements IConfigurationChanged, IPluginEnabled
 		return worldNames.isEmpty();
 	}
 
-	public static boolean isDergonWorld(@Nullable IWorld world)
+	public static boolean isNotDergonWorld(@Nullable IWorld world)
 	{
-		if (world == null) return false;
+		if (world == null) return true;
 
-		return worldNames.contains(world.getName());
+		return !worldNames.contains(world.getName());
 	}
 
 	@Override

@@ -133,14 +133,14 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 	}
 
 	@Override
-	public boolean OnChunkUnload(IChunk chunk)
+	public void OnChunkUnload(IChunk chunk)
 	{
 		// Check if player unloaded a chunk with a dergon in it so we can register it.
 		if (handler.getActiveDergons().isEmpty())
-			return true;
+			return;
 
-		if (!Config.isDergonWorld(chunk.getWorld()))
-			return true;
+		if (Config.isNotDergonWorld(chunk.getWorld()))
+			return;
 
 		for (IEntity entity : chunk.getEntities())
 			if (entity instanceof ILivingEntity)
@@ -155,7 +155,6 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 				);
 			}
 
-		return true;
 	}
 
 	@Override
@@ -165,7 +164,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		if (dergonChunks.isEmpty())
 			return;
 
-		if (!Config.isDergonWorld(chunk.getWorld()))
+		if (Config.isNotDergonWorld(chunk.getWorld()))
 			return;
 
 		List<Integer> reloadedDergons = new ArrayList<>();

@@ -30,7 +30,7 @@ public class DergonHolder
 	private void attemptSpawn()
 	{
 		// Check if trying to spawn in anti-dergon bubble
-		if (!Config.isValidSpawnLocation(spawnLocation))
+		if (Config.isInvalidSpawnLocation(spawnLocation))
 		{
 			handler.removeDergon(dergonID);
 			return;

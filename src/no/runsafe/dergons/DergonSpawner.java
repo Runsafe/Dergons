@@ -24,7 +24,7 @@ public class DergonSpawner implements IConfigurationChanged
 		List<IPlayer> selectedPlayers = new ArrayList<>(0);
 		for (IPlayer player : Dergons.server.getOnlinePlayers())
 		{
-			if (player == null || !Config.isDergonWorld(player.getWorld()))
+			if (player == null || Config.isNotDergonWorld(player.getWorld()))
 				continue;
 
 			ILocation playerLocation = player.getLocation();
@@ -39,7 +39,7 @@ public class DergonSpawner implements IConfigurationChanged
 				continue;
 
 			// Check if we're in the anti dergon bubble
-			if (!Config.isValidSpawnLocation(playerLocation))
+			if (Config.isInvalidSpawnLocation(playerLocation))
 				continue;
 
 			if (random.nextInt(100) <= Config.getSpawnChance() + ((playerY - Config.getMinSpawnY()) * 0.5))
