@@ -2,9 +2,13 @@ package no.runsafe.dergons;
 
 import net.minecraft.server.v1_12_R1.*;
 import no.runsafe.dergons.event.*;
-import no.runsafe.framework.api.*;
+import no.runsafe.framework.api.IBossBar;
+import no.runsafe.framework.api.ILocation;
+import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.player.IPlayer;
-import no.runsafe.framework.minecraft.bossBar.*;
+import no.runsafe.framework.minecraft.bossBar.BarColour;
+import no.runsafe.framework.minecraft.bossBar.BarStyle;
+import no.runsafe.framework.minecraft.bossBar.RunsafeBossBar;
 
 import java.util.*;
 

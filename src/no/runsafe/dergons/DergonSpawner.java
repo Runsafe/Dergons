@@ -1,6 +1,7 @@
 package no.runsafe.dergons;
 
-import no.runsafe.framework.api.*;
+import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 

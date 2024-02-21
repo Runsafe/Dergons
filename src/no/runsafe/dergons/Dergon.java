@@ -16,10 +16,7 @@ import no.runsafe.framework.minecraft.entity.ProjectileEntity;
 import no.runsafe.framework.minecraft.item.meta.RunsafeMeta;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Math.*;
 
@@ -64,6 +61,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Bukkit likes when custom mobs have this constructor. Have it not do anything.
 	 * Called when re-loading a dergon that was allowed to unload naturally or spawned with the summon command.
 	 */
+	@SuppressWarnings("unused")
 	public Dergon(World bukkitWorld)
 	{
 		super(null);
@@ -120,7 +118,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			for (IPlayer player : players)
 			{
 				// Skip the player if we're vanished, in creative mode, or in spectator mode.
-				if (!isValidTarget(player) || isRidingPlayer(player.getName()))
+				if (isInvalidTarget(player) || isRidingPlayer(player.getName()))
 					continue;
 
 				ILocation playerLocation = player.getLocation();
@@ -167,7 +165,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		List<IPlayer> closePlayers = getLocation().getPlayersInRange(10);
 		IPlayer unluckyChum = closePlayers.get(random.nextInt(closePlayers.size()));
 
-		if (!isValidTarget(unluckyChum))
+		if (isInvalidTarget(unluckyChum))
 			return;
 
 		// Always pick up a player if they're wearing an elytra.
@@ -228,10 +226,10 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		else idleTicks = 0;
 
 		// Wing particles
-		dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ)
-			.playEffect(WorldEffect.FLAME, 0, 1, 50);
-		dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ)
-			.playEffect(WorldEffect.FLAME, 0, 1, 50);
+		ILocation leftLocation = dergonWorld.getLocation(dergonWingLeft.locX, dergonWingLeft.locY, dergonWingLeft.locZ);
+		ILocation rightLocation = dergonWorld.getLocation(dergonWingRight.locX, dergonWingRight.locY, dergonWingRight.locZ);
+		Objects.requireNonNull(leftLocation).playEffect(WorldEffect.FLAME, 0, 1, 50);
+		Objects.requireNonNull(rightLocation).playEffect(WorldEffect.FLAME, 0, 1, 50);
 
 		// Handle randomized dergon attacks
 		ILocation dergonHeadLocation = dergonWorld.getLocation(dergonHead.locX, dergonHead.locY - 1, dergonHead.locZ);
@@ -241,7 +239,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 				((RunsafeFallingBlock) dergonWorld.spawnFallingBlock(dergonHeadLocation, Item.Unavailable.Fire)).setDropItem(false);
 
 			if (random.nextInt(60) == 1)
-				ProjectileEntity.DragonFireball.spawn(dergonHeadLocation).setVelocity(targetEntity.getLocation().toVector().subtract(dergonHeadLocation.toVector()).normalize());
+			{
+				Vector velocity = Objects.requireNonNull(targetEntity.getLocation())
+					.toVector().subtract(dergonHeadLocation.toVector()).normalize();
+				ProjectileEntity.DragonFireball.spawn(dergonHeadLocation).setVelocity(velocity);
+			}
 		}
 
 		yaw = (float) trimDegrees(yaw);
@@ -769,11 +771,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * @param player Person to consider targeting.
 	 * @return True if targetable.
 	 */
-	private boolean isValidTarget(IPlayer player)
+	private boolean isInvalidTarget(IPlayer player)
 	{
-		return !player.isVanished()
-			&& !player.isDead()
-			&& player.isSurvivalist();
+		return player.isVanished()
+			|| player.isDead()
+			|| !player.isSurvivalist();
 	}
 
 	private boolean isRidingPlayer(String playerName)

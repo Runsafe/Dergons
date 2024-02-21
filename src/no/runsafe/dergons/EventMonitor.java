@@ -3,7 +3,10 @@ package no.runsafe.dergons;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.block.IBlock;
 import no.runsafe.framework.api.chunk.IChunk;
-import no.runsafe.framework.api.entity.*;
+import no.runsafe.framework.api.entity.IAreaEffectCloud;
+import no.runsafe.framework.api.entity.IEntity;
+import no.runsafe.framework.api.entity.ILivingEntity;
+import no.runsafe.framework.api.entity.IProjectileSource;
 import no.runsafe.framework.api.event.entity.IItemSpawn;
 import no.runsafe.framework.api.event.player.IPlayerDeathEvent;
 import no.runsafe.framework.api.event.player.IPlayerRightClick;
@@ -57,6 +60,10 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 		if (handler.getActiveDergons().isEmpty())
 			return true;
 
+		ILocation location = player.getLocation();
+		if (location == null)
+			return true;
+
 		// Check if a cloud is near the player
 		IAreaEffectCloud cloud = null;
 		List<IEntity> entities = player.getWorld().getEntities();
@@ -67,7 +74,7 @@ public class EventMonitor implements IItemSpawn, IPlayerRightClick, IChunkUnload
 				continue;
 
 			// Make sure cloud is near the player
-			if (player.getLocation().distance(entity.getLocation()) > 5)
+			if (location.distance(entity.getLocation()) > 5)
 				continue;
 
 			Dergons.Debugger.debugFine("Player %s right clicking near area effect cloud with a bottle", player.getName());
