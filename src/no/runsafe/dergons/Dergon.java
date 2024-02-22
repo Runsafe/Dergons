@@ -169,12 +169,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			return;
 
 		// Always pick up a player if they're wearing an elytra.
-		RunsafeMeta chestplate = unluckyChum.getChestplate();
-		if (chestplate != null && chestplate.is(Item.Transportation.Elytra))
+		RunsafeMeta chestPlate = unluckyChum.getChestplate();
+		if (chestPlate != null && chestPlate.is(Item.Transportation.Elytra))
 		{
 			// Crumple their elytra
-			chestplate.setDurability((short) (chestplate.getDurability() + 100));
-			unluckyChum.setChestplate(chestplate);
+			chestPlate.setDurability((short) (chestPlate.getDurability() + 100));
+			unluckyChum.setChestplate(chestPlate);
 			// Do additional damage
 			unluckyChum.damage(Config.getPickupDamage());
 			unluckyChum.addBuff(Buff.Combat.Blindness.duration(10));
@@ -372,21 +372,21 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		float sinYaw = (float) sin(yawRad);
 		float cosYaw = (float) cos(yawRad);
 
-		incrementHitboxLocation(
+		incrementHitBoxLocation(
 			dergonBody,
 			(sinYaw / 2),
 			0,
 			-(cosYaw / 2)
 		);
 
-		incrementHitboxLocation(
+		incrementHitBoxLocation(
 			dergonWingRight,
 			(cosYaw * 4.5),
 			1,
 			(sinYaw * 4.5)
 		);
 
-		incrementHitboxLocation(
+		incrementHitBoxLocation(
 			dergonWingLeft,
 			-(cosYaw * 4.5),
 			1,
@@ -406,7 +406,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		float xHeadDirectionIncremented = (float) sin(toRadians(yaw) - bi * 0.01F);
 		float zHeadDirectionIncremented = (float) cos(toRadians(yaw) - bi * 0.01F);
 
-		incrementHitboxLocation(
+		incrementHitBoxLocation(
 			dergonHead,
 			(xHeadDirectionIncremented * 5.5 * cosF1),
 			(currentAltitude - olderPosition[1]) + (sinF1 * 5.5),
@@ -430,7 +430,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 			final float ONE_POINT_FIVE = 1.5F;
 			float movementMultiplier = (tailNumber + 1) * 2.0F; // 2, 4, 6
 
-			incrementHitboxLocation(
+			incrementHitBoxLocation(
 				tailSection,
 				-(sinYaw * ONE_POINT_FIVE + sin(tailDirection) * movementMultiplier) * cosF1,
 				(oldPosition[1] - olderPosition[1]) - ((movementMultiplier + ONE_POINT_FIVE) * sinF1) + 1.5D,
@@ -445,14 +445,14 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Names of this function in various spigot versions:
 	 * v1_8_R3 - v1_12_R1: a
 	 * @param bodyPart Part of the dergon hit.
-	 * @param damager Source of the damage.
+	 * @param damageSource Source of the damage.
 	 * @param damageValue Amount of damage.
 	 * @return True if damage is dealt.
 	 */
 	@Override
-	public boolean a(EntityComplexPart bodyPart, DamageSource damager, float damageValue)
+	public boolean a(EntityComplexPart bodyPart, DamageSource damageSource, float damageValue)
 	{
-		Entity bukkitAttacker = damager.getEntity();
+		Entity bukkitAttacker = damageSource.getEntity();
 		IPlayer attacker = null;
 		if (bukkitAttacker instanceof EntityHuman)
 			attacker = ObjectWrapper.convert(((EntityHuman) bukkitAttacker).getBukkitEntity());
@@ -476,12 +476,12 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 		targetEntity = null;
 
 		// Only apply damage if the source is a player or an explosion.
-		if (attacker != null || damager.isExplosion())
+		if (attacker != null || damageSource.isExplosion())
 		{
-			// Do more damage for head shots
+			// Do more damage for headshots
 			if(bodyPart != dergonHead)
 				damageValue = (damageValue / 4) + 1;
-			damageEntity(damager, damageValue);
+			damageEntity(damageSource, damageValue);
 		}
 
 		// Spawn in some creatures to help defend the dergon
@@ -595,7 +595,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 	/**
 	 * Damage the dergon.
-	 * Overrides method in EntityLiving.class
+	 * Overrides method in {@link EntityLiving}
 	 * Names of this function in various spigot versions:
 	 * v1_12_R1: damageEntity0
 	 * @param source damage source
@@ -676,11 +676,11 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * Gets all hitboxes.
+	 * Gets all hit-boxes.
 	 * Overrides method in Entity.class.
 	 * Names of this method in various spigot versions:
 	 * v_12_R1: bb
-	 * @return All hitboxes.
+	 * @return All hit-boxes.
 	 */
 	@Override
 	public Entity[] bb()
@@ -751,13 +751,13 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	}
 
 	/**
-	 * Increments the hitbox location of a dergon's body part.
+	 * Increments the hit-box location of a dergon's body part.
 	 * @param bodyPart Part to change the location of.
 	 * @param xIncrement How far to move in the X direction.
 	 * @param yIncrement How far to move in the Y direction.
 	 * @param zIncrement How far to move in the Z direction.
 	 */
-	private void incrementHitboxLocation(EntityComplexPart bodyPart, double xIncrement, double yIncrement, double zIncrement)
+	private void incrementHitBoxLocation(EntityComplexPart bodyPart, double xIncrement, double yIncrement, double zIncrement)
 	{
 		bodyPart.B_(); //t_() means on update. Behavior changes slightly in 1.12 (B_())
 		bodyPart.setPositionRotation(
@@ -769,7 +769,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 	 * Checks if player should be targeted.
 	 * Will not return true if player is vanished, dead, in creative, or in spectator mode.
 	 * @param player Person to consider targeting.
-	 * @return True if targetable.
+	 * @return True if they can be targeted.
 	 */
 	private boolean isInvalidTarget(IPlayer player)
 	{
@@ -795,7 +795,7 @@ public class Dergon extends EntityInsentient implements IComplex, IMonster
 
 	/*
 	 * Dergon bodily appendages.
-	 * Only their hitboxes.
+	 * Only their hit-boxes.
 	 */
 	private final EntityComplexPart[] children;
 	private final EntityComplexPart dergonHead;

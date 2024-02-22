@@ -244,7 +244,7 @@ public class DergonHandler
 			dergonID = entry.getKey();
 			Dergons.Debugger.debugInfo("Healing dergon with ID: " + dergonID);
 			activeDergons.get(dergonID).heal(Config.getHealAmount());
-			// Continue to the next dergon incase the player is fighting multiple dergons
+			// Continue to the next dergon in case the player is fighting multiple dergons
 		}
 		return dergonID;
 	}

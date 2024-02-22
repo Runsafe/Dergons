@@ -1,9 +1,9 @@
 name: Dergons
 main: no.runsafe.dergons.Dergons
 version: 1.0.@BUILD@
-author: Kruithne
+author: Kruithne, DevelopDeborah
 depend: [RunsafeWorldGuardBridge]
-description:
+description: They aren't dragons
 commands:
   dergons:
     description: Dergon related commands
