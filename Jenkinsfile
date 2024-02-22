@@ -16,6 +16,7 @@ pipeline {
         ant 'Default'
         jdk 'Default'
       }
+      steps { buildPluginWithAnt env.plugin, 'WorldGuardBridge', 'build/jar/*.jar' }
     }
     stage('Deploy to test server') {
       when { not { branch 'master' } }
